@@ -889,105 +889,116 @@ export function AppShell() {
 
         {/* ═══ HOME ═══ */}
         {screen === 'home' && (
-          <div className="flex flex-col min-h-[836px]" style={{background:'var(--bg0)'}}>
+          <div className="flex flex-col relative overflow-hidden" style={{background:'var(--bg0)',minHeight:'100vh'}}>
+            {/* Decorative bg blurs */}
+            <div className="absolute -top-20 -right-20 w-64 h-64 rounded-full blur-[80px] pointer-events-none" style={{background:'rgba(45,212,168,0.12)'}} />
+            <div className="absolute top-1/3 -left-20 w-48 h-48 rounded-full blur-[60px] pointer-events-none" style={{background:'rgba(129,140,248,0.08)'}} />
+
             {/* Hero Header */}
-            <div className="relative px-5 pt-6 pb-4">
-              <div className="absolute top-0 left-0 right-0 h-32 pointer-events-none" style={{background:'linear-gradient(180deg, rgba(45,212,168,0.06) 0%, transparent 100%)'}} />
-              <div className="flex justify-between items-start relative z-10">
-                <div>
-                  <div className="text-[13px] font-medium mb-0.5" style={{color:'var(--t3)'}}>Good evening</div>
-                  <h1 className="text-[28px] font-extrabold leading-tight" style={{color:'var(--t1)'}}>What did they<br/>ask? <span className="inline-block">🤔</span></h1>
-                </div>
-                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold mt-1" style={{background:'var(--bg2)',border:'1px solid var(--brc)',color:'var(--ac)'}}>
-                  {selCountry ? COUNTRIES.find(c=>c.name===selCountry)?.flag : '🌍'} · {selBelief ? BELIEFS.find(b=>b.name===selBelief)?.icon : ''} · {!isPro && `${MAX_FREE - usageCount} free`}
-                </div>
+            <div className="relative z-10 px-6 pt-14 pb-6">
+              <div className="absolute top-5 right-5 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-bold" style={{background:'rgba(45,212,168,0.1)',border:'1px solid rgba(45,212,168,0.2)',color:'var(--ac)'}}>
+                {selCountry ? COUNTRIES.find(c=>c.name===selCountry)?.flag : '🌍'} · {selBelief ? BELIEFS.find(b=>b.name===selBelief)?.icon : ''} · {!isPro && `${MAX_FREE - usageCount} free`}
               </div>
+              <p className="text-[14px] font-medium mb-1" style={{color:'var(--t3)'}}>Good evening</p>
+              <h1 className="text-[34px] font-extrabold leading-[1.1] tracking-tight" style={{color:'var(--t1)'}}>
+                What did they<br/>ask? <span style={{display:'inline-block',transform:'translateY(2px)'}}>🤔</span>
+              </h1>
             </div>
 
-            <div className="flex-1 overflow-y-auto pb-20" style={{scrollbarWidth:'none'}}>
+            <div className="relative z-10 flex-1 overflow-y-auto pb-24" style={{scrollbarWidth:'none'}}>
               {/* Child selector */}
               {children.length > 0 && (
-                <div className="px-5 mb-4">
-                  <div className="text-[10px] font-bold uppercase tracking-[0.15em] mb-2.5" style={{color:'var(--t3)'}}>For which child?</div>
-                  <div className="flex gap-2 overflow-x-auto" style={{scrollbarWidth:'none'}}>
+                <div className="px-6 mb-5">
+                  <div className="text-[10px] font-bold uppercase tracking-[0.2em] mb-3" style={{color:'var(--t3)'}}>For which child?</div>
+                  <div className="flex gap-2.5 overflow-x-auto" style={{scrollbarWidth:'none'}}>
                     {children.map(c => (
                       <button key={c.id} onClick={() => setSelectedChild(c)}
-                        className="flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-2xl text-[13px] font-semibold transition-all"
+                        className="flex-shrink-0 flex items-center gap-2.5 px-5 py-3 rounded-2xl text-[14px] font-bold transition-all"
                         style={{
-                          background: selectedChild?.id===c.id ? 'var(--ac)' : 'var(--bg2)',
+                          background: selectedChild?.id===c.id ? 'linear-gradient(135deg, #2dd4a8, #1AB5A0)' : 'var(--bg2)',
                           color: selectedChild?.id===c.id ? '#0A0E17' : 'var(--t2)',
                           border: selectedChild?.id===c.id ? 'none' : '1px solid var(--brc)',
-                          boxShadow: selectedChild?.id===c.id ? '0 4px 16px rgba(45,212,168,0.3)' : 'none',
+                          boxShadow: selectedChild?.id===c.id ? '0 6px 20px rgba(45,212,168,0.4)' : 'none',
                         }}>
-                        <Baby size={14}/>{c.name} <span className="text-[10px] opacity-70">({c.age})</span>
+                        <Baby size={16}/>{c.name} <span className="text-[11px] opacity-60">({c.age})</span>
                       </button>
                     ))}
-                    <button onClick={() => navigate('addchild')} className="flex-shrink-0 flex items-center gap-1.5 px-4 py-2.5 rounded-2xl text-[12px] font-semibold" style={{border:'1.5px dashed var(--brc)',color:'var(--t3)'}}>
-                      <Plus size={13}/>Add
+                    <button onClick={() => navigate('addchild')} className="flex-shrink-0 flex items-center gap-2 px-5 py-3 rounded-2xl text-[13px] font-semibold" style={{border:'2px dashed var(--brc)',color:'var(--t3)'}}>
+                      <Plus size={14}/>Add
                     </button>
                   </div>
                 </div>
               )}
 
-              {/* Question input — glassmorphism */}
-              <div className="mx-5 rounded-2xl p-[1px] mb-4" style={{background:'linear-gradient(135deg, rgba(45,212,168,0.3), rgba(129,140,248,0.2), rgba(244,114,182,0.2))'}}>
-                <div className="rounded-2xl p-5" style={{background:'var(--bg2)',backdropFilter:'blur(20px)'}}>
-                  <div className="text-[10px] font-bold uppercase tracking-[0.15em] mb-3" style={{color:'var(--ac)'}}>Your child's question</div>
+              {/* Question input — prominent gradient border */}
+              <div className="mx-6 rounded-[20px] p-[2px] mb-5" style={{background:'linear-gradient(135deg, #2dd4a8, #818cf8, #f472b6)'}}>
+                <div className="rounded-[18px] p-6" style={{background:'var(--bg0)'}}>
+                  <div className="text-[11px] font-extrabold uppercase tracking-[0.2em] mb-4" style={{color:'var(--ac)'}}>Your child's question</div>
                   <textarea value={question} onChange={e => setQuestion(e.target.value)} rows={3} placeholder={`"What is sex?" or "Why did grandpa die?"`}
-                    className="w-full bg-transparent border-none outline-none text-[16px] font-medium resize-none leading-relaxed" style={{color:'var(--t1)'}} />
+                    className="w-full bg-transparent border-none outline-none text-[17px] font-medium resize-none leading-relaxed" style={{color:'var(--t1)'}} />
                 </div>
               </div>
 
               {/* Triggers */}
-              <div className="mx-5 rounded-2xl p-5 mb-4" style={{background:'var(--bg2)',border:'1px solid var(--brc)'}}>
-                <div className="text-[10px] font-bold uppercase tracking-[0.15em] mb-3" style={{color:'var(--t3)'}}>What triggered this? <span className="font-medium normal-case tracking-normal opacity-60">(optional)</span></div>
+              <div className="mx-6 rounded-[20px] p-6 mb-5" style={{background:'var(--bg2)',border:'1px solid var(--brc)'}}>
+                <div className="text-[10px] font-bold uppercase tracking-[0.2em] mb-4" style={{color:'var(--t3)'}}>What triggered this? <span className="font-medium normal-case tracking-normal opacity-50">(optional)</span></div>
                 <div className="flex gap-2 flex-wrap">
                   {TRIGGERS.map(tr => (
                     <button key={tr.key} onClick={() => setSelectedTriggers(prev => prev.includes(tr.key) ? prev.filter(x=>x!==tr.key) : [...prev,tr.key])}
-                      className="flex items-center gap-1.5 px-3 py-2 rounded-full text-[11px] font-semibold transition-all"
+                      className="flex items-center gap-1.5 px-3.5 py-2.5 rounded-full text-[12px] font-semibold transition-all"
                       style={{
                         background: selectedTriggers.includes(tr.key) ? 'var(--a2)' : 'transparent',
                         color: selectedTriggers.includes(tr.key) ? 'white' : 'var(--t2)',
-                        border: selectedTriggers.includes(tr.key) ? '1px solid var(--a2)' : '1px solid var(--brc)',
+                        border: selectedTriggers.includes(tr.key) ? '1.5px solid var(--a2)' : '1.5px solid var(--brc)',
+                        boxShadow: selectedTriggers.includes(tr.key) ? '0 4px 12px rgba(244,114,182,0.3)' : 'none',
                       }}>
-                      <tr.icon size={12}/>{tr.label}
+                      <tr.icon size={13}/>{tr.label}
                     </button>
                   ))}
                 </div>
                 {selectedTriggers.length > 0 && (
                   <input value={triggerDetail} onChange={e => setTriggerDetail(e.target.value)} placeholder="What did they see or hear?"
-                    className="w-full mt-3 px-4 py-2.5 rounded-xl text-[13px] font-medium outline-none transition-all focus:border-[var(--a2)]"
-                    style={{background:'var(--bgi)',border:'1px solid var(--brc)',color:'var(--t1)'}} />
+                    className="w-full mt-4 px-4 py-3 rounded-xl text-[13px] font-medium outline-none transition-all focus:border-[var(--a2)]"
+                    style={{background:'var(--bg0)',border:'1.5px solid var(--brc)',color:'var(--t1)'}} />
                 )}
               </div>
 
-              {/* Topics — card style */}
-              <div className="px-5 mb-5">
-                <div className="text-[10px] font-bold uppercase tracking-[0.15em] mb-3" style={{color:'var(--t3)'}}>Common questions</div>
-                <div className="flex gap-2.5 overflow-x-auto pb-1" style={{scrollbarWidth:'none'}}>
-                  {TOPICS.map(t => (
-                    <button key={t.label} onClick={() => setQuestion(t.q)} className="flex-shrink-0 flex flex-col items-center gap-1.5 px-5 py-3.5 rounded-2xl transition-all active:scale-95"
-                      style={{background:'var(--bg2)',border:'1px solid var(--brc)',boxShadow:'0 2px 8px rgba(0,0,0,0.1)',minWidth:80}}>
-                      <span className="text-2xl">{t.emoji}</span>
-                      <span className="text-[11px] font-bold whitespace-nowrap" style={{color:'var(--t1)'}}>{t.label}</span>
+              {/* Topics — bigger card style */}
+              <div className="px-6 mb-6">
+                <div className="text-[10px] font-bold uppercase tracking-[0.2em] mb-3" style={{color:'var(--t3)'}}>Common questions</div>
+                <div className="grid grid-cols-4 gap-2.5">
+                  {TOPICS.slice(0,4).map(t => (
+                    <button key={t.label} onClick={() => setQuestion(t.q)} className="flex flex-col items-center gap-2 py-4 rounded-2xl transition-all active:scale-95"
+                      style={{background:'var(--bg2)',border:'1px solid var(--brc)'}}>
+                      <span className="text-[28px]">{t.emoji}</span>
+                      <span className="text-[11px] font-bold" style={{color:'var(--t1)'}}>{t.label}</span>
+                    </button>
+                  ))}
+                </div>
+                <div className="grid grid-cols-4 gap-2.5 mt-2.5">
+                  {TOPICS.slice(4).map(t => (
+                    <button key={t.label} onClick={() => setQuestion(t.q)} className="flex flex-col items-center gap-2 py-4 rounded-2xl transition-all active:scale-95"
+                      style={{background:'var(--bg2)',border:'1px solid var(--brc)'}}>
+                      <span className="text-[28px]">{t.emoji}</span>
+                      <span className="text-[11px] font-bold" style={{color:'var(--t1)'}}>{t.label}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
               {genError && (
-                <div className="mx-5 mb-4 flex items-center gap-2.5 p-4 rounded-2xl" style={{background:'var(--a2g)',border:'1px solid rgba(244,114,182,0.2)'}}>
-                  <AlertCircle size={16} style={{color:'var(--a2)'}} />
+                <div className="mx-6 mb-5 flex items-center gap-3 p-4 rounded-2xl" style={{background:'rgba(244,114,182,0.08)',border:'1px solid rgba(244,114,182,0.2)'}}>
+                  <AlertCircle size={18} style={{color:'var(--a2)'}} />
                   <span className="text-[13px] font-medium" style={{color:'var(--a2)'}}>{genError}</span>
                 </div>
               )}
 
-              {/* Generate button */}
-              <div className="px-5">
-                <button onClick={handleGenerate} className="w-full py-4 rounded-2xl text-[16px] font-bold flex items-center justify-center gap-2.5 transition-all active:scale-[0.98]"
-                  style={{background:'linear-gradient(135deg,#2dd4a8,#1AB5A0)',color:'#0A0E17',boxShadow:'0 8px 32px rgba(45,212,168,0.35)'}}>
-                  <Sparkles size={20}/>Generate Explanation
-                  {!isPro && <span className="text-[12px] font-semibold opacity-60">({MAX_FREE - usageCount} free left)</span>}
+              {/* Generate button — big and bold */}
+              <div className="px-6">
+                <button onClick={handleGenerate} className="w-full py-[18px] rounded-2xl text-[17px] font-extrabold flex items-center justify-center gap-3 transition-all active:scale-[0.97]"
+                  style={{background:'linear-gradient(135deg,#2dd4a8,#1AB5A0)',color:'#0A0E17',boxShadow:'0 10px 40px rgba(45,212,168,0.4)'}}>
+                  <Sparkles size={22}/>Generate Explanation
+                  {!isPro && <span className="text-[13px] font-bold opacity-50 ml-1">({MAX_FREE - usageCount} free left)</span>}
                 </button>
               </div>
             </div>
