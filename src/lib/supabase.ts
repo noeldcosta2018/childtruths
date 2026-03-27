@@ -12,7 +12,7 @@ export function getSupabaseClient(): SupabaseClient {
     }
     _supabase = createClient(url, key, {
       auth: {
-        flowType: 'pkce',
+        flowType: 'implicit',
         autoRefreshToken: true,
         persistSession: true,
         detectSessionInUrl: true,
