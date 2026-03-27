@@ -22,28 +22,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Set up the auth state listener FIRST so we don't miss any events
+    // Check if we're returning from OAuth (tokens in URL hash)
+    const hashHasTokens = typeof window !== 'undefined' &&
+      window.location.hash.includes('access_token')
+
+    // Listen for auth state changes (fires when hash tokens are detected)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        console.log('Auth state changed:', event, session ? 'has session' : 'no session')
-        setSession(session)
-        setUser(session?.user ?? null)
+      (event, currentSession) => {
+        console.log('[Auth]', event, currentSession ? 'session exists' : 'no session')
+        setSession(currentSession)
+        setUser(currentSession?.user ?? null)
         setLoading(false)
 
-        // Clean up URL hash after successful sign in
-        if (event === 'SIGNED_IN' && window.location.hash) {
-          // Remove the tokens from the URL without reloading
+        // Clean up URL hash after sign in
+        if (event === 'SIGNED_IN' && typeof window !== 'undefined' && window.location.hash) {
           window.history.replaceState(null, '', window.location.pathname)
         }
       }
     )
 
-    // Then check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-      setUser(session?.user ?? null)
-      setLoading(false)
-    })
+    // Only call getSession if NOT returning from OAuth
+    // If returning from OAuth, let onAuthStateChange handle it to avoid race condition
+    if (!hashHasTokens) {
+      supabase.auth.getSession().then(({ data: { session: existingSession } }) => {
+        setSession(existingSession)
+        setUser(existingSession?.user ?? null)
+        setLoading(false)
+      })
+    }
 
     return () => subscription.unsubscribe()
   }, [])

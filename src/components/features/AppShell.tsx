@@ -329,13 +329,14 @@ export function AppShell() {
     }
   }, [user, session, authContextLoading]);
 
-  // Splash timer
+  // Splash timer - wait for auth to finish loading before deciding
   useEffect(() => {
     if (screen === 'splash') {
       const t = setTimeout(() => {
-        if (!authContextLoading && user) return; // auth will handle navigation
+        if (authContextLoading) return; // still loading, wait
+        if (user) return; // user exists, auth useEffect will handle navigation
         navigate('onboarding');
-      }, 2000);
+      }, 3000);
       return () => clearTimeout(t);
     }
   }, [screen, authContextLoading, user]);
