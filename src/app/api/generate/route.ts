@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
       .single()
 
     const isPro = !!subscription
-    const MAX_FREE = 3
+    const MAX_FREE = 7
 
     if (currentUsage >= MAX_FREE && !isPro) {
       return NextResponse.json({ error: 'Free limit reached. Please upgrade.' }, { status: 402 })

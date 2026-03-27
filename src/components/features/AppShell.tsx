@@ -369,11 +369,12 @@ export function AppShell() {
   const [openLayer, setOpenLayer] = useState(0);
   const [generating, setGenerating] = useState(false);
   const [genError, setGenError] = useState('');
+  const [selectedPlan, setSelectedPlan] = useState('annual');
 
   // Usage
   const [usageCount, setUsageCount] = useState(0);
   const [isPro, setIsPro] = useState(false);
-  const MAX_FREE = 3;
+  const MAX_FREE = 7;
 
   // Saved
   const [saved, setSaved] = useState([]);
@@ -740,7 +741,7 @@ export function AppShell() {
               {authMode === 'login' ? 'Welcome back' : authMode === 'signup' ? 'Create account' : 'Reset password'}
             </h2>
             <p className="text-sm mb-6" style={{color:'var(--t3)'}}>
-              {authMode === 'login' ? 'Sign in to continue' : authMode === 'signup' ? 'Start your free trial — 3 explanations/month' : 'We\'ll send you a reset link'}
+              {authMode === 'login' ? 'Sign in to continue' : authMode === 'signup' ? 'Start your free trial — 7-day free trial' : 'We\'ll send you a reset link'}
             </p>
 
             {authMode !== 'forgot' && (
@@ -1235,55 +1236,71 @@ export function AppShell() {
               <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{background:'linear-gradient(135deg,var(--ac),var(--a3))',boxShadow:'0 8px 30px rgba(34,211,183,0.3)'}}>
                 <Lock size={28} color="white" />
               </div>
-              <h2 className="text-2xl font-extrabold mb-1" style={{fontFamily:'Baloo 2,cursive',color:'var(--t1)'}}>You've used your 3 free tries</h2>
+              <h2 className="text-2xl font-extrabold mb-1" style={{fontFamily:'Baloo 2,cursive',color:'var(--t1)'}}>You've used your 7 free tries</h2>
               <p className="text-sm" style={{color:'var(--t3)'}}>Upgrade to ChildTruths Pro for unlimited explanations</p>
             </div>
 
-            {/* Pricing */}
+            {/* Plan selection */}
             {[
-              {plan:'Monthly',price:'$6.99',period:'/month',popular:false,planKey:'monthly'},
-              {plan:'Annual',price:'$49.99',period:'/year',popular:true,save:'Save 40%',planKey:'annual'},
+              {plan:'Annual',price:'$49.99',perMonth:'$4.17/mo',period:'/year',popular:true,save:'Save 40%',planKey:'annual'},
+              {plan:'Monthly',price:'$6.99',perMonth:'',period:'/month',popular:false,planKey:'monthly'},
             ].map(p => (
-              <button key={p.plan} onClick={async () => {
-                if (!user) return;
-                try {
-                  const res = await fetch('/api/checkout', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ plan: p.planKey, email: user.email, userId: user.id }),
-                  });
-                  const data = await res.json();
-                  if (data.url) window.location.href = data.url;
-                } catch (err) { console.error('Checkout error:', err); }
-              }}
-                className="w-full rounded-2xl border p-4 mb-3 text-left relative transition-all hover:-translate-y-0.5"
-                style={{background: p.popular ? 'var(--acg)' : 'var(--bg2)', borderColor: p.popular ? 'var(--ac)' : 'var(--brc)'}}>
-                {p.popular && <span className="absolute -top-2.5 right-4 text-[10px] font-bold px-2.5 py-0.5 rounded-full" style={{background:'var(--ac)',color: dark ? '#0A0E17' : '#fff'}}>BEST VALUE</span>}
+              <button key={p.plan} onClick={() => setSelectedPlan(p.planKey)}
+                className="w-full rounded-2xl p-4 mb-3 text-left relative transition-all"
+                style={{
+                  background: selectedPlan===p.planKey ? 'var(--acg)' : 'var(--bg2)',
+                  border: selectedPlan===p.planKey ? '2px solid var(--ac)' : '2px solid var(--brc)',
+                }}>
+                {p.popular && <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 text-[10px] font-bold px-3 py-0.5 rounded-full" style={{background:'var(--ac)',color:'#0A0E17'}}>MOST POPULAR</span>}
                 <div className="flex justify-between items-center">
-                  <div>
-                    <div className="text-base font-bold" style={{color:'var(--t1)'}}>{p.plan}</div>
-                    {p.save && <div className="text-[11px] font-semibold" style={{color:'var(--ac)'}}>{p.save}</div>}
+                  <div className="flex items-center gap-3">
+                    <div className="w-6 h-6 rounded-full border-2 flex items-center justify-center" style={{borderColor: selectedPlan===p.planKey ? 'var(--ac)' : 'var(--brc)'}}>
+                      {selectedPlan===p.planKey && <div className="w-3.5 h-3.5 rounded-full" style={{background:'var(--ac)'}} />}
+                    </div>
+                    <div>
+                      <div className="text-[16px] font-bold" style={{color:'var(--t1)'}}>{p.plan}</div>
+                      {p.save && <div className="text-[11px] font-semibold" style={{color:'var(--ac)'}}>{p.save}</div>}
+                    </div>
                   </div>
                   <div className="text-right">
-                    <span className="text-xl font-extrabold" style={{color:'var(--t1)'}}>{p.price}</span>
+                    <span className="text-[20px] font-extrabold" style={{color:'var(--t1)'}}>{p.price}</span>
                     <span className="text-[12px]" style={{color:'var(--t3)'}}>{p.period}</span>
+                    {p.perMonth && <div className="text-[11px]" style={{color:'var(--t3)'}}>{p.perMonth}</div>}
                   </div>
                 </div>
               </button>
             ))}
 
-            <div className="mt-2 space-y-2">
-              {['Unlimited explanations','All response layers','Cultural & belief calibration','Audio read-aloud','Co-parent sharing','Priority support'].map(f => (
-                <div key={f} className="flex items-center gap-2">
-                  <Check size={14} style={{color:'var(--ac)'}} />
-                  <span className="text-[13px] font-medium" style={{color:'var(--t2)'}}>{f}</span>
+            {/* Subscribe button */}
+            <button onClick={async () => {
+              if (!user) return;
+              try {
+                const res = await fetch('/api/checkout', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ plan: selectedPlan, email: user.email, userId: user.id }),
+                });
+                const data = await res.json();
+                if (data.url) window.location.href = data.url;
+              } catch (err) { console.error('Checkout error:', err); }
+            }}
+              className="w-full py-4 rounded-2xl text-[16px] font-bold mt-2 transition-all active:scale-[0.97]"
+              style={{background:'linear-gradient(135deg,var(--ac),#1AB5A0)',color:'#FFFFFF',boxShadow:'0 6px 24px rgba(34,211,183,0.3)'}}>
+              Subscribe Now
+            </button>
+
+            <div className="mt-5 space-y-2.5">
+              {['Unlimited explanations','All 4 response layers','Cultural & belief calibration','Audio read-aloud','Co-parent sharing','Priority support'].map(f => (
+                <div key={f} className="flex items-center gap-2.5">
+                  <Check size={15} style={{color:'var(--ac)'}} />
+                  <span className="text-[14px] font-medium" style={{color:'var(--t2)'}}>{f}</span>
                 </div>
               ))}
             </div>
 
-            <div className="mt-6 flex items-center justify-center gap-2 p-3 rounded-xl border" style={{background:'var(--bg2)',borderColor:'var(--brc)'}}>
-              <CreditCard size={16} style={{color:'var(--t3)'}} />
-              <span className="text-[12px] font-medium" style={{color:'var(--t3)'}}>Secured by Stripe · Cancel anytime</span>
+            <div className="mt-6 flex items-center justify-center gap-2 p-3 rounded-xl" style={{background:'var(--bg2)'}}>
+              <Shield size={16} style={{color:'var(--t3)'}} />
+              <span className="text-[12px] font-medium" style={{color:'var(--t3)'}}>7-day free trial · Cancel anytime</span>
             </div>
 
             <div className="mt-4 flex justify-center gap-4">
@@ -1422,7 +1439,7 @@ export function AppShell() {
                 <p className="text-sm font-bold mt-2" style={{color:'var(--t1)'}}>Acceptable Use</p>
                 <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>You may not use ChildTruths to generate harmful, abusive, or inappropriate content. We reserve the right to terminate accounts that violate these terms.</p>
                 <p className="text-sm font-bold mt-2" style={{color:'var(--t1)'}}>Subscriptions</p>
-                <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>Free accounts receive 3 explanations per month. Pro subscriptions are billed monthly or annually through the App Store or Google Play. You can cancel at any time — access continues until the end of your billing period.</p>
+                <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>Free accounts receive 7 explanations to try. Pro subscriptions are billed monthly or annually through the App Store or Google Play. You can cancel at any time — access continues until the end of your billing period.</p>
               </>}
               {legalPage === 'refund' && <>
                 <h3 className="text-lg font-bold" style={{color:'var(--t1)',fontFamily:'Baloo 2,cursive'}}>Refund Policy</h3>
