@@ -34,9 +34,12 @@ export async function GET(request: NextRequest) {
     error: error?.message,
     cookieNames: allCookies.map(c => c.name),
     envCheck: {
-      hasSupabaseUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
-      hasAnonKey: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-      hasServiceKey: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+      supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
+      anonKeyStart: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.substring(0, 20),
+      anonKeyEnd: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.slice(-10),
+      anonKeyLength: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.length,
+      serviceKeyStart: process.env.SUPABASE_SERVICE_ROLE_KEY?.substring(0, 20),
+      serviceKeyEnd: process.env.SUPABASE_SERVICE_ROLE_KEY?.slice(-10),
     }
   })
 }
