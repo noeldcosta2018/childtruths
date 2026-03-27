@@ -93,6 +93,49 @@ function Logo({ size = 32, className = "" }) {
   );
 }
 
+function FamilyLogo({ size = 120 }) {
+  const s = size;
+  return (
+    <div className="relative" style={{ width: s, height: s }}>
+      <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" width={s} height={s}>
+        {/* Background circle with glow */}
+        <defs>
+          <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#2dd4a8" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="#2dd4a8" stopOpacity="0" />
+          </radialGradient>
+          <linearGradient id="bodyGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#2dd4a8" />
+            <stop offset="100%" stopColor="#818cf8" />
+          </linearGradient>
+        </defs>
+        <circle cx="100" cy="100" r="95" fill="url(#glow)" />
+
+        {/* Father - left */}
+        <circle cx="65" cy="62" r="18" fill="url(#bodyGrad)" opacity="0.9" />
+        <path d="M65 82 C45 82 38 100 38 115 Q38 130 52 130 L78 130 Q92 130 92 115 C92 100 85 82 65 82Z" fill="url(#bodyGrad)" opacity="0.85" />
+
+        {/* Mother - right */}
+        <circle cx="135" cy="62" r="18" fill="#818cf8" opacity="0.9" />
+        <path d="M135 82 C115 82 108 100 108 115 Q108 130 122 130 L148 130 Q162 130 162 115 C162 100 155 82 135 82Z" fill="#818cf8" opacity="0.85" />
+
+        {/* Child - center front */}
+        <circle cx="100" cy="100" r="14" fill="#f472b6" opacity="0.95" />
+        <path d="M100 116 C85 116 80 128 80 138 Q80 150 90 150 L110 150 Q120 150 120 138 C120 128 115 116 100 116Z" fill="#f472b6" opacity="0.9" />
+
+        {/* Heart above */}
+        <path d="M100 42 C96 34 86 34 86 42 C86 50 100 58 100 58 C100 58 114 50 114 42 C114 34 104 34 100 42Z" fill="#f472b6" opacity="0.7" />
+
+        {/* Speech bubble - small */}
+        <path d="M148 38 Q148 28 158 28 L172 28 Q182 28 182 38 L182 48 Q182 58 172 58 L162 58 L156 66 L158 58 L158 58 Q148 58 148 48 Z" fill="#2dd4a8" opacity="0.6" />
+        <circle cx="160" cy="43" r="2" fill="white" opacity="0.8" />
+        <circle cx="166" cy="43" r="2" fill="white" opacity="0.8" />
+        <circle cx="172" cy="43" r="2" fill="white" opacity="0.8" />
+      </svg>
+    </div>
+  );
+}
+
 function IconBtn({ icon: Icon, size = 18, onClick, className = "", badge }) {
   return (
     <button onClick={onClick} className={`relative flex items-center justify-center rounded-xl border transition-all duration-200 hover:border-[var(--ac)] active:scale-95 ${className}`}
@@ -546,10 +589,8 @@ export function AppShell() {
         {/* ═══ SPLASH ═══ */}
         {screen === 'splash' && (
           <div className="flex flex-col items-center justify-center text-center min-h-[836px]" style={{background:'var(--bg0)'}}>
-            <div className="w-20 h-20 rounded-2xl flex items-center justify-center mb-4" style={{background:'linear-gradient(135deg,var(--ac),var(--a3))',boxShadow:'0 12px 40px rgba(34,211,183,0.3)'}}>
-              <MessageCircle size={40} color="white" strokeWidth={2.5} />
-            </div>
-            <div className="text-2xl font-extrabold" style={{fontFamily:'Baloo 2,cursive',color:'var(--t1)'}}>ChildTruths</div>
+            <FamilyLogo size={120} />
+            <div className="text-2xl font-extrabold mt-4" style={{fontFamily:'Baloo 2,cursive',color:'var(--t1)'}}>ChildTruths</div>
             <Loader2 size={20} className="mt-6 animate-spin" style={{color:'var(--ac)'}} />
           </div>
         )}
@@ -560,8 +601,8 @@ export function AppShell() {
             <div className="absolute -top-16 -left-10 w-72 h-72 rounded-full blur-[60px] pointer-events-none" style={{background:'var(--acg)'}} />
             <div className="absolute -bottom-10 -right-10 w-60 h-60 rounded-full blur-[60px] pointer-events-none" style={{background:'var(--a2g)'}} />
 
-            <div className="relative z-10 w-24 h-24 rounded-[22px] flex items-center justify-center mb-6" style={{background:'linear-gradient(135deg,var(--ac),var(--a3))',boxShadow:'0 12px 40px rgba(34,211,183,0.25)'}}>
-              <MessageCircle size={48} color="white" strokeWidth={2.5} />
+            <div className="relative z-10 mb-6">
+              <FamilyLogo size={140} />
             </div>
             <h1 className="relative z-10 text-4xl font-extrabold mb-1" style={{fontFamily:'Baloo 2,cursive',color:'var(--t1)'}}>ChildTruths</h1>
             <p className="relative z-10 text-lg font-bold mb-1" style={{fontFamily:'Baloo 2,cursive',color:'var(--ac)'}}>The hard talks, made simple</p>
