@@ -723,16 +723,40 @@ export function AppShell() {
         )}
 
         {/* ═══ SETUP ═══ */}
-        {screen === 'setup' && (
+        {screen === 'setup' && (() => {
+          const isFromSettings = prevScreen === 'settings';
+          const saveAndReturn = async (updates) => {
+            if (user) {
+              try {
+                await db.upsertProfile(user.id, {
+                  email: user.email, name: userName,
+                  language: selLanguage, country: selCountry, belief: selBelief,
+                  ...updates,
+                });
+              } catch (err) { console.error('Error saving profile:', err); }
+            }
+            if (isFromSettings) navigate('settings');
+          };
+          return (
           <div className="flex flex-col min-h-[836px]" style={{background:'var(--bg0)'}}>
             <div className="px-6 pt-5 pb-0">
-              <h2 className="text-[22px] font-extrabold" style={{fontFamily:'Baloo 2,cursive',color:'var(--t1)'}}>Quick setup ⚡</h2>
-              <p className="text-[13px] mb-4" style={{color:'var(--t3)'}}>3 taps. That's it.</p>
-              <div className="flex gap-1.5 mb-6">
-                {[1,2,3].map(i => (
-                  <div key={i} className="h-1 rounded-full flex-1 transition-all duration-400" style={{background: i <= setupStep ? 'var(--ac)' : 'var(--chb)', boxShadow: i === setupStep ? '0 0 8px var(--acg)' : 'none'}} />
-                ))}
-              </div>
+              {isFromSettings && (
+                <button onClick={() => navigate('settings')} className="flex items-center gap-2 mb-3">
+                  <ArrowLeft size={18} style={{color:'var(--t2)'}} />
+                  <span className="text-[14px] font-medium" style={{color:'var(--t2)'}}>Back to Settings</span>
+                </button>
+              )}
+              {!isFromSettings && (
+                <>
+                  <h2 className="text-[22px] font-extrabold" style={{fontFamily:'Baloo 2,cursive',color:'var(--t1)'}}>Quick setup ⚡</h2>
+                  <p className="text-[13px] mb-4" style={{color:'var(--t3)'}}>3 taps. That's it.</p>
+                  <div className="flex gap-1.5 mb-6">
+                    {[1,2,3].map(i => (
+                      <div key={i} className="h-1 rounded-full flex-1 transition-all duration-400" style={{background: i <= setupStep ? 'var(--ac)' : 'var(--chb)', boxShadow: i === setupStep ? '0 0 8px var(--acg)' : 'none'}} />
+                    ))}
+                  </div>
+                </>
+              )}
             </div>
 
             <div className="flex-1 px-6 pb-6 overflow-y-auto" style={{scrollbarWidth:'none'}}>
@@ -742,7 +766,11 @@ export function AppShell() {
                   <p className="text-[13px] mb-5" style={{color:'var(--t3)'}}>Explanations will be in this language.</p>
                   <div className="flex flex-col gap-2">
                     {LANGUAGES.map(l => (
-                      <button key={l.name} onClick={() => {setSelLanguage(l.name);setSetupStep(2)}}
+                      <button key={l.name} onClick={async () => {
+                        setSelLanguage(l.name);
+                        if (isFromSettings) { await saveAndReturn({language: l.name}); }
+                        else { setSetupStep(2); }
+                      }}
                         className="flex items-center gap-3 p-3.5 rounded-xl border text-left text-[15px] font-semibold transition-all hover:translate-x-1 hover:border-[var(--ac)]"
                         style={{background: selLanguage===l.name ? 'var(--ac)' : 'var(--chb)', color: selLanguage===l.name ? 'var(--chat)' : 'var(--t2)', borderColor: selLanguage===l.name ? 'var(--ac)' : 'var(--chbr)'}}>
                         <span className="text-xl">{l.flag}</span>{l.name}
@@ -764,7 +792,11 @@ export function AppShell() {
                   </div>
                   <div className="flex flex-col gap-2 max-h-[400px] overflow-y-auto" style={{scrollbarWidth:'none'}}>
                     {filteredCountries.map(c => (
-                      <button key={c.name} onClick={() => {setSelCountry(c.name);setSetupStep(3)}}
+                      <button key={c.name} onClick={async () => {
+                        setSelCountry(c.name);
+                        if (isFromSettings) { await saveAndReturn({country: c.name}); }
+                        else { setSetupStep(3); }
+                      }}
                         className="flex items-center gap-3 p-3.5 rounded-xl border text-left text-[15px] font-semibold transition-all hover:translate-x-1 hover:border-[var(--ac)]"
                         style={{background: selCountry===c.name ? 'var(--ac)' : 'var(--chb)', color: selCountry===c.name ? 'var(--chat)' : 'var(--t2)', borderColor: selCountry===c.name ? 'var(--ac)' : 'var(--chbr)'}}>
                         <span className="text-xl">{c.flag}</span>{c.name}
@@ -780,7 +812,10 @@ export function AppShell() {
                   <p className="text-[13px] mb-5 leading-relaxed" style={{color:'var(--t3)'}}>This shapes how we frame answers — especially around death, purpose, and relationships. Always truthful. This adjusts framing, not facts.</p>
                   <div className="flex flex-col gap-2 mb-6">
                     {BELIEFS.map(b => (
-                      <button key={b.name} onClick={() => setSelBelief(b.name)}
+                      <button key={b.name} onClick={async () => {
+                        setSelBelief(b.name);
+                        if (isFromSettings) { await saveAndReturn({belief: b.name}); }
+                      }}
                         className="flex items-center gap-3 p-3.5 rounded-xl border text-left transition-all hover:translate-x-1 hover:border-[var(--ac)]"
                         style={{background: selBelief===b.name ? 'var(--ac)' : 'var(--chb)', color: selBelief===b.name ? 'var(--chat)' : 'var(--t2)', borderColor: selBelief===b.name ? 'var(--ac)' : 'var(--chbr)'}}>
                         <span className="text-xl flex-shrink-0">{b.icon}</span>
@@ -791,28 +826,29 @@ export function AppShell() {
                       </button>
                     ))}
                   </div>
-                  <button disabled={!selBelief} onClick={async () => {
-                    if (user) {
-                      try {
-                        await db.upsertProfile(user.id, {
-                          email: user.email,
-                          name: userName,
-                          language: selLanguage,
-                          country: selCountry,
-                          belief: selBelief,
-                        });
-                      } catch (err) { console.error('Error saving profile:', err); }
-                    }
-                    navigate('addchild');
-                  }}
-                    className="w-full py-3.5 rounded-xl text-[15px] font-bold transition-all hover:-translate-y-0.5"
-                    style={{background:'linear-gradient(135deg,var(--ac),#1AB5A0)',color: dark ? '#0A0E17' : '#fff',boxShadow:'0 6px 20px rgba(34,211,183,0.25)',opacity:selBelief?1:0.3}}>
-                    Done — Add your child →
-                  </button>
+                  {!isFromSettings && (
+                    <button disabled={!selBelief} onClick={async () => {
+                      if (user) {
+                        try {
+                          await db.upsertProfile(user.id, {
+                            email: user.email, name: userName,
+                            language: selLanguage, country: selCountry, belief: selBelief,
+                          });
+                        } catch (err) { console.error('Error saving profile:', err); }
+                      }
+                      navigate('addchild');
+                    }}
+                      className="w-full py-3.5 rounded-xl text-[15px] font-bold transition-all hover:-translate-y-0.5"
+                      style={{background:'linear-gradient(135deg,var(--ac),#1AB5A0)',color:'#fff',boxShadow:'0 6px 20px rgba(34,211,183,0.25)',opacity:selBelief?1:0.3}}>
+                      Done — Add your child →
+                    </button>
+                  )}
                 </>
               )}
             </div>
           </div>
+          );
+        })()}
         )}
 
         {/* ═══ ADD CHILD ═══ */}
@@ -1210,7 +1246,7 @@ export function AppShell() {
               {/* Profile */}
               <div className="mx-5 mt-2 text-[11px] font-bold uppercase tracking-widest flex items-center gap-2" style={{color:'var(--t3)'}}>Profile<div className="flex-1 h-px" style={{background:'var(--brs)'}} /></div>
               <div className="mx-5 mt-2 rounded-2xl border overflow-hidden" style={{background:'var(--bg2)',borderColor:'var(--brc)'}}>
-                <button onClick={() => navigate('setup')} className="flex justify-between items-center px-4 py-4 w-full border-b" style={{borderColor:'var(--brs)'}}>
+                <button onClick={() => { setSetupStep(1); navigate('setup'); }} className="flex justify-between items-center px-4 py-4 w-full border-b" style={{borderColor:'var(--brs)'}}>
                   <span className="text-[14px] font-semibold" style={{color:'var(--t1)'}}>Language</span>
                   <div className="flex items-center gap-1.5"><span className="text-[13px]" style={{color:'var(--t3)'}}>{LANGUAGES.find(l=>l.name===selLanguage)?.flag||'🇬🇧'} {selLanguage}</span><ChevronRight size={14} style={{color:'var(--t3)'}} /></div>
                 </button>
