@@ -249,7 +249,7 @@ function LayerCard({ layer, isOpen, onToggle, index }) {
 export function AppShell() {
   const { user, session, loading: authContextLoading } = useAuth();
 
-  const [dark, setDark] = useState(true);
+  const [dark, setDark] = useState(false);
   const [screen, setScreen] = useState('splash');
   const [prevScreen, setPrevScreen] = useState(null);
 
@@ -584,13 +584,7 @@ export function AppShell() {
     <div className="flex flex-col items-center min-h-screen" style={{fontFamily:'Plus Jakarta Sans, sans-serif'}}>
       <div className="w-full max-w-[500px] overflow-hidden relative" style={{...themeVars, background:'var(--bg0)', minHeight:'100vh', transition:'all 0.4s'}}>
 
-        {/* Theme toggle */}
-        {screen !== 'splash' && (
-          <button onClick={() => setDark(!dark)} className="absolute top-4 right-4 z-50 w-9 h-9 rounded-xl border flex items-center justify-center transition-all hover:border-[var(--ac)]"
-            style={{background:'var(--bg2)',borderColor:'var(--brc)'}}>
-            {dark ? <Moon size={16} style={{color:'var(--t2)'}} /> : <Sun size={16} style={{color:'var(--t2)'}} />}
-          </button>
-        )}
+        {/* Theme toggle removed — light only */}
 
         {/* ═══ SPLASH ═══ */}
         {screen === 'splash' && (
@@ -889,88 +883,69 @@ export function AppShell() {
 
         {/* ═══ HOME ═══ */}
         {screen === 'home' && (
-          <div className="flex flex-col" style={{
-            height:'100vh',overflow:'hidden',
-            background: dark
-              ? 'linear-gradient(180deg, #141825 0%, #0f1219 100%)'
-              : 'linear-gradient(180deg, #FFF5F5 0%, #FFFFFF 100%)',
-          }}>
+          <div className="flex flex-col" style={{height:'100vh',overflow:'hidden',background:'#FFFFFF'}}>
 
-            {/* ── Header ── */}
-            <div className="text-center pt-12 pb-2 px-6">
-              {children.length > 0 && selectedChild && (
-                <div className="flex justify-center gap-2 mb-5">
-                  {children.map(c => (
-                    <button key={c.id} onClick={() => setSelectedChild(c)}
-                      className="px-5 py-2 rounded-full text-[13px] font-semibold transition-all duration-200"
-                      style={{
-                        background: selectedChild?.id===c.id
-                          ? (dark ? 'rgba(45,212,168,0.15)' : 'rgba(45,212,168,0.12)')
-                          : 'transparent',
-                        color: selectedChild?.id===c.id ? 'var(--ac)' : 'var(--t3)',
-                        border: selectedChild?.id===c.id ? '1.5px solid var(--ac)' : '1.5px solid transparent',
-                      }}>
-                      {c.name} · {c.age}
-                    </button>
-                  ))}
-                  <button onClick={() => navigate('addchild')} className="w-9 h-9 rounded-full flex items-center justify-center" style={{border:'1.5px dashed var(--brc)'}}>
-                    <Plus size={14} style={{color:'var(--t3)'}} />
-                  </button>
-                </div>
+            {/* ── Child selector top bar ── */}
+            <div className="flex justify-center gap-2 pt-14 pb-2 px-6">
+              {children.length > 0 && children.map(c => (
+                <button key={c.id} onClick={() => setSelectedChild(c)}
+                  className="px-5 py-2 rounded-full text-[14px] font-semibold transition-all duration-200"
+                  style={{
+                    background: selectedChild?.id===c.id ? '#E8FAF5' : '#F5F5F5',
+                    color: selectedChild?.id===c.id ? '#0D9B7A' : '#9CA3AF',
+                  }}>
+                  {c.name} · {c.age}
+                </button>
+              ))}
+              {children.length > 0 && (
+                <button onClick={() => navigate('addchild')} className="w-9 h-9 rounded-full flex items-center justify-center" style={{background:'#F5F5F5'}}>
+                  <Plus size={15} style={{color:'#9CA3AF'}} />
+                </button>
               )}
-              <h1 className="text-[32px] font-extrabold leading-[1.15] tracking-tight mb-2" style={{color:'var(--t1)'}}>
-                What did<br/>they ask?
-              </h1>
-              <p className="text-[14px]" style={{color:'var(--t3)'}}>Type their question or pick one below</p>
             </div>
 
-            {/* ── Question input card ── */}
-            <div className="px-5 mt-5">
-              <div className="rounded-[20px] p-1" style={{
-                background: dark
-                  ? 'linear-gradient(135deg, rgba(45,212,168,0.2), rgba(129,140,248,0.15))'
-                  : '#FFFFFF',
-                boxShadow: dark ? 'none' : '0 2px 20px rgba(0,0,0,0.06)',
-              }}>
-                <div className="rounded-[16px] px-5 py-4" style={{
-                  background: dark ? '#1a2030' : '#FFFFFF',
-                }}>
-                  <textarea value={question} onChange={e => setQuestion(e.target.value)} rows={2}
-                    placeholder={'"What is sex?" or "Why did grandpa die?"'}
-                    className="w-full bg-transparent border-none outline-none text-[16px] font-medium resize-none leading-relaxed"
-                    style={{color:'var(--t1)',fontFamily:'Plus Jakarta Sans, sans-serif'}} />
-                </div>
+            {/* ── Hero heading — Flo style large centered ── */}
+            <div className="text-center px-8 pt-6 pb-4">
+              <h1 className="text-[34px] font-extrabold leading-[1.15] tracking-tight" style={{color:'#1A1A1A'}}>
+                What did<br/>they ask?
+              </h1>
+              <p className="text-[15px] mt-2" style={{color:'#9CA3AF'}}>Type their question or tap a topic</p>
+            </div>
+
+            {/* ── Question input — Flo gray card, no borders ── */}
+            <div className="px-6 mt-2">
+              <div className="rounded-2xl px-5 py-4" style={{background:'#F5F5F5'}}>
+                <textarea value={question} onChange={e => setQuestion(e.target.value)} rows={2}
+                  placeholder={'"What is sex?" or "Why did grandpa die?"'}
+                  className="w-full bg-transparent border-none outline-none text-[17px] font-medium resize-none leading-relaxed placeholder:text-[#C4C4C4]"
+                  style={{color:'#1A1A1A'}} />
               </div>
             </div>
 
-            {/* ── Quick topics ── */}
-            <div className="px-5 mt-5">
-              <div className="flex gap-2 overflow-x-auto pb-1" style={{scrollbarWidth:'none'}}>
-                {TOPICS.map(t => (
+            {/* ── Quick topics — 3x2 grid, Flo gray cards ── */}
+            <div className="px-6 mt-5">
+              <div className="grid grid-cols-3 gap-2.5">
+                {TOPICS.slice(0,6).map(t => (
                   <button key={t.label} onClick={() => setQuestion(t.q)}
-                    className="flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-full text-[13px] font-semibold transition-all duration-150 active:scale-[0.96]"
-                    style={{
-                      background: dark ? 'rgba(255,255,255,0.06)' : '#FFFFFF',
-                      color: 'var(--t2)',
-                      boxShadow: dark ? 'none' : '0 1px 8px rgba(0,0,0,0.06)',
-                      border: dark ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(0,0,0,0.04)',
-                    }}>
-                    <span className="text-[16px]">{t.emoji}</span>{t.label}
+                    className="flex flex-col items-center justify-center py-4 rounded-2xl transition-all duration-150 active:scale-[0.95]"
+                    style={{background:'#F5F5F5'}}>
+                    <span className="text-[24px] mb-1">{t.emoji}</span>
+                    <span className="text-[12px] font-semibold" style={{color:'#6B7280'}}>{t.label}</span>
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* ── Triggers ── */}
-            <div className="px-5 mt-5">
-              <p className="text-[11px] font-semibold mb-2.5" style={{color:'var(--t3)'}}>What triggered this?</p>
+            {/* ── Triggers — minimal pills ── */}
+            <div className="px-6 mt-5">
+              <p className="text-[12px] font-semibold mb-2" style={{color:'#9CA3AF'}}>What triggered this?</p>
               <div className="flex gap-2 flex-wrap">
-                {TRIGGERS.slice(0,4).map(tr => (
+                {TRIGGERS.map(tr => (
                   <button key={tr.key} onClick={() => setSelectedTriggers(prev => prev.includes(tr.key) ? prev.filter(x=>x!==tr.key) : [...prev,tr.key])}
                     className="px-3.5 py-[7px] rounded-full text-[12px] font-medium transition-all duration-150"
                     style={{
-                      background: selectedTriggers.includes(tr.key) ? 'var(--ac)' : (dark ? 'rgba(255,255,255,0.05)' : '#F3F4F6'),
-                      color: selectedTriggers.includes(tr.key) ? '#0A0E17' : 'var(--t3)',
+                      background: selectedTriggers.includes(tr.key) ? '#2dd4a8' : '#F5F5F5',
+                      color: selectedTriggers.includes(tr.key) ? '#FFFFFF' : '#9CA3AF',
                     }}>
                     {tr.label}
                   </button>
@@ -979,27 +954,22 @@ export function AppShell() {
             </div>
 
             {genError && (
-              <div className="mx-5 mt-4 flex items-center gap-2 px-4 py-3 rounded-2xl" style={{background:'rgba(244,114,182,0.08)'}}>
-                <AlertCircle size={14} style={{color:'#f472b6'}} />
-                <span className="text-[13px] font-medium" style={{color:'#f472b6'}}>{genError}</span>
+              <div className="mx-6 mt-4 flex items-center gap-2 px-4 py-3 rounded-2xl" style={{background:'#FEF2F2'}}>
+                <AlertCircle size={14} style={{color:'#EF4444'}} />
+                <span className="text-[13px] font-medium" style={{color:'#EF4444'}}>{genError}</span>
               </div>
             )}
 
-            {/* ── CTA Button — Flo style pill ── */}
-            <div className="mt-auto px-8 pb-4">
+            {/* ── CTA — Flo centered pill button ── */}
+            <div className="mt-auto flex flex-col items-center pb-4">
               <button onClick={handleGenerate}
-                className="w-full py-[16px] rounded-full text-[16px] font-bold flex items-center justify-center gap-2.5 transition-all duration-200 active:scale-[0.97]"
-                style={{
-                  background: 'linear-gradient(135deg, #2dd4a8, #20c997)',
-                  color: '#0A0E17',
-                  boxShadow: '0 8px 30px rgba(45,212,168,0.3)',
-                }}>
-                <Sparkles size={18}/>
-                Generate Explanation
+                className="px-12 py-[15px] rounded-full text-[16px] font-bold flex items-center justify-center gap-2 transition-all duration-200 active:scale-[0.96]"
+                style={{background:'linear-gradient(135deg, #2dd4a8, #20c997)',color:'#FFFFFF'}}>
+                <Sparkles size={17}/>Generate
               </button>
               {!isPro && (
-                <p className="text-center text-[12px] mt-2.5" style={{color:'var(--t3)'}}>
-                  {MAX_FREE - usageCount} free explanations remaining
+                <p className="text-[12px] mt-2" style={{color:'#C4C4C4'}}>
+                  {MAX_FREE - usageCount} free remaining
                 </p>
               )}
             </div>
