@@ -258,6 +258,7 @@ export function AppShell() {
   const navigate = (s) => { setPrevScreen(screen); setScreen(s); };
 
   // Handle auth state from Supabase
+  const dataLoadedRef = useRef(false);
   useEffect(() => {
     if (authContextLoading) return;
 
@@ -265,15 +266,41 @@ export function AppShell() {
       setIsLoggedIn(true);
       setUserName(user.user_metadata?.full_name || user.email?.split('@')[0] || 'Parent');
 
+      // Only load data once per session
+      if (dataLoadedRef.current) return;
+      dataLoadedRef.current = true;
+
       // Load user data from Supabase
       const loadUserData = async () => {
         try {
-          const [profile, childrenData, usageData, subscription] = await Promise.all([
-            db.getProfile(user.id),
-            db.getChildren(user.id),
-            db.getUsageCount(user.id),
-            db.getSubscription(user.id),
-          ]);
+          // Try to get profile - might not exist yet for new users
+          let profile = null;
+          try {
+            profile = await db.getProfile(user.id);
+          } catch (e) {
+            console.log('Profile not found, will create during setup');
+          }
+
+          let childrenData = [];
+          try {
+            childrenData = await db.getChildren(user.id);
+          } catch (e) {
+            console.log('No children found');
+          }
+
+          let usageData = 0;
+          try {
+            usageData = await db.getUsageCount(user.id);
+          } catch (e) {
+            console.log('No usage data');
+          }
+
+          let subscription = null;
+          try {
+            subscription = await db.getSubscription(user.id);
+          } catch (e) {
+            console.log('No subscription');
+          }
 
           if (profile) {
             if (profile.language) setSelLanguage(profile.language);
@@ -326,6 +353,7 @@ export function AppShell() {
     } else if (!authContextLoading) {
       setIsLoggedIn(false);
       setDataLoaded(false);
+      dataLoadedRef.current = false;
     }
   }, [user, session, authContextLoading]);
 
@@ -1131,7 +1159,7 @@ export function AppShell() {
                     <ChevronRight size={14} style={{color:'var(--t3)'}} />
                   </button>
                 ))}
-                <button onClick={async () => { await signOut(); setIsLoggedIn(false); setDataLoaded(false); setChildren([]); setSaved([]); navigate('auth'); }} className="flex items-center gap-2 px-4 py-3.5 w-full">
+                <button onClick={async () => { await signOut(); setIsLoggedIn(false); setDataLoaded(false); dataLoadedRef.current = false; setChildren([]); setSaved([]); navigate('auth'); }} className="flex items-center gap-2 px-4 py-3.5 w-full">
                   <LogOut size={14} style={{color:'var(--a2)'}} /><span className="text-[13px] font-semibold" style={{color:'var(--a2)'}}>Sign Out</span>
                 </button>
               </div>
