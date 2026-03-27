@@ -2,6 +2,10 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { MessageCircle, ArrowLeft, ChevronDown, ChevronRight, Search, Moon, Sun, Bookmark, Copy, Share2, Volume2, Settings, Home, BookOpen, Plus, X, Check, AlertCircle, Lock, CreditCard, Shield, FileText, RefreshCw, Eye, EyeOff, Loader2, Sparkles, ChevronUp, Tv, Smartphone, Users, School, Ear, Globe, Star, Heart, Baby, LogOut, User, Mail, KeyRound, Layers } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { signInWithGoogle, signInWithEmail, signUp, signOut, resetPassword } from "@/lib/auth";
+import * as db from "@/lib/db";
+import { supabase } from "@/lib/supabase";
 
 // ═══════════════════════════════════════
 // CHILDTRUTHS — PRODUCTION APP
@@ -51,63 +55,26 @@ const TOPICS = [
   {emoji:"🏥",label:"Illness",q:"What happens when someone gets really sick?"},
 ];
 
-// Simulate API call to Claude
-async function generateLayers(question: string, childName: string, age: string, country: string, belief: string, trigger: string, triggerDetail: string, language: string) {
-  const systemPrompt = `You are ChildTruths, an AI that helps parents explain difficult topics to children.
-You generate LAYERED explanations — 4 layers from simplest to most detailed.
+// Call generate API with auth
+async function generateLayers(question: string, childName: string, age: string, country: string, belief: string, trigger: string, triggerDetail: string, language: string, accessToken: string) {
+  const response = await fetch("/api/generate", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({ question, childName, age, country, belief, trigger, triggerDetail, language }),
+  });
 
-CONTEXT:
-- Child's name: ${childName}
-- Child's age: ${age}
-- Country: ${country}
-- Family beliefs: ${belief}
-- Language: ${language}
-- Trigger: ${trigger || 'Not specified'}
-- Trigger detail: ${triggerDetail || 'Not specified'}
-
-RULES:
-1. Layer 1: The simplest, warmest answer. No biology, no complexity. Just love and truth.
-2. Layer 2: Slightly more detail. Still gentle. Most kids stop here.
-3. Layer 3: Introduces simple biology or real concepts. Age-appropriate terms.
-4. Layer 4: Full age-appropriate truth. Factual but framed in family's belief system.
-5. Each layer should include what the child might ask next to trigger the deeper layer.
-6. Frame answers using the family's belief system naturally — not forced.
-7. Consider what a ${age} year old in ${country} has likely been exposed to.
-8. If there's a trigger (TV, friend, etc.), acknowledge it in Layer 1.
-9. Use the child's first name occasionally for warmth.
-
-Respond ONLY in this JSON format, no markdown:
-{
-  "layers": [
-    {"level":1,"title":"Start here","subtitle":"The simple, warm answer","quote":"...","note":"...","nextQ":"If they ask: ..."},
-    {"level":2,"title":"If they push","subtitle":"A little more detail","quote":"...","note":"...","nextQ":"If they ask: ..."},
-    {"level":3,"title":"If they really want to know","subtitle":"Simple biology/concepts","quote":"...","note":"...","nextQ":"If they ask: ..."},
-    {"level":4,"title":"The full truth","subtitle":"Age-appropriate detail","quote":"...","note":"..."}
-  ],
-  "parentTip":"...",
-  "misinfoTip":"..."
-}`;
-
-  try {
-    const response = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-20250514",
-        max_tokens: 1000,
-        messages: [{ role: "user", content: `Question from my child: "${question}"\n\nGenerate the layered explanation.` }],
-        system: systemPrompt
-      })
-    });
-    if (!response.ok) throw new Error(`API error: ${response.status}`);
-    const data = await response.json();
-    const text = data.content.map(c => c.text || "").join("");
-    const clean = text.replace(/```json|```/g, "").trim();
-    return JSON.parse(clean);
-  } catch (err) {
-    console.error("API Error:", err);
-    throw err;
+  if (response.status === 402) {
+    throw new Error("FREE_LIMIT_REACHED");
   }
+  if (response.status === 401) {
+    throw new Error("UNAUTHORIZED");
+  }
+  if (!response.ok) throw new Error(`API error: ${response.status}`);
+
+  return response.json();
 }
 
 // ═══════════════════════════════════════
@@ -231,6 +198,8 @@ function LayerCard({ layer, isOpen, onToggle, index }) {
 // ═══════════════════════════════════════
 
 export function AppShell() {
+  const { user, session, loading: authContextLoading } = useAuth();
+
   const [dark, setDark] = useState(true);
   const [screen, setScreen] = useState('splash');
   const [prevScreen, setPrevScreen] = useState(null);
@@ -283,15 +252,93 @@ export function AppShell() {
   // Legal
   const [legalPage, setLegalPage] = useState(null);
 
+  // Data loading flag
+  const [dataLoaded, setDataLoaded] = useState(false);
+
   const navigate = (s) => { setPrevScreen(screen); setScreen(s); };
+
+  // Handle auth state from Supabase
+  useEffect(() => {
+    if (authContextLoading) return;
+
+    if (user && session) {
+      setIsLoggedIn(true);
+      setUserName(user.user_metadata?.full_name || user.email?.split('@')[0] || 'Parent');
+
+      // Load user data from Supabase
+      const loadUserData = async () => {
+        try {
+          const [profile, childrenData, usageData, subscription] = await Promise.all([
+            db.getProfile(user.id),
+            db.getChildren(user.id),
+            db.getUsageCount(user.id),
+            db.getSubscription(user.id),
+          ]);
+
+          if (profile) {
+            if (profile.language) setSelLanguage(profile.language);
+            if (profile.country) setSelCountry(profile.country);
+            if (profile.belief) setSelBelief(profile.belief);
+          }
+
+          if (childrenData && childrenData.length > 0) {
+            const mapped = childrenData.map(c => ({ id: c.id, name: c.name, age: c.age_range }));
+            setChildren(mapped);
+            setSelectedChild(mapped[0]);
+          }
+
+          setUsageCount(usageData);
+          setIsPro(!!subscription);
+          setDataLoaded(true);
+
+          // If user has profile + children, skip setup
+          if (profile?.country && profile?.belief && childrenData && childrenData.length > 0) {
+            if (screen === 'splash' || screen === 'onboarding' || screen === 'auth') {
+              navigate('home');
+            }
+          } else if (profile?.country && profile?.belief) {
+            navigate('addchild');
+          } else {
+            navigate('setup');
+          }
+        } catch (err) {
+          console.error('Error loading user data:', err);
+          setDataLoaded(true);
+          navigate('setup');
+        }
+      };
+      loadUserData();
+
+      // Load saved explanations
+      db.getSavedExplanations(user.id).then(explanations => {
+        const mapped = explanations.map(e => ({
+          id: e.id,
+          question: e.question,
+          child: { name: e.children?.name || 'Child', age: e.children?.age_range || '' },
+          layers: e.layers,
+          date: new Date(e.created_at).toLocaleDateString(),
+          country: e.country,
+          belief: e.belief,
+          triggers: e.triggers || [],
+        }));
+        setSaved(mapped);
+      }).catch(console.error);
+    } else if (!authContextLoading) {
+      setIsLoggedIn(false);
+      setDataLoaded(false);
+    }
+  }, [user, session, authContextLoading]);
 
   // Splash timer
   useEffect(() => {
     if (screen === 'splash') {
-      const t = setTimeout(() => navigate('onboarding'), 2000);
+      const t = setTimeout(() => {
+        if (!authContextLoading && user) return; // auth will handle navigation
+        navigate('onboarding');
+      }, 2000);
       return () => clearTimeout(t);
     }
-  }, [screen]);
+  }, [screen, authContextLoading, user]);
 
   // Theme
   useEffect(() => {
@@ -330,35 +377,65 @@ export function AppShell() {
     setAuthError('');
     if (!email.trim()) return setAuthError('Email is required');
     if (!email.includes('@')) return setAuthError('Please enter a valid email');
-    if (mode === 'forgot') { setAuthMode('login'); return; }
+
+    if (mode === 'forgot') {
+      setAuthLoading(true);
+      try {
+        await resetPassword(email);
+        setAuthError('');
+        setAuthMode('login');
+        alert('Check your email for a password reset link.');
+      } catch (err: any) {
+        setAuthError(err.message || 'Failed to send reset email');
+      } finally {
+        setAuthLoading(false);
+      }
+      return;
+    }
+
     if (!password) return setAuthError('Password is required');
     if (password.length < 6) return setAuthError('Password must be at least 6 characters');
     if (mode === 'signup' && password !== confirmPass) return setAuthError('Passwords do not match');
 
     setAuthLoading(true);
-    // Simulate API auth
-    await new Promise(r => setTimeout(r, 1500));
-    setAuthLoading(false);
-    setIsLoggedIn(true);
-    setUserName(email.split('@')[0]);
-    navigate('setup');
+    try {
+      if (mode === 'signup') {
+        await signUp(email, password);
+        alert('Check your email to confirm your account.');
+        setAuthMode('login');
+      } else {
+        await signInWithEmail(email, password);
+        // Auth state change listener will handle navigation
+      }
+    } catch (err: any) {
+      setAuthError(err.message || 'Authentication failed');
+    } finally {
+      setAuthLoading(false);
+    }
   };
 
   const handleGoogleAuth = async () => {
     setAuthLoading(true);
-    await new Promise(r => setTimeout(r, 1200));
-    setAuthLoading(false);
-    setIsLoggedIn(true);
-    setUserName('Parent');
-    navigate('setup');
+    try {
+      await signInWithGoogle();
+      // Redirects to Google OAuth - auth state change will handle the rest
+    } catch (err: any) {
+      setAuthError(err.message || 'Google sign-in failed');
+      setAuthLoading(false);
+    }
   };
 
-  const addChild = () => {
-    if (!childName.trim() || !childAge) return;
-    setChildren(prev => [...prev, { name: childName.trim(), age: childAge, id: Date.now() }]);
-    setChildName('');
-    setChildAge('');
-    setShowAddChild(false);
+  const addChild = async () => {
+    if (!childName.trim() || !childAge || !user) return;
+    try {
+      const newChild = await db.addChild(user.id, childName.trim(), childAge);
+      setChildren(prev => [...prev, { name: newChild.name, age: newChild.age_range, id: newChild.id }]);
+      setChildName('');
+      setChildAge('');
+      setShowAddChild(false);
+    } catch (err) {
+      console.error('Error adding child:', err);
+    }
   };
 
   const handleGenerate = async () => {
@@ -371,10 +448,11 @@ export function AppShell() {
     navigate('loading');
 
     try {
+      const token = session?.access_token || '';
       const result = await generateLayers(
         question, selectedChild.name, selectedChild.age,
         selCountry, selBelief, selectedTriggers.join(', '),
-        triggerDetail, selLanguage
+        triggerDetail, selLanguage, token
       );
       setLayers(result.layers);
       setParentTip(result.parentTip);
@@ -382,44 +460,41 @@ export function AppShell() {
       setOpenLayer(0);
       setUsageCount(prev => prev + 1);
       navigate('result');
-    } catch (err) {
-      // Fallback demo layers
-      const child = selectedChild;
-      const beliefRef = selBelief === 'Islam' ? 'Allah' : selBelief === 'Christianity' ? 'God' : selBelief === 'Hinduism' ? 'the universe' : 'nature';
-      setLayers([
-        {level:1,title:"Start here",subtitle:"The simple, warm answer",
-          quote:`${child.name}, I'm glad you asked me. Mommy and Daddy loved each other very much, and ${beliefRef === 'Allah' ? 'Allah blessed us' : beliefRef === 'God' ? 'God blessed us' : 'we were blessed'} with a baby that grew inside Mommy's tummy. That baby was you.`,
-          note:"True, warm, age-appropriate. Most children are satisfied with this answer.",
-          nextQ:`If ${child.name} asks: "But how did the baby get there?" → Open Layer 2`},
-        {level:2,title:"If they push",subtitle:"A little more detail, still gentle",
-          quote:`When a mommy and daddy love each other and are married, something special happens — ${beliefRef === 'Allah' ? "by Allah's design" : beliefRef === 'God' ? "by God's design" : "in nature"} — that starts a baby growing inside the mommy. It's one of the most amazing things our bodies can do.`,
-          note:"Still no biology details. Adds the concept that bodies are involved. Most kids stop here.",
-          nextQ:`If ${child.name} asks: "But what special thing?" → Open Layer 3`},
-        {level:3,title:"If they really want to know",subtitle:"Simple biology, belief context",
-          quote:`Inside every mommy, there's a tiny tiny egg — way smaller than a grain of sand. And daddies have something that helps that egg start growing into a baby. When they come together inside the mommy's body, a new baby begins to grow in a special safe place called the uterus. It takes about nine months.`,
-          note:"Introduces real biology. Uses proper terms. Framed as something wondrous.",
-          nextQ:`If ${child.name} asks: "How do they come together?" → Open Layer 4`},
-        {level:4,title:"The full truth",subtitle:"Age-appropriate biology",
-          quote:`When a husband and wife are married, part of their private relationship involves their bodies getting very close in a special way. The father's body sends tiny things called sperm to meet the egg inside the mother. When one meets the egg, it begins to grow into a baby${beliefRef === 'Allah' ? ", by Allah's will" : beliefRef === 'God' ? ", by God's will" : ""}. This is only for married adults and it's a private, beautiful part of their relationship.`,
-          note:"Factual. Framed within family values. Appropriate for the selected age group."},
-      ]);
-      setParentTip(`Since this was triggered by something ${child.name} saw or heard, start by asking: "What exactly did you see?" Their answer tells you how much they already understand. Then read Layer 1.`);
-      setMisinfoTip(`If ${child.name} heard something incorrect from friends or media, stay calm. Say: "I'm glad you asked me so I can tell you what's actually true." Then start from Layer 1.`);
-      setOpenLayer(0);
-      setUsageCount(prev => prev + 1);
-      navigate('result');
+    } catch (err: any) {
+      if (err.message === 'FREE_LIMIT_REACHED') {
+        navigate('paywall');
+        return;
+      }
+      setGenError('Failed to generate explanation. Please try again.');
+      navigate('home');
     } finally {
       setGenerating(false);
     }
   };
 
-  const saveResult = () => {
-    if (!layers || !selectedChild) return;
-    setSaved(prev => [{
-      id: Date.now(), question, child: selectedChild, layers,
-      date: new Date().toLocaleDateString(), country: selCountry, belief: selBelief,
-      triggers: selectedTriggers,
-    }, ...prev]);
+  const saveResult = async () => {
+    if (!layers || !selectedChild || !user) return;
+    try {
+      const saved_entry = await db.saveExplanation(user.id, {
+        child_id: selectedChild.id,
+        question,
+        triggers: selectedTriggers,
+        trigger_detail: triggerDetail,
+        layers,
+        parent_tip: parentTip,
+        misinfo_tip: misinfoTip,
+        country: selCountry,
+        belief: selBelief,
+        language: selLanguage,
+      });
+      setSaved(prev => [{
+        id: saved_entry.id, question, child: selectedChild, layers,
+        date: new Date().toLocaleDateString(), country: selCountry, belief: selBelief,
+        triggers: selectedTriggers,
+      }, ...prev]);
+    } catch (err) {
+      console.error('Error saving explanation:', err);
+    }
   };
 
   const filteredCountries = COUNTRIES.filter(c => c.name.toLowerCase().includes(countrySearch.toLowerCase()));
@@ -628,7 +703,20 @@ export function AppShell() {
                       </button>
                     ))}
                   </div>
-                  <button disabled={!selBelief} onClick={() => navigate('addchild')}
+                  <button disabled={!selBelief} onClick={async () => {
+                    if (user) {
+                      try {
+                        await db.upsertProfile(user.id, {
+                          email: user.email,
+                          name: userName,
+                          language: selLanguage,
+                          country: selCountry,
+                          belief: selBelief,
+                        });
+                      } catch (err) { console.error('Error saving profile:', err); }
+                    }
+                    navigate('addchild');
+                  }}
                     className="w-full py-3.5 rounded-xl text-[15px] font-bold transition-all hover:-translate-y-0.5"
                     style={{background:'linear-gradient(135deg,var(--ac),#1AB5A0)',color: dark ? '#0A0E17' : '#fff',boxShadow:'0 6px 20px rgba(34,211,183,0.25)',opacity:selBelief?1:0.3}}>
                     Done — Add your child →
@@ -677,12 +765,15 @@ export function AppShell() {
               </div>
             )}
 
-            <button onClick={() => {
-              if (childName.trim() && childAge) {
-                const newChild = { name: childName.trim(), age: childAge, id: Date.now() };
-                setChildren(prev => [...prev, newChild]);
-                setSelectedChild(newChild);
-                setChildName(''); setChildAge('');
+            <button onClick={async () => {
+              if (childName.trim() && childAge && user) {
+                try {
+                  const newChild = await db.addChild(user.id, childName.trim(), childAge);
+                  const mapped = { name: newChild.name, age: newChild.age_range, id: newChild.id };
+                  setChildren(prev => [...prev, mapped]);
+                  setSelectedChild(mapped);
+                  setChildName(''); setChildAge('');
+                } catch (err) { console.error('Error adding child:', err); }
               }
             }} disabled={!childName.trim() || !childAge}
               className="w-full py-3 rounded-xl border text-sm font-bold flex items-center justify-center gap-2 mb-3 transition-all"
@@ -690,11 +781,14 @@ export function AppShell() {
               <Plus size={16}/>Add child
             </button>
 
-            <button onClick={() => {
-              if (children.length === 0 && childName.trim() && childAge) {
-                const newChild = { name: childName.trim(), age: childAge, id: Date.now() };
-                setChildren([newChild]);
-                setSelectedChild(newChild);
+            <button onClick={async () => {
+              if (children.length === 0 && childName.trim() && childAge && user) {
+                try {
+                  const newChild = await db.addChild(user.id, childName.trim(), childAge);
+                  const mapped = { name: newChild.name, age: newChild.age_range, id: newChild.id };
+                  setChildren([mapped]);
+                  setSelectedChild(mapped);
+                } catch (err) { console.error('Error adding child:', err); }
               } else if (children.length > 0) {
                 setSelectedChild(children[0]);
               }
@@ -902,10 +996,21 @@ export function AppShell() {
 
             {/* Pricing */}
             {[
-              {plan:'Monthly',price:'$6.99',period:'/month',popular:false},
-              {plan:'Annual',price:'$49.99',period:'/year',popular:true,save:'Save 40%'},
+              {plan:'Monthly',price:'$6.99',period:'/month',popular:false,planKey:'monthly'},
+              {plan:'Annual',price:'$49.99',period:'/year',popular:true,save:'Save 40%',planKey:'annual'},
             ].map(p => (
-              <button key={p.plan} onClick={() => {setIsPro(true);navigate('home')}}
+              <button key={p.plan} onClick={async () => {
+                if (!user) return;
+                try {
+                  const res = await fetch('/api/checkout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ plan: p.planKey, email: user.email, userId: user.id }),
+                  });
+                  const data = await res.json();
+                  if (data.url) window.location.href = data.url;
+                } catch (err) { console.error('Checkout error:', err); }
+              }}
                 className="w-full rounded-2xl border p-4 mb-3 text-left relative transition-all hover:-translate-y-0.5"
                 style={{background: p.popular ? 'var(--acg)' : 'var(--bg2)', borderColor: p.popular ? 'var(--ac)' : 'var(--brc)'}}>
                 {p.popular && <span className="absolute -top-2.5 right-4 text-[10px] font-bold px-2.5 py-0.5 rounded-full" style={{background:'var(--ac)',color: dark ? '#0A0E17' : '#fff'}}>BEST VALUE</span>}
@@ -1029,7 +1134,7 @@ export function AppShell() {
                     <ChevronRight size={14} style={{color:'var(--t3)'}} />
                   </button>
                 ))}
-                <button onClick={() => {setIsLoggedIn(false);navigate('auth')}} className="flex items-center gap-2 px-4 py-3.5 w-full">
+                <button onClick={async () => { await signOut(); setIsLoggedIn(false); setDataLoaded(false); setChildren([]); setSaved([]); navigate('auth'); }} className="flex items-center gap-2 px-4 py-3.5 w-full">
                   <LogOut size={14} style={{color:'var(--a2)'}} /><span className="text-[13px] font-semibold" style={{color:'var(--a2)'}}>Sign Out</span>
                 </button>
               </div>
