@@ -883,69 +883,67 @@ export function AppShell() {
 
         {/* ═══ HOME ═══ */}
         {screen === 'home' && (
-          <div className="flex flex-col" style={{height:'100vh',overflow:'hidden',background:'#FFFFFF'}}>
+          <div className="flex flex-col" style={{height:'100vh',overflow:'hidden',background:'linear-gradient(180deg, #F0FDF9 0%, #FFFFFF 40%)'}}>
 
-            {/* ── Child selector top bar ── */}
-            <div className="flex justify-center gap-2 pt-14 pb-2 px-6">
-              {children.length > 0 && children.map(c => (
-                <button key={c.id} onClick={() => setSelectedChild(c)}
-                  className="px-5 py-2 rounded-full text-[14px] font-semibold transition-all duration-200"
-                  style={{
-                    background: selectedChild?.id===c.id ? '#E8FAF5' : '#F5F5F5',
-                    color: selectedChild?.id===c.id ? '#0D9B7A' : '#9CA3AF',
-                  }}>
-                  {c.name} · {c.age}
-                </button>
-              ))}
-              {children.length > 0 && (
-                <button onClick={() => navigate('addchild')} className="w-9 h-9 rounded-full flex items-center justify-center" style={{background:'#F5F5F5'}}>
-                  <Plus size={15} style={{color:'#9CA3AF'}} />
+            {/* ── Top bar ── */}
+            <div className="flex justify-between items-center px-6 pt-12 pb-1">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{background:'linear-gradient(135deg, #2dd4a8, #14b8a6)'}}>
+                  <MessageCircle size={14} color="white" strokeWidth={2.5} />
+                </div>
+                <span className="text-[15px] font-bold" style={{color:'#1A1A1A'}}>ChildTruths</span>
+              </div>
+              {children.length > 0 && selectedChild && (
+                <button onClick={() => {}} className="flex items-center gap-1.5 px-4 py-2 rounded-full" style={{background:'#F0FDF9'}}>
+                  <span className="text-[13px] font-semibold" style={{color:'#0D9B7A'}}>{selectedChild.name}</span>
+                  <span className="text-[11px]" style={{color:'#6B9F94'}}>({selectedChild.age})</span>
                 </button>
               )}
             </div>
 
-            {/* ── Hero heading — Flo style large centered ── */}
-            <div className="text-center px-8 pt-6 pb-4">
-              <h1 className="text-[34px] font-extrabold leading-[1.15] tracking-tight" style={{color:'#1A1A1A'}}>
-                What did<br/>they ask?
+            {/* ── Hero ── */}
+            <div className="text-center px-8 pt-8 pb-2">
+              <p className="text-[14px] mb-2" style={{color:'#94A3B8'}}>We're here to help you explain</p>
+              <h1 className="text-[30px] font-extrabold leading-[1.2]" style={{color:'#0F172A'}}>
+                What did {selectedChild?.name || 'they'} ask?
               </h1>
-              <p className="text-[15px] mt-2" style={{color:'#9CA3AF'}}>Type their question or tap a topic</p>
             </div>
 
-            {/* ── Question input — Flo gray card, no borders ── */}
-            <div className="px-6 mt-2">
-              <div className="rounded-2xl px-5 py-4" style={{background:'#F5F5F5'}}>
+            {/* ── Question input ── */}
+            <div className="px-6 mt-5">
+              <div className="rounded-[20px] px-5 py-4 relative" style={{background:'#FFFFFF',boxShadow:'0 2px 16px rgba(0,0,0,0.04)'}}>
                 <textarea value={question} onChange={e => setQuestion(e.target.value)} rows={2}
                   placeholder={'"What is sex?" or "Why did grandpa die?"'}
-                  className="w-full bg-transparent border-none outline-none text-[17px] font-medium resize-none leading-relaxed placeholder:text-[#C4C4C4]"
-                  style={{color:'#1A1A1A'}} />
+                  className="w-full bg-transparent border-none outline-none text-[16px] resize-none leading-relaxed placeholder:text-[#CBD5E1]"
+                  style={{color:'#0F172A',fontWeight:500}} />
               </div>
             </div>
 
-            {/* ── Quick topics — 3x2 grid, Flo gray cards ── */}
-            <div className="px-6 mt-5">
-              <div className="grid grid-cols-3 gap-2.5">
+            {/* ── Quick topics ── */}
+            <div className="px-6 mt-6">
+              <p className="text-[11px] font-bold uppercase tracking-[0.15em] mb-3" style={{color:'#94A3B8'}}>Or pick a topic</p>
+              <div className="grid grid-cols-3 gap-2">
                 {TOPICS.slice(0,6).map(t => (
                   <button key={t.label} onClick={() => setQuestion(t.q)}
-                    className="flex flex-col items-center justify-center py-4 rounded-2xl transition-all duration-150 active:scale-[0.95]"
-                    style={{background:'#F5F5F5'}}>
-                    <span className="text-[24px] mb-1">{t.emoji}</span>
-                    <span className="text-[12px] font-semibold" style={{color:'#6B7280'}}>{t.label}</span>
+                    className="flex flex-col items-center justify-center py-3.5 rounded-2xl transition-all duration-150 active:scale-[0.95]"
+                    style={{background:'#FFFFFF',boxShadow:'0 1px 8px rgba(0,0,0,0.04)'}}>
+                    <span className="text-[22px] mb-1">{t.emoji}</span>
+                    <span className="text-[11px] font-semibold" style={{color:'#64748B'}}>{t.label}</span>
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* ── Triggers — minimal pills ── */}
+            {/* ── Triggers ── */}
             <div className="px-6 mt-5">
-              <p className="text-[12px] font-semibold mb-2" style={{color:'#9CA3AF'}}>What triggered this?</p>
-              <div className="flex gap-2 flex-wrap">
+              <p className="text-[11px] font-bold uppercase tracking-[0.15em] mb-2" style={{color:'#94A3B8'}}>Triggered by</p>
+              <div className="flex gap-1.5 flex-wrap">
                 {TRIGGERS.map(tr => (
                   <button key={tr.key} onClick={() => setSelectedTriggers(prev => prev.includes(tr.key) ? prev.filter(x=>x!==tr.key) : [...prev,tr.key])}
-                    className="px-3.5 py-[7px] rounded-full text-[12px] font-medium transition-all duration-150"
+                    className="px-3 py-[6px] rounded-full text-[11px] font-medium transition-all duration-150"
                     style={{
-                      background: selectedTriggers.includes(tr.key) ? '#2dd4a8' : '#F5F5F5',
-                      color: selectedTriggers.includes(tr.key) ? '#FFFFFF' : '#9CA3AF',
+                      background: selectedTriggers.includes(tr.key) ? '#2dd4a8' : '#F1F5F9',
+                      color: selectedTriggers.includes(tr.key) ? '#FFFFFF' : '#94A3B8',
                     }}>
                     {tr.label}
                   </button>
@@ -954,22 +952,23 @@ export function AppShell() {
             </div>
 
             {genError && (
-              <div className="mx-6 mt-4 flex items-center gap-2 px-4 py-3 rounded-2xl" style={{background:'#FEF2F2'}}>
+              <div className="mx-6 mt-3 flex items-center gap-2 px-4 py-3 rounded-2xl" style={{background:'#FEF2F2'}}>
                 <AlertCircle size={14} style={{color:'#EF4444'}} />
                 <span className="text-[13px] font-medium" style={{color:'#EF4444'}}>{genError}</span>
               </div>
             )}
 
-            {/* ── CTA — Flo centered pill button ── */}
-            <div className="mt-auto flex flex-col items-center pb-4">
+            {/* ── CTA ── */}
+            <div className="mt-auto flex flex-col items-center pb-4 px-6">
               <button onClick={handleGenerate}
-                className="px-12 py-[15px] rounded-full text-[16px] font-bold flex items-center justify-center gap-2 transition-all duration-200 active:scale-[0.96]"
-                style={{background:'linear-gradient(135deg, #2dd4a8, #20c997)',color:'#FFFFFF'}}>
-                <Sparkles size={17}/>Generate
+                className="w-full py-[16px] rounded-full text-[16px] font-bold flex items-center justify-center gap-2.5 transition-all duration-200 active:scale-[0.97]"
+                style={{background:'linear-gradient(135deg, #2dd4a8, #14b8a6)',color:'#FFFFFF',boxShadow:'0 6px 24px rgba(45,212,168,0.3)'}}>
+                <Sparkles size={18}/>
+                Generate Explanation
               </button>
               {!isPro && (
-                <p className="text-[12px] mt-2" style={{color:'#C4C4C4'}}>
-                  {MAX_FREE - usageCount} free remaining
+                <p className="text-[12px] mt-2.5 font-medium" style={{color:'#CBD5E1'}}>
+                  {MAX_FREE - usageCount} free explanations remaining
                 </p>
               )}
             </div>
