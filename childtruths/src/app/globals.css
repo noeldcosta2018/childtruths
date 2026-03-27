@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Baloo+2:wght@500;700;800&display=swap');
+
+:root {
+  --bg-primary:#F8FAFC;--bg-surface:#FFFFFF;--bg-card:#FFFFFF;--bg-input:#F1F5F9;
+  --border-subtle:rgba(0,0,0,0.06);--border-card:rgba(0,0,0,0.08);
+  --text-primary:#0F172A;--text-secondary:#475569;--text-muted:#94A3B8;
+  --accent:#0D9488;--accent-glow:rgba(13,148,136,0.1);--accent-soft:rgba(13,148,136,0.06);
+  --accent-pink:#EC4899;--accent-pink-glow:rgba(236,72,153,0.08);
+  --accent-indigo:#6366F1;--accent-indigo-glow:rgba(99,102,241,0.08);
+  --accent-amber:#F59E0B;--accent-amber-glow:rgba(245,158,11,0.08);
+  --shadow-card:0 2px 16px rgba(0,0,0,0.06);--nav-bg:rgba(255,255,255,0.95);
+  --chip-bg:rgba(0,0,0,0.04);--chip-border:rgba(0,0,0,0.1);--chip-active-text:#FFFFFF;
+}
+.dark {
+  --bg-primary:#0A0E17;--bg-surface:#111827;--bg-card:#1A2235;--bg-input:#141C2E;
+  --border-subtle:rgba(255,255,255,0.06);--border-card:rgba(255,255,255,0.08);
+  --text-primary:#F1F5F9;--text-secondary:#94A3B8;--text-muted:#64748B;
+  --accent:#22D3B7;--accent-glow:rgba(34,211,183,0.15);--accent-soft:rgba(34,211,183,0.1);
+  --accent-pink:#F472B6;--accent-pink-glow:rgba(244,114,182,0.12);
+  --accent-indigo:#818CF8;--accent-indigo-glow:rgba(129,140,248,0.12);
+  --accent-amber:#FBBF24;--accent-amber-glow:rgba(251,191,36,0.12);
+  --shadow-card:0 4px 24px rgba(0,0,0,0.3);--nav-bg:rgba(10,14,23,0.95);
+  --chip-bg:rgba(255,255,255,0.06);--chip-border:rgba(255,255,255,0.1);--chip-active-text:#0A0E17;
+}
+body { background:var(--bg-primary);color:var(--text-primary);font-family:'Plus Jakarta Sans',sans-serif; }
+*{-webkit-tap-highlight-color:transparent}
+.no-scrollbar::-webkit-scrollbar{display:none}
+.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
