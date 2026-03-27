@@ -623,9 +623,22 @@ export function AppShell() {
                 <span style={{color:'#2dd4a8'}}>made simple.</span>
               </h1>
 
-              <p className="text-[15px] leading-relaxed mb-8 max-w-[320px]" style={{color:'rgba(255,255,255,0.65)'}}>
+              <p className="text-[15px] leading-relaxed mb-5 max-w-[320px]" style={{color:'rgba(255,255,255,0.65)'}}>
                 Age-tuned, culturally aware explanations for every question your child asks. Start gentle. Go deeper only if they keep asking.
               </p>
+
+              {/* Trustpilot rating */}
+              <div className="flex items-center gap-3 mb-8 px-4 py-3 rounded-2xl" style={{background:'rgba(255,255,255,0.08)',backdropFilter:'blur(8px)'}}>
+                <div className="flex gap-0.5">
+                  {[1,2,3,4,5].map(i => (
+                    <span key={i} className="text-[16px]">⭐</span>
+                  ))}
+                </div>
+                <div>
+                  <p className="text-[13px] font-bold" style={{color:'#FFFFFF'}}>#1 App for Kids Explainers</p>
+                  <p className="text-[11px]" style={{color:'rgba(255,255,255,0.4)'}}>Trusted by thousands of parents</p>
+                </div>
+              </div>
 
               <button onClick={() => navigate('auth')} className="w-full py-4 rounded-2xl text-[15px] font-bold transition-all active:scale-[0.98]" style={{background:'#2dd4a8',color:'#0A0E17',boxShadow:'0 8px 32px rgba(45,212,168,0.35)'}}>
                 Get Started
@@ -944,21 +957,21 @@ export function AppShell() {
               </div>
             </div>
 
-            {/* ── Triggers ── */}
+            {/* ── Triggers — 3x2 grid ── */}
             <div className="relative z-10 px-5 mt-7">
               <p className="text-[11px] font-bold uppercase tracking-[0.2em] mb-2.5" style={{color:'rgba(255,255,255,0.3)'}}>⚡ Triggered by</p>
-              <div className="flex gap-2 flex-wrap">
+              <div className="grid grid-cols-3 gap-2">
                 {TRIGGERS.map(tr => {
                   const triggerEmojis = {tv:'📺',ipad:'📱',friend:'👥',school:'🏫',overheard:'👂',event:'⚠️'};
                   return (
                     <button key={tr.key} onClick={() => setSelectedTriggers(prev => prev.includes(tr.key) ? prev.filter(x=>x!==tr.key) : [...prev,tr.key])}
-                      className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-[13px] font-medium transition-all duration-150"
+                      className="flex items-center justify-center gap-1.5 px-2 py-2.5 rounded-xl text-[12px] font-medium transition-all duration-150"
                       style={{
                         background: selectedTriggers.includes(tr.key) ? '#2dd4a8' : 'rgba(255,255,255,0.06)',
                         color: selectedTriggers.includes(tr.key) ? '#0B1120' : 'rgba(255,255,255,0.5)',
                         border: `1px solid ${selectedTriggers.includes(tr.key) ? '#2dd4a8' : 'rgba(255,255,255,0.08)'}`,
                       }}>
-                      <span className="text-[12px]">{triggerEmojis[tr.key] || '📌'}</span>{tr.label}
+                      <span className="text-[11px]">{triggerEmojis[tr.key]}</span>{tr.label}
                     </button>
                   );
                 })}
@@ -1189,66 +1202,65 @@ export function AppShell() {
         {/* ═══ SETTINGS ═══ */}
         {screen === 'settings' && (
           <div className="flex flex-col min-h-[836px]" style={{background:'var(--bg0)'}}>
-            <div className="flex items-center gap-3 px-4 py-3 border-b" style={{background:'var(--bg1)',borderColor:'var(--brs)'}}>
-              <Settings size={18} style={{color:'var(--ac)'}} />
-              <span className="text-sm font-bold" style={{color:'var(--t1)'}}>Settings</span>
+            <div className="flex items-center gap-3 px-5 pt-12 pb-4">
+              <Settings size={20} style={{color:'var(--ac)'}} />
+              <span className="text-[18px] font-bold" style={{color:'var(--t1)'}}>Settings</span>
             </div>
             <div className="flex-1 overflow-y-auto pb-16" style={{scrollbarWidth:'none'}}>
-              <div className="mx-4 mt-4 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2" style={{color:'var(--t3)'}}>Profile<div className="flex-1 h-px" style={{background:'var(--brs)'}} /></div>
-              <div className="mx-4 mt-2 rounded-2xl border overflow-hidden" style={{background:'var(--bg2)',borderColor:'var(--brc)'}}>
-                {[['Language',`🇬🇧 ${selLanguage}`],['Country',`${COUNTRIES.find(c=>c.name===selCountry)?.flag||'🌍'} ${selCountry||'Not set'}`],['Family beliefs',`${BELIEFS.find(b=>b.name===selBelief)?.icon||''} ${selBelief||'Not set'}`]].map(([l,v],i,a) => (
-                  <div key={l} className="flex justify-between items-center px-4 py-3.5 border-b cursor-pointer" style={{borderColor: i<a.length-1 ? 'var(--brs)' : 'transparent'}}>
-                    <span className="text-[13px] font-semibold" style={{color:'var(--t1)'}}>{l}</span>
-                    <div className="flex items-center gap-1"><span className="text-[12px]" style={{color:'var(--t3)'}}>{v}</span><ChevronRight size={14} style={{color:'var(--t3)'}} /></div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mx-4 mt-4 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2" style={{color:'var(--t3)'}}>Children<div className="flex-1 h-px" style={{background:'var(--brs)'}} /></div>
-              <div className="mx-4 mt-2 rounded-2xl border overflow-hidden" style={{background:'var(--bg2)',borderColor:'var(--brc)'}}>
-                {children.map((c,i) => (
-                  <div key={c.id} className="flex justify-between items-center px-4 py-3.5 border-b" style={{borderColor:'var(--brs)'}}>
-                    <div className="flex items-center gap-2"><Baby size={14} style={{color:'var(--ac)'}} /><span className="text-[13px] font-semibold" style={{color:'var(--t1)'}}>{c.name}</span></div>
-                    <span className="text-[12px] px-2 py-0.5 rounded-md" style={{background:'var(--a3g)',color:'var(--a3)'}}>{c.age}</span>
-                  </div>
-                ))}
-                <button onClick={() => navigate('addchild')} className="flex items-center gap-2 px-4 py-3.5 w-full">
-                  <Plus size={14} style={{color:'var(--ac)'}} /><span className="text-[13px] font-semibold" style={{color:'var(--ac)'}}>Add child</span>
+              {/* Profile */}
+              <div className="mx-5 mt-2 text-[11px] font-bold uppercase tracking-widest flex items-center gap-2" style={{color:'var(--t3)'}}>Profile<div className="flex-1 h-px" style={{background:'var(--brs)'}} /></div>
+              <div className="mx-5 mt-2 rounded-2xl border overflow-hidden" style={{background:'var(--bg2)',borderColor:'var(--brc)'}}>
+                <button onClick={() => navigate('setup')} className="flex justify-between items-center px-4 py-4 w-full border-b" style={{borderColor:'var(--brs)'}}>
+                  <span className="text-[14px] font-semibold" style={{color:'var(--t1)'}}>Language</span>
+                  <div className="flex items-center gap-1.5"><span className="text-[13px]" style={{color:'var(--t3)'}}>{LANGUAGES.find(l=>l.name===selLanguage)?.flag||'🇬🇧'} {selLanguage}</span><ChevronRight size={14} style={{color:'var(--t3)'}} /></div>
+                </button>
+                <button onClick={() => { setSetupStep(2); navigate('setup'); }} className="flex justify-between items-center px-4 py-4 w-full border-b" style={{borderColor:'var(--brs)'}}>
+                  <span className="text-[14px] font-semibold" style={{color:'var(--t1)'}}>Country</span>
+                  <div className="flex items-center gap-1.5"><span className="text-[13px]" style={{color:'var(--t3)'}}>{COUNTRIES.find(c=>c.name===selCountry)?.flag||'🌍'} {selCountry||'Not set'}</span><ChevronRight size={14} style={{color:'var(--t3)'}} /></div>
+                </button>
+                <button onClick={() => { setSetupStep(3); navigate('setup'); }} className="flex justify-between items-center px-4 py-4 w-full" style={{borderColor:'transparent'}}>
+                  <span className="text-[14px] font-semibold" style={{color:'var(--t1)'}}>Family beliefs</span>
+                  <div className="flex items-center gap-1.5"><span className="text-[13px]" style={{color:'var(--t3)'}}>{BELIEFS.find(b=>b.name===selBelief)?.icon||''} {selBelief||'Not set'}</span><ChevronRight size={14} style={{color:'var(--t3)'}} /></div>
                 </button>
               </div>
 
-              <div className="mx-4 mt-4 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2" style={{color:'var(--t3)'}}>Appearance<div className="flex-1 h-px" style={{background:'var(--brs)'}} /></div>
-              <div className="mx-4 mt-2 rounded-2xl border overflow-hidden" style={{background:'var(--bg2)',borderColor:'var(--brc)'}}>
-                <div onClick={() => setDark(!dark)} className="flex justify-between items-center px-4 py-3.5 cursor-pointer">
-                  <span className="text-[13px] font-semibold" style={{color:'var(--t1)'}}>Dark mode</span>
-                  <div className="w-11 h-6 rounded-full relative cursor-pointer transition-all" style={{background: dark ? 'var(--ac)' : 'var(--chb)', border:`1px solid ${dark ? 'var(--ac)' : 'var(--chbr)'}`}}>
-                    <div className="absolute top-[2px] w-[18px] h-[18px] rounded-full bg-white shadow transition-transform" style={{left: dark ? 22 : 2}} />
+              {/* Children */}
+              <div className="mx-5 mt-5 text-[11px] font-bold uppercase tracking-widest flex items-center gap-2" style={{color:'var(--t3)'}}>Children<div className="flex-1 h-px" style={{background:'var(--brs)'}} /></div>
+              <div className="mx-5 mt-2 rounded-2xl border overflow-hidden" style={{background:'var(--bg2)',borderColor:'var(--brc)'}}>
+                {children.map((c) => (
+                  <div key={c.id} className="flex justify-between items-center px-4 py-4 border-b" style={{borderColor:'var(--brs)'}}>
+                    <div className="flex items-center gap-2.5"><Baby size={16} style={{color:'var(--ac)'}} /><span className="text-[14px] font-semibold" style={{color:'var(--t1)'}}>{c.name}</span></div>
+                    <span className="text-[12px] px-2.5 py-1 rounded-lg font-semibold" style={{background:'var(--a3g)',color:'var(--a3)'}}>{c.age}</span>
                   </div>
-                </div>
+                ))}
+                <button onClick={() => navigate('addchild')} className="flex items-center gap-2 px-4 py-4 w-full">
+                  <Plus size={16} style={{color:'var(--ac)'}} /><span className="text-[14px] font-semibold" style={{color:'var(--ac)'}}>Add child</span>
+                </button>
               </div>
 
-              <div className="mx-4 mt-4 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2" style={{color:'var(--t3)'}}>Account<div className="flex-1 h-px" style={{background:'var(--brs)'}} /></div>
-              <div className="mx-4 mt-2 rounded-2xl border overflow-hidden" style={{background:'var(--bg2)',borderColor:'var(--brc)'}}>
-                <div className="flex justify-between items-center px-4 py-3.5 border-b cursor-pointer" style={{borderColor:'var(--brs)'}}>
-                  <span className="text-[13px] font-semibold" style={{color:'var(--t1)'}}>Subscription</span>
-                  <span className="text-[12px] font-bold" style={{color: isPro ? 'var(--ac)' : 'var(--a4)'}}>{isPro ? 'Pro' : `Free (${MAX_FREE - usageCount} left)`}</span>
+              {/* Account */}
+              <div className="mx-5 mt-5 text-[11px] font-bold uppercase tracking-widest flex items-center gap-2" style={{color:'var(--t3)'}}>Account<div className="flex-1 h-px" style={{background:'var(--brs)'}} /></div>
+              <div className="mx-5 mt-2 rounded-2xl border overflow-hidden" style={{background:'var(--bg2)',borderColor:'var(--brc)'}}>
+                <div className="flex justify-between items-center px-4 py-4 border-b" style={{borderColor:'var(--brs)'}}>
+                  <span className="text-[14px] font-semibold" style={{color:'var(--t1)'}}>Subscription</span>
+                  <span className="text-[13px] font-bold" style={{color: isPro ? 'var(--ac)' : 'var(--a4)'}}>{isPro ? 'Pro' : `Free (${MAX_FREE - usageCount} left)`}</span>
                 </div>
                 {!isPro && (
-                  <button onClick={() => navigate('paywall')} className="flex items-center gap-2 px-4 py-3.5 w-full border-b" style={{borderColor:'var(--brs)'}}>
-                    <CreditCard size={14} style={{color:'var(--ac)'}} /><span className="text-[13px] font-semibold" style={{color:'var(--ac)'}}>Upgrade to Pro</span>
+                  <button onClick={() => navigate('paywall')} className="flex items-center gap-2 px-4 py-4 w-full border-b" style={{borderColor:'var(--brs)'}}>
+                    <CreditCard size={16} style={{color:'var(--ac)'}} /><span className="text-[14px] font-semibold" style={{color:'var(--ac)'}}>Upgrade to Pro</span>
                   </button>
                 )}
                 {[['Privacy Policy','privacy'],['Terms of Service','terms'],['Refund Policy','refund']].map(([l,k]) => (
-                  <button key={k} onClick={() => {setLegalPage(k);navigate('legal')}} className="flex justify-between items-center px-4 py-3.5 w-full border-b" style={{borderColor:'var(--brs)'}}>
-                    <span className="text-[13px] font-semibold" style={{color:'var(--t1)'}}>{l}</span>
+                  <button key={k} onClick={() => {setLegalPage(k);navigate('legal')}} className="flex justify-between items-center px-4 py-4 w-full border-b" style={{borderColor:'var(--brs)'}}>
+                    <span className="text-[14px] font-semibold" style={{color:'var(--t1)'}}>{l}</span>
                     <ChevronRight size={14} style={{color:'var(--t3)'}} />
                   </button>
                 ))}
-                <button onClick={async () => { await signOut(); setIsLoggedIn(false); setDataLoaded(false); dataLoadedRef.current = false; setChildren([]); setSaved([]); navigate('auth'); }} className="flex items-center gap-2 px-4 py-3.5 w-full">
-                  <LogOut size={14} style={{color:'var(--a2)'}} /><span className="text-[13px] font-semibold" style={{color:'var(--a2)'}}>Sign Out</span>
+                <button onClick={async () => { await signOut(); setIsLoggedIn(false); setDataLoaded(false); dataLoadedRef.current = false; setChildren([]); setSaved([]); navigate('auth'); }} className="flex items-center gap-2 px-4 py-4 w-full">
+                  <LogOut size={16} style={{color:'var(--a2)'}} /><span className="text-[14px] font-semibold" style={{color:'var(--a2)'}}>Sign Out</span>
                 </button>
               </div>
-              <div className="text-center mt-6 text-[11px]" style={{color:'var(--t3)'}}>ChildTruths v1.0 · Made with ❤️</div>
+              <div className="text-center mt-6 mb-4 text-[12px]" style={{color:'var(--t3)'}}>ChildTruths v1.0 · Made with ❤️</div>
             </div>
             <BottomNav active="settings" onNav={s => navigate(s === 'home' ? 'home' : s === 'saved' ? 'saved' : 'settings')} />
           </div>
