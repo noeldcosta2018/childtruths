@@ -3,8 +3,8 @@ import './globals.css'
 import { AuthProvider } from '@/contexts/AuthContext'
 
 export const metadata: Metadata = {
-  title: 'ChildTruths — The hard talks, made simple',
-  description: 'Layered, honest explanations for parents.',
+  title: 'Kidzplainer — The hard talks, made simple',
+  description: 'Age-tuned, culturally aware explanations for every question your child asks.',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

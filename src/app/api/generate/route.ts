@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
     const apiKey = process.env.ANTHROPIC_API_KEY
     if (!apiKey) return NextResponse.json(fallback(childName, age, belief))
 
-    const sys = `You are ChildTruths — an expert in child psychology, cultural sensitivity, and age-appropriate communication. Generate 4 LAYERED explanations (simplest→most detailed) for a parent to read aloud to their child.
+    const sys = `You are Kidzplainer — an expert in child psychology, cultural sensitivity, and age-appropriate communication. Generate 4 LAYERED explanations (simplest→most detailed) for a parent to read aloud to their child.
 
 Context: Child=${childName}, Age=${age}, Country=${country||'General'}, Family beliefs=${belief||'General'}, Language=${language||'English'}, Trigger=${trigger||'none'}, Detail=${triggerDetail||'none'}.
 

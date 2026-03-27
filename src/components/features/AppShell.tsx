@@ -168,7 +168,7 @@ function Logo({ size = 32, className = "" }) {
         <div className="absolute inset-0 rounded-lg" style={{background:'linear-gradient(135deg,var(--ac),var(--a3))'}} />
         <MessageCircle size={size*0.55} className="absolute" style={{top:'50%',left:'50%',transform:'translate(-50%,-50%)',color:'white',strokeWidth:2.5}} />
       </div>
-      <span className="font-bold tracking-tight" style={{fontFamily:'Baloo 2,cursive',fontSize:size*0.65,color:'var(--t1)'}}>ChildTruths</span>
+      <span className="font-bold tracking-tight" style={{fontFamily:'Baloo 2,cursive',fontSize:size*0.65,color:'var(--t1)'}}>Kidzplainer</span>
     </div>
   );
 }
@@ -677,7 +677,7 @@ export function AppShell() {
             </div>
             <div className="relative z-10 flex flex-col items-center">
               <FamilyLogo size={80} />
-              <div className="text-3xl font-extrabold mt-3" style={{fontFamily:'Baloo 2,cursive',color:'white'}}>ChildTruths</div>
+              <div className="text-3xl font-extrabold mt-3" style={{fontFamily:'Baloo 2,cursive',color:'white'}}>Kidzplainer</div>
               <Loader2 size={20} className="mt-8 animate-spin" style={{color:'#2dd4a8'}} />
             </div>
           </div>
@@ -686,9 +686,11 @@ export function AppShell() {
         {/* ═══ ONBOARDING ═══ */}
         {screen === 'onboarding' && (
           <div className="flex flex-col relative overflow-hidden" style={{background:'#0A0E17',minHeight:'100vh'}}>
-            {/* Full-screen background image */}
+            {/* Full-screen background video */}
             <div className="absolute inset-0 z-0">
-              <img src="https://images.unsplash.com/photo-1476703993599-0035a21b17a9?w=800&q=80&auto=format&fit=crop" alt="" className="w-full h-full object-cover" style={{opacity:0.5}} />
+              <video autoPlay muted loop playsInline className="w-full h-full object-cover" style={{opacity:0.5}}>
+                <source src="https://videos.pexels.com/video-files/3209177/3209177-uhd_2560_1440_25fps.mp4" type="video/mp4" />
+              </video>
               <div className="absolute inset-0" style={{background:'linear-gradient(0deg, #0A0E17 5%, rgba(10,14,23,0.85) 45%, rgba(10,14,23,0.4) 70%, rgba(10,14,23,0.6) 100%)'}} />
             </div>
 
@@ -696,7 +698,7 @@ export function AppShell() {
             <div className="relative z-10 flex flex-col flex-1 justify-end px-6 pb-10">
               <div className="flex items-center gap-2 mb-4">
                 <FamilyLogo size={36} />
-                <span className="text-[13px] font-bold tracking-wide uppercase" style={{color:'rgba(255,255,255,0.5)',letterSpacing:'0.15em'}}>ChildTruths</span>
+                <span className="text-[13px] font-bold tracking-wide uppercase" style={{color:'rgba(255,255,255,0.5)',letterSpacing:'0.15em'}}>Kidzplainer</span>
               </div>
 
               <h1 className="text-[38px] font-extrabold leading-[1.1] mb-3" style={{fontFamily:'Plus Jakarta Sans,sans-serif',color:'white'}}>
@@ -762,7 +764,7 @@ export function AppShell() {
               <div className="px-6 pb-10">
                 <p className="text-[13px] font-bold uppercase tracking-[0.2em] mb-4" style={{color:'#2dd4a8'}}>The solution</p>
                 <h2 className="text-[28px] font-extrabold leading-[1.15] mb-5" style={{color:'#FFFFFF'}}>
-                  ChildTruths gives you<br/>the <span style={{color:'#2dd4a8'}}>perfect words.</span>
+                  Kidzplainer gives you<br/>the <span style={{color:'#2dd4a8'}}>perfect words.</span>
                 </h2>
                 <div className="space-y-3">
                   {[
@@ -788,7 +790,7 @@ export function AppShell() {
                 <p className="text-[13px] font-bold uppercase tracking-[0.2em] mb-4" style={{color:'#2dd4a8'}}>Parents love it</p>
                 <div className="space-y-3">
                   {[
-                    {quote:'My 5-year-old asked about death after grandpa passed. ChildTruths gave me the exact words I needed. I cried.',name:'Sarah M.',location:'Dubai, UAE'},
+                    {quote:'My 5-year-old asked about death after grandpa passed. Kidzplainer gave me the exact words I needed. I cried.',name:'Sarah M.',location:'Dubai, UAE'},
                     {quote:'Finally! An app that respects our Islamic values while being honest with our kids.',name:'Ahmed K.',location:'Riyadh, SA'},
                     {quote:'My daughter asked "what is sex" at dinner. Instead of panicking, I opened the app. Layer 1 was perfect.',name:'Jessica R.',location:'London, UK'},
                   ].map((item,i) => (
@@ -1119,7 +1121,7 @@ export function AppShell() {
                   <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{background:'linear-gradient(135deg, #2dd4a8, #818cf8)'}}>
                     <MessageCircle size={16} color="white" strokeWidth={2.5} />
                   </div>
-                  <span className="text-[17px] font-bold text-white">ChildTruths</span>
+                  <span className="text-[17px] font-bold text-white">Kidzplainer</span>
                 </div>
               </div>
               {children.length > 0 && selectedChild && (
@@ -1329,7 +1331,7 @@ export function AppShell() {
                 <Lock size={28} color="white" />
               </div>
               <h2 className="text-2xl font-extrabold mb-1" style={{fontFamily:'Baloo 2,cursive',color:'var(--t1)'}}>You've used your 7 free tries</h2>
-              <p className="text-sm" style={{color:'var(--t3)'}}>Upgrade to ChildTruths Pro for unlimited explanations</p>
+              <p className="text-sm" style={{color:'var(--t3)'}}>Upgrade to Kidzplainer Pro for unlimited explanations</p>
             </div>
 
             {/* Plan selection */}
@@ -1491,7 +1493,7 @@ export function AppShell() {
                   <LogOut size={16} style={{color:'var(--a2)'}} /><span className="text-[14px] font-semibold" style={{color:'var(--a2)'}}>Sign Out</span>
                 </button>
               </div>
-              <div className="text-center mt-6 mb-4 text-[12px]" style={{color:'var(--t3)'}}>ChildTruths v1.0 · Made with ❤️</div>
+              <div className="text-center mt-6 mb-4 text-[12px]" style={{color:'var(--t3)'}}>Kidzplainer v1.0 · Made with ❤️</div>
             </div>
             <BottomNav active="settings" onNav={s => navigate(s === 'home' ? 'home' : s === 'saved' ? 'saved' : 'settings')} />
           </div>
@@ -1510,13 +1512,13 @@ export function AppShell() {
               {legalPage === 'privacy' && <>
                 <h3 className="text-lg font-bold" style={{color:'var(--t1)',fontFamily:'Baloo 2,cursive'}}>Privacy Policy</h3>
                 <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>Last updated: March 2026</p>
-                <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>ChildTruths ("we", "our") respects your privacy and is committed to protecting the personal data of you and your family.</p>
+                <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>Kidzplainer ("we", "our") respects your privacy and is committed to protecting the personal data of you and your family.</p>
                 <p className="text-sm font-bold mt-2" style={{color:'var(--t1)'}}>Data We Collect</p>
                 <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>We collect: your email address for authentication, your child's first name and age group for personalization, your country and belief preferences for content calibration, and the questions you submit. We do NOT collect your child's full name, date of birth, photos, location data, or any other identifying information about your child.</p>
                 <p className="text-sm font-bold mt-2" style={{color:'var(--t1)'}}>How We Use Data</p>
                 <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>Your data is used solely to generate personalized explanations. We do not sell, share, or monetize your data. Questions are processed by AI and are not stored on our servers beyond what's needed for your saved history.</p>
                 <p className="text-sm font-bold mt-2" style={{color:'var(--t1)'}}>Children's Privacy (COPPA)</p>
-                <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>ChildTruths is designed for parents, not children. We do not knowingly collect personal information from children under 13. The child's first name is provided by the parent and used only within the parent's account.</p>
+                <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>Kidzplainer is designed for parents, not children. We do not knowingly collect personal information from children under 13. The child's first name is provided by the parent and used only within the parent's account.</p>
                 <p className="text-sm font-bold mt-2" style={{color:'var(--t1)'}}>Data Security</p>
                 <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>All data is encrypted in transit (TLS 1.3) and at rest (AES-256). We use Stripe for payment processing — we never see or store your credit card details.</p>
                 <p className="text-sm font-bold mt-2" style={{color:'var(--t1)'}}>Your Rights</p>
@@ -1525,18 +1527,18 @@ export function AppShell() {
               {legalPage === 'terms' && <>
                 <h3 className="text-lg font-bold" style={{color:'var(--t1)',fontFamily:'Baloo 2,cursive'}}>Terms of Service</h3>
                 <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>Last updated: March 2026</p>
-                <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>By using ChildTruths, you agree to these terms. ChildTruths provides AI-generated educational content to help parents communicate with their children. We are not a substitute for professional advice from child psychologists, therapists, or medical professionals.</p>
+                <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>By using Kidzplainer, you agree to these terms. Kidzplainer provides AI-generated educational content to help parents communicate with their children. We are not a substitute for professional advice from child psychologists, therapists, or medical professionals.</p>
                 <p className="text-sm font-bold mt-2" style={{color:'var(--t1)'}}>Content Disclaimer</p>
                 <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>AI-generated content is provided as a starting point for conversations. Parents should review all content before sharing with their children and adjust based on their judgment. We strive for accuracy but cannot guarantee all content will be appropriate for every family's specific situation.</p>
                 <p className="text-sm font-bold mt-2" style={{color:'var(--t1)'}}>Acceptable Use</p>
-                <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>You may not use ChildTruths to generate harmful, abusive, or inappropriate content. We reserve the right to terminate accounts that violate these terms.</p>
+                <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>You may not use Kidzplainer to generate harmful, abusive, or inappropriate content. We reserve the right to terminate accounts that violate these terms.</p>
                 <p className="text-sm font-bold mt-2" style={{color:'var(--t1)'}}>Subscriptions</p>
                 <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>Free accounts receive 7 explanations to try. Pro subscriptions are billed monthly or annually through the App Store or Google Play. You can cancel at any time — access continues until the end of your billing period.</p>
               </>}
               {legalPage === 'refund' && <>
                 <h3 className="text-lg font-bold" style={{color:'var(--t1)',fontFamily:'Baloo 2,cursive'}}>Refund Policy</h3>
                 <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>Last updated: March 2026</p>
-                <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>We want you to be completely satisfied with ChildTruths.</p>
+                <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>We want you to be completely satisfied with Kidzplainer.</p>
                 <p className="text-sm font-bold mt-2" style={{color:'var(--t1)'}}>7-Day Money-Back Guarantee</p>
                 <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>If you're not happy with your Pro subscription, you can request a full refund within 7 days of your first payment. No questions asked. Email refunds@childtruths.com with your account email.</p>
                 <p className="text-sm font-bold mt-2" style={{color:'var(--t1)'}}>App Store / Google Play Purchases</p>
