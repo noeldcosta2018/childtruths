@@ -689,7 +689,7 @@ export function AppShell() {
             {/* Full-screen background video */}
             <div className="absolute inset-0 z-0">
               <video autoPlay muted loop playsInline className="w-full h-full object-cover" style={{opacity:0.5}}>
-                <source src="https://videos.pexels.com/video-files/3209177/3209177-uhd_2560_1440_25fps.mp4" type="video/mp4" />
+                <source src="https://videos.pexels.com/video-files/5728974/5728974-hd_1080_1920_30fps.mp4" type="video/mp4" />
               </video>
               <div className="absolute inset-0" style={{background:'linear-gradient(0deg, #0A0E17 5%, rgba(10,14,23,0.85) 45%, rgba(10,14,23,0.4) 70%, rgba(10,14,23,0.6) 100%)'}} />
             </div>
