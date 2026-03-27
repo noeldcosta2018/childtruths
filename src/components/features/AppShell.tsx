@@ -46,14 +46,94 @@ const TRIGGERS = [
   {icon: Globe, label:"Real event", key:"event"},
 ];
 
-const TOPICS = [
-  {emoji:"👶",label:"Babies",q:"Where do babies come from?"},
-  {emoji:"🕊️",label:"Death",q:"Why do people die?"},
-  {emoji:"💔",label:"Divorce",q:"Why are you and dad splitting up?"},
-  {emoji:"❓",label:"Sex",q:"What is sex?"},
-  {emoji:"🌙",label:"Afterlife",q:"What happens after we die?"},
-  {emoji:"🏥",label:"Illness",q:"What happens when someone gets really sick?"},
-];
+const TOPICS_BY_LANG = {
+  'English': [
+    {emoji:"👶",label:"Babies",q:"Where do babies come from?"},
+    {emoji:"🕊️",label:"Death",q:"Why do people die?"},
+    {emoji:"💔",label:"Divorce",q:"Why are you and dad splitting up?"},
+    {emoji:"❓",label:"Sex",q:"What is sex?"},
+    {emoji:"🌙",label:"Afterlife",q:"What happens after we die?"},
+    {emoji:"🏥",label:"Illness",q:"What happens when someone gets really sick?"},
+  ],
+  'العربية': [
+    {emoji:"👶",label:"أطفال",q:"من أين يأتي الأطفال؟"},
+    {emoji:"🕊️",label:"الموت",q:"لماذا يموت الناس؟"},
+    {emoji:"💔",label:"الطلاق",q:"لماذا أنتما تنفصلان؟"},
+    {emoji:"❓",label:"الجنس",q:"ما هو الجنس؟"},
+    {emoji:"🌙",label:"الآخرة",q:"ماذا يحدث بعد الموت؟"},
+    {emoji:"🏥",label:"المرض",q:"ماذا يحدث عندما يمرض شخص ما بشدة؟"},
+  ],
+  'हिन्दी': [
+    {emoji:"👶",label:"बच्चे",q:"बच्चे कहाँ से आते हैं?"},
+    {emoji:"🕊️",label:"मृत्यु",q:"लोग क्यों मरते हैं?"},
+    {emoji:"💔",label:"तलाक",q:"आप और पापा अलग क्यों हो रहे हैं?"},
+    {emoji:"❓",label:"सेक्स",q:"सेक्स क्या है?"},
+    {emoji:"🌙",label:"परलोक",q:"मरने के बाद क्या होता है?"},
+    {emoji:"🏥",label:"बीमारी",q:"जब कोई बहुत बीमार हो जाए तो क्या होता है?"},
+  ],
+  'Español': [
+    {emoji:"👶",label:"Bebés",q:"¿De dónde vienen los bebés?"},
+    {emoji:"🕊️",label:"Muerte",q:"¿Por qué muere la gente?"},
+    {emoji:"💔",label:"Divorcio",q:"¿Por qué se están separando?"},
+    {emoji:"❓",label:"Sexo",q:"¿Qué es el sexo?"},
+    {emoji:"🌙",label:"Más allá",q:"¿Qué pasa después de morir?"},
+    {emoji:"🏥",label:"Enfermedad",q:"¿Qué pasa cuando alguien se enferma mucho?"},
+  ],
+  'Français': [
+    {emoji:"👶",label:"Bébés",q:"D'où viennent les bébés ?"},
+    {emoji:"🕊️",label:"Mort",q:"Pourquoi les gens meurent ?"},
+    {emoji:"💔",label:"Divorce",q:"Pourquoi vous séparez-vous ?"},
+    {emoji:"❓",label:"Sexe",q:"C'est quoi le sexe ?"},
+    {emoji:"🌙",label:"Au-delà",q:"Que se passe-t-il après la mort ?"},
+    {emoji:"🏥",label:"Maladie",q:"Que se passe-t-il quand quelqu'un est très malade ?"},
+  ],
+  '中文': [
+    {emoji:"👶",label:"宝宝",q:"宝宝是从哪里来的？"},
+    {emoji:"🕊️",label:"死亡",q:"人为什么会死？"},
+    {emoji:"💔",label:"离婚",q:"你们为什么要分开？"},
+    {emoji:"❓",label:"性",q:"什么是性？"},
+    {emoji:"🌙",label:"来世",q:"人死后会怎样？"},
+    {emoji:"🏥",label:"疾病",q:"人生了重病会怎样？"},
+  ],
+  'Português': [
+    {emoji:"👶",label:"Bebês",q:"De onde vêm os bebês?"},
+    {emoji:"🕊️",label:"Morte",q:"Por que as pessoas morrem?"},
+    {emoji:"💔",label:"Divórcio",q:"Por que vocês estão se separando?"},
+    {emoji:"❓",label:"Sexo",q:"O que é sexo?"},
+    {emoji:"🌙",label:"Além",q:"O que acontece depois que morremos?"},
+    {emoji:"🏥",label:"Doença",q:"O que acontece quando alguém fica muito doente?"},
+  ],
+  'Deutsch': [
+    {emoji:"👶",label:"Babys",q:"Woher kommen Babys?"},
+    {emoji:"🕊️",label:"Tod",q:"Warum sterben Menschen?"},
+    {emoji:"💔",label:"Scheidung",q:"Warum trennt ihr euch?"},
+    {emoji:"❓",label:"Sex",q:"Was ist Sex?"},
+    {emoji:"🌙",label:"Jenseits",q:"Was passiert nach dem Tod?"},
+    {emoji:"🏥",label:"Krankheit",q:"Was passiert wenn jemand sehr krank wird?"},
+  ],
+};
+
+const UI_STRINGS = {
+  'English': { greeting:'Good evening', hereToHelp:"We're here to help", whatDidAsk:'What did {name} ask?', orPickTopic:'Or pick a topic', triggeredBy:'Triggered by', generate:'Generate Child Friendly Explanation', freeRemaining:'{n} free explanations remaining', signInMore:'Sign in for more', yourExplanation:'Your Explanation', save:'Save', copy:'Copy', share:'Share', read:'Read', howToUse:'How to use the layers', wrongInfo:'If they heard wrong info' },
+  'العربية': { greeting:'مساء الخير', hereToHelp:'نحن هنا للمساعدة', whatDidAsk:'ماذا سأل {name}؟', orPickTopic:'أو اختر موضوعاً', triggeredBy:'السبب', generate:'إنشاء شرح مناسب للأطفال', freeRemaining:'{n} شروحات مجانية متبقية', signInMore:'سجل دخول للمزيد', yourExplanation:'شرحك', save:'حفظ', copy:'نسخ', share:'مشاركة', read:'قراءة', howToUse:'كيفية استخدام الطبقات', wrongInfo:'إذا سمعوا معلومات خاطئة' },
+  'हिन्दी': { greeting:'शुभ संध्या', hereToHelp:'हम मदद के लिए यहाँ हैं', whatDidAsk:'{name} ने क्या पूछा?', orPickTopic:'या एक विषय चुनें', triggeredBy:'कारण', generate:'बच्चों के अनुकूल व्याख्या बनाएं', freeRemaining:'{n} मुफ्त व्याख्याएं शेष', signInMore:'अधिक के लिए साइन इन करें', yourExplanation:'आपकी व्याख्या', save:'सहेजें', copy:'कॉपी', share:'शेयर', read:'पढ़ें', howToUse:'परतों का उपयोग कैसे करें', wrongInfo:'अगर उन्होंने गलत जानकारी सुनी' },
+  'Español': { greeting:'Buenas tardes', hereToHelp:'Estamos aquí para ayudar', whatDidAsk:'¿Qué preguntó {name}?', orPickTopic:'O elige un tema', triggeredBy:'Provocado por', generate:'Generar Explicación para Niños', freeRemaining:'{n} explicaciones gratuitas restantes', signInMore:'Inicia sesión para más', yourExplanation:'Tu Explicación', save:'Guardar', copy:'Copiar', share:'Compartir', read:'Leer', howToUse:'Cómo usar las capas', wrongInfo:'Si escucharon información incorrecta' },
+  'Français': { greeting:'Bonsoir', hereToHelp:'Nous sommes là pour aider', whatDidAsk:"Qu'a demandé {name} ?", orPickTopic:'Ou choisissez un sujet', triggeredBy:'Déclenché par', generate:'Générer une explication adaptée', freeRemaining:'{n} explications gratuites restantes', signInMore:'Connectez-vous pour plus', yourExplanation:'Votre Explication', save:'Sauver', copy:'Copier', share:'Partager', read:'Lire', howToUse:'Comment utiliser les couches', wrongInfo:"S'ils ont entendu de fausses infos" },
+  '中文': { greeting:'晚上好', hereToHelp:'我们来帮助您', whatDidAsk:'{name}问了什么？', orPickTopic:'或选择一个话题', triggeredBy:'触发原因', generate:'生成儿童友好解释', freeRemaining:'{n} 次免费解释剩余', signInMore:'登录获取更多', yourExplanation:'您的解释', save:'保存', copy:'复制', share:'分享', read:'朗读', howToUse:'如何使用分层', wrongInfo:'如果他们听到了错误信息' },
+  'Português': { greeting:'Boa noite', hereToHelp:'Estamos aqui para ajudar', whatDidAsk:'O que {name} perguntou?', orPickTopic:'Ou escolha um tema', triggeredBy:'Provocado por', generate:'Gerar Explicação para Crianças', freeRemaining:'{n} explicações gratuitas restantes', signInMore:'Entre para mais', yourExplanation:'Sua Explicação', save:'Salvar', copy:'Copiar', share:'Compartilhar', read:'Ler', howToUse:'Como usar as camadas', wrongInfo:'Se ouviram informações erradas' },
+  'Deutsch': { greeting:'Guten Abend', hereToHelp:'Wir sind hier um zu helfen', whatDidAsk:'Was hat {name} gefragt?', orPickTopic:'Oder wähle ein Thema', triggeredBy:'Ausgelöst durch', generate:'Kindgerechte Erklärung erstellen', freeRemaining:'{n} kostenlose Erklärungen übrig', signInMore:'Anmelden für mehr', yourExplanation:'Deine Erklärung', save:'Speichern', copy:'Kopieren', share:'Teilen', read:'Vorlesen', howToUse:'So verwendest du die Ebenen', wrongInfo:'Wenn sie falsche Infos gehört haben' },
+};
+
+const TRIGGERS_BY_LANG = {
+  'English': ['TV / Movie','iPad / Phone','Friend told them','At school','Overheard adults','Real event'],
+  'العربية': ['تلفزيون / فيلم','آيباد / هاتف','أخبرهم صديق','في المدرسة','سمعوا الكبار','حدث حقيقي'],
+  'हिन्दी': ['टीवी / फिल्म','आईपैड / फोन','दोस्त ने बताया','स्कूल में','बड़ों की बात सुनी','असली घटना'],
+  'Español': ['TV / Película','iPad / Teléfono','Un amigo les dijo','En la escuela','Escucharon adultos','Evento real'],
+  'Français': ['TV / Film','iPad / Téléphone','Un ami leur a dit','À l\'école','Entendu des adultes','Événement réel'],
+  '中文': ['电视/电影','iPad/手机','朋友告诉的','在学校','听到大人说','真实事件'],
+  'Português': ['TV / Filme','iPad / Celular','Amigo contou','Na escola','Ouviram adultos','Evento real'],
+  'Deutsch': ['TV / Film','iPad / Handy','Freund erzählte','In der Schule','Erwachsene gehört','Echtes Ereignis'],
+};
 
 // Call generate API with auth
 async function generateLayers(question: string, childName: string, age: string, country: string, belief: string, trigger: string, triggerDetail: string, language: string, accessToken: string) {
@@ -958,13 +1038,20 @@ export function AppShell() {
             </div>
 
             {/* ── Hero ── */}
-            <div className="relative z-10 px-5 mt-7">
+            {(() => {
+              const t = UI_STRINGS[selLanguage] || UI_STRINGS['English'];
+              const topics = TOPICS_BY_LANG[selLanguage] || TOPICS_BY_LANG['English'];
+              const triggerLabels = TRIGGERS_BY_LANG[selLanguage] || TRIGGERS_BY_LANG['English'];
+              const triggerEmojis = ['📺','📱','👥','🏫','👂','⚠️'];
+              const isRTL = selLanguage === 'العربية';
+              return (<>
+            <div className="relative z-10 px-5 mt-7" style={{direction: isRTL ? 'rtl' : 'ltr'}}>
               <div className="flex items-center gap-2 mb-1.5">
                 <div className="w-2 h-2 rounded-full" style={{background:'#2dd4a8'}} />
-                <p className="text-[14px] font-medium" style={{color:'rgba(255,255,255,0.5)'}}>We're here to help</p>
+                <p className="text-[14px] font-medium" style={{color:'rgba(255,255,255,0.5)'}}>{t.hereToHelp}</p>
               </div>
               <h1 className="text-[28px] font-extrabold leading-[1.2]" style={{color:'#FFFFFF'}}>
-                What did {selectedChild?.name || 'they'} ask?
+                {t.whatDidAsk.replace('{name}', selectedChild?.name || 'they')}
               </h1>
             </div>
 
@@ -972,34 +1059,32 @@ export function AppShell() {
             <div className="relative z-10 px-5 mt-6">
               <div className="rounded-2xl px-5 py-4" style={{background:'rgba(255,255,255,0.07)',border:'1px solid rgba(255,255,255,0.1)',backdropFilter:'blur(10px)'}}>
                 <textarea value={question} onChange={e => setQuestion(e.target.value)} rows={2}
-                  placeholder={'"What is sex?" or "Why did grandpa die?"'}
+                  placeholder={topics[0]?.q || '"What is sex?"'}
                   className="w-full bg-transparent border-none outline-none text-[17px] font-medium resize-none leading-relaxed placeholder:text-[rgba(255,255,255,0.25)]"
-                  style={{color:'#FFFFFF'}} />
+                  style={{color:'#FFFFFF',direction: isRTL ? 'rtl' : 'ltr'}} />
               </div>
             </div>
 
             {/* ── Quick topics — scrollable carousel ── */}
             <div className="relative z-10 mt-6">
-              <p className="text-[11px] font-bold uppercase tracking-[0.2em] mb-3 px-5" style={{color:'rgba(255,255,255,0.3)'}}>Or pick a topic</p>
+              <p className="text-[11px] font-bold uppercase tracking-[0.2em] mb-3 px-5" style={{color:'rgba(255,255,255,0.3)',direction: isRTL ? 'rtl' : 'ltr'}}>{t.orPickTopic}</p>
               <div className="flex gap-2.5 overflow-x-auto px-5" style={{scrollbarWidth:'none'}}>
-                {TOPICS.map(t => (
-                  <button key={t.label} onClick={() => setQuestion(t.q)}
+                {topics.map(tp => (
+                  <button key={tp.label} onClick={() => setQuestion(tp.q)}
                     className="flex-shrink-0 flex flex-col items-center justify-center rounded-2xl transition-all duration-150 active:scale-[0.95]"
                     style={{background:'rgba(255,255,255,0.06)',border:'1px solid rgba(255,255,255,0.08)',backdropFilter:'blur(8px)',width:100,height:85}}>
-                    <span className="text-[26px] mb-1.5">{t.emoji}</span>
-                    <span className="text-[12px] font-semibold" style={{color:'rgba(255,255,255,0.55)'}}>{t.label}</span>
+                    <span className="text-[26px] mb-1.5">{tp.emoji}</span>
+                    <span className="text-[12px] font-semibold" style={{color:'rgba(255,255,255,0.55)'}}>{tp.label}</span>
                   </button>
                 ))}
               </div>
             </div>
 
             {/* ── Triggers — 3x2 grid ── */}
-            <div className="relative z-10 px-5 mt-7">
-              <p className="text-[11px] font-bold uppercase tracking-[0.2em] mb-2.5" style={{color:'rgba(255,255,255,0.3)'}}>⚡ Triggered by</p>
+            <div className="relative z-10 px-5 mt-7" style={{direction: isRTL ? 'rtl' : 'ltr'}}>
+              <p className="text-[11px] font-bold uppercase tracking-[0.2em] mb-2.5" style={{color:'rgba(255,255,255,0.3)'}}>⚡ {t.triggeredBy}</p>
               <div className="grid grid-cols-3 gap-2">
-                {TRIGGERS.map(tr => {
-                  const triggerEmojis = {tv:'📺',ipad:'📱',friend:'👥',school:'🏫',overheard:'👂',event:'⚠️'};
-                  return (
+                {TRIGGERS.map((tr, idx) => (
                     <button key={tr.key} onClick={() => setSelectedTriggers(prev => prev.includes(tr.key) ? prev.filter(x=>x!==tr.key) : [...prev,tr.key])}
                       className="flex items-center justify-center gap-1.5 px-2 py-2.5 rounded-xl text-[12px] font-medium transition-all duration-150"
                       style={{
@@ -1007,10 +1092,9 @@ export function AppShell() {
                         color: selectedTriggers.includes(tr.key) ? '#0B1120' : 'rgba(255,255,255,0.5)',
                         border: `1px solid ${selectedTriggers.includes(tr.key) ? '#2dd4a8' : 'rgba(255,255,255,0.08)'}`,
                       }}>
-                      <span className="text-[11px]">{triggerEmojis[tr.key]}</span>{tr.label}
+                      <span className="text-[11px]">{triggerEmojis[idx]}</span>{triggerLabels[idx]}
                     </button>
-                  );
-                })}
+                ))}
               </div>
             </div>
 
@@ -1027,14 +1111,16 @@ export function AppShell() {
                 className="w-full py-[17px] rounded-2xl text-[17px] font-bold flex items-center justify-center gap-2.5 transition-all duration-200 active:scale-[0.97]"
                 style={{background:'linear-gradient(135deg, #2dd4a8, #20c997)',color:'#FFFFFF',boxShadow:'0 8px 30px rgba(45,212,168,0.3)'}}>
                 <Sparkles size={19}/>
-                Generate Child Friendly Explanation
+                {t.generate}
               </button>
               {!isPro && (
                 <p className="text-center text-[12px] mt-3 flex items-center justify-center gap-1.5" style={{color:'rgba(255,255,255,0.3)'}}>
-                  <AlertCircle size={12}/> {MAX_FREE - usageCount} free explanations remaining · <span style={{color:'#2dd4a8',fontWeight:600}}>Sign in for more</span>
+                  <AlertCircle size={12}/> {t.freeRemaining.replace('{n}', String(MAX_FREE - usageCount))} · <span style={{color:'#2dd4a8',fontWeight:600}}>{t.signInMore}</span>
                 </p>
               )}
             </div>
+              </>);
+            })()}
 
             <BottomNav active="home" onNav={s => navigate(s === 'home' ? 'home' : s === 'saved' ? 'saved' : 'settings')} />
           </div>
@@ -1067,7 +1153,7 @@ export function AppShell() {
                 <button onClick={() => navigate('home')} className="w-9 h-9 rounded-full flex items-center justify-center transition-all active:scale-90" style={{background:'var(--bg2)',border:'1px solid var(--brc)'}}>
                   <ArrowLeft size={16} style={{color:'var(--t2)'}} />
                 </button>
-                <span className="text-[15px] font-bold" style={{color:'var(--t1)'}}>Your Explanation</span>
+                <span className="text-[15px] font-bold" style={{color:'var(--t1)'}}>{(UI_STRINGS[selLanguage]||UI_STRINGS['English']).yourExplanation}</span>
               </div>
               {/* Original question as quote */}
               <div className="px-4 py-3 rounded-xl" style={{background:'var(--bg2)',borderLeft:'3px solid var(--ac)'}}>
@@ -1101,12 +1187,12 @@ export function AppShell() {
 
               {/* Actions — vertical icon layout */}
               <div className="flex gap-2 px-5 py-4">
-                {[
-                  {icon:Bookmark,label:'Save',action:saveResult},
-                  {icon:Copy,label:'Copy',action:()=>navigator.clipboard?.writeText(layers[0]?.quote||'')},
-                  {icon:Share2,label:'Share',action:()=>{}},
-                  {icon:Volume2,label:'Read',action:()=>{}},
-                ].map(a => (
+                {(() => { const t = UI_STRINGS[selLanguage]||UI_STRINGS['English']; return [
+                  {icon:Bookmark,label:t.save,action:saveResult},
+                  {icon:Copy,label:t.copy,action:()=>navigator.clipboard?.writeText(layers[0]?.quote||'')},
+                  {icon:Share2,label:t.share,action:()=>{}},
+                  {icon:Volume2,label:t.read,action:()=>{}},
+                ]; })().map(a => (
                   <button key={a.label} onClick={a.action} className="flex-1 flex flex-col items-center gap-1.5 py-3.5 rounded-2xl transition-all active:scale-95"
                     style={{background:'var(--bg2)',border:'1px solid var(--brc)'}}>
                     <a.icon size={18} style={{color:'var(--t2)'}} />
@@ -1120,7 +1206,7 @@ export function AppShell() {
                 <div className="mx-5 mb-3 rounded-2xl p-5" style={{background:'linear-gradient(135deg, rgba(45,212,168,0.06), rgba(45,212,168,0.02))',border:'1px solid rgba(45,212,168,0.12)'}}>
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-base">💡</span>
-                    <span className="text-[11px] font-extrabold uppercase tracking-[0.12em]" style={{color:'var(--ac)'}}>How to use the layers</span>
+                    <span className="text-[11px] font-extrabold uppercase tracking-[0.12em]" style={{color:'var(--ac)'}}>{(UI_STRINGS[selLanguage]||UI_STRINGS['English']).howToUse}</span>
                   </div>
                   <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>{parentTip}</p>
                 </div>
@@ -1129,7 +1215,7 @@ export function AppShell() {
                 <div className="mx-5 mb-3 rounded-2xl p-5" style={{background:'linear-gradient(135deg, rgba(251,191,36,0.06), rgba(251,191,36,0.02))',border:'1px solid rgba(251,191,36,0.12)'}}>
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-base">⚠️</span>
-                    <span className="text-[11px] font-extrabold uppercase tracking-[0.12em]" style={{color:'var(--a4)'}}>If they heard wrong info</span>
+                    <span className="text-[11px] font-extrabold uppercase tracking-[0.12em]" style={{color:'var(--a4)'}}>{(UI_STRINGS[selLanguage]||UI_STRINGS['English']).wrongInfo}</span>
                   </div>
                   <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>{misinfoTip}</p>
                 </div>
