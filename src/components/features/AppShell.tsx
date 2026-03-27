@@ -895,20 +895,20 @@ export function AppShell() {
                 <div className="w-7 h-7 rounded-lg flex items-center justify-center" style={{background:'linear-gradient(135deg, #2dd4a8, #818cf8)'}}>
                   <MessageCircle size={13} color="white" strokeWidth={2.5} />
                 </div>
-                <span className="text-[14px] font-bold" style={{color:'rgba(255,255,255,0.5)'}}>ChildTruths</span>
+                <span className="text-[16px] font-bold" style={{color:'rgba(255,255,255,0.5)'}}>ChildTruths</span>
               </div>
               {children.length > 0 && selectedChild && (
                 <button onClick={() => {}} className="flex items-center gap-1.5 px-4 py-2 rounded-full" style={{background:'rgba(45,212,168,0.1)',border:'1px solid rgba(45,212,168,0.2)'}}>
-                  <span className="text-[13px] font-semibold" style={{color:'#2dd4a8'}}>{selectedChild.name}</span>
-                  <span className="text-[11px]" style={{color:'rgba(45,212,168,0.6)'}}>({selectedChild.age})</span>
+                  <span className="text-[15px] font-semibold" style={{color:'#2dd4a8'}}>{selectedChild.name}</span>
+                  <span className="text-[13px]" style={{color:'rgba(45,212,168,0.6)'}}>({selectedChild.age})</span>
                 </button>
               )}
             </div>
 
             {/* ── Hero heading ── */}
             <div className="relative z-10 px-6 pt-8 pb-2">
-              <p className="text-[14px] mb-2" style={{color:'rgba(255,255,255,0.4)'}}>We're here to help</p>
-              <h1 className="text-[32px] font-extrabold leading-[1.15]" style={{color:'#FFFFFF'}}>
+              <p className="text-[16px] mb-2" style={{color:'rgba(255,255,255,0.4)'}}>We're here to help</p>
+              <h1 className="text-[36px] font-extrabold leading-[1.15]" style={{color:'#FFFFFF'}}>
                 What did {selectedChild?.name || 'they'} ask?
               </h1>
             </div>
@@ -918,21 +918,21 @@ export function AppShell() {
               <div className="rounded-2xl px-5 py-4" style={{background:'rgba(255,255,255,0.06)',border:'1px solid rgba(255,255,255,0.08)'}}>
                 <textarea value={question} onChange={e => setQuestion(e.target.value)} rows={2}
                   placeholder={'"What is sex?" or "Why did grandpa die?"'}
-                  className="w-full bg-transparent border-none outline-none text-[16px] font-medium resize-none leading-relaxed"
+                  className="w-full bg-transparent border-none outline-none text-[18px] font-medium resize-none leading-relaxed"
                   style={{color:'#F1F5F9'}} />
               </div>
             </div>
 
             {/* ── Quick topics ── */}
             <div className="relative z-10 px-6 mt-5">
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] mb-3" style={{color:'rgba(255,255,255,0.3)'}}>Or pick a topic</p>
+              <p className="text-[12px] font-bold uppercase tracking-[0.15em] mb-3" style={{color:'rgba(255,255,255,0.35)'}}>Or pick a topic</p>
               <div className="grid grid-cols-3 gap-2">
                 {TOPICS.slice(0,6).map(t => (
                   <button key={t.label} onClick={() => setQuestion(t.q)}
                     className="flex flex-col items-center justify-center py-3.5 rounded-2xl transition-all duration-150 active:scale-[0.95]"
                     style={{background:'rgba(255,255,255,0.05)',border:'1px solid rgba(255,255,255,0.06)'}}>
-                    <span className="text-[22px] mb-1">{t.emoji}</span>
-                    <span className="text-[11px] font-semibold" style={{color:'rgba(255,255,255,0.45)'}}>{t.label}</span>
+                    <span className="text-[26px] mb-1">{t.emoji}</span>
+                    <span className="text-[13px] font-semibold" style={{color:'rgba(255,255,255,0.5)'}}>{t.label}</span>
                   </button>
                 ))}
               </div>
@@ -940,11 +940,11 @@ export function AppShell() {
 
             {/* ── Triggers ── */}
             <div className="relative z-10 px-6 mt-4">
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] mb-2" style={{color:'rgba(255,255,255,0.25)'}}>Triggered by</p>
+              <p className="text-[12px] font-bold uppercase tracking-[0.15em] mb-2" style={{color:'rgba(255,255,255,0.3)'}}>Triggered by</p>
               <div className="flex gap-1.5 flex-wrap">
                 {TRIGGERS.map(tr => (
                   <button key={tr.key} onClick={() => setSelectedTriggers(prev => prev.includes(tr.key) ? prev.filter(x=>x!==tr.key) : [...prev,tr.key])}
-                    className="px-3 py-[6px] rounded-full text-[11px] font-medium transition-all duration-150"
+                    className="px-4 py-[8px] rounded-full text-[13px] font-medium transition-all duration-150"
                     style={{
                       background: selectedTriggers.includes(tr.key) ? '#2dd4a8' : 'rgba(255,255,255,0.05)',
                       color: selectedTriggers.includes(tr.key) ? '#0A0E17' : 'rgba(255,255,255,0.35)',
@@ -965,13 +965,13 @@ export function AppShell() {
             {/* ── CTA ── */}
             <div className="relative z-10 mt-auto px-6 pb-4">
               <button onClick={handleGenerate}
-                className="w-full py-[16px] rounded-2xl text-[16px] font-bold flex items-center justify-center gap-2.5 transition-all duration-200 active:scale-[0.97]"
+                className="w-full py-[18px] rounded-2xl text-[18px] font-bold flex items-center justify-center gap-2.5 transition-all duration-200 active:scale-[0.97]"
                 style={{background:'#2dd4a8',color:'#0A0E17'}}>
-                <Sparkles size={18}/>
+                <Sparkles size={20}/>
                 Generate Explanation
               </button>
               {!isPro && (
-                <p className="text-center text-[12px] mt-2.5" style={{color:'rgba(255,255,255,0.25)'}}>
+                <p className="text-center text-[13px] mt-3" style={{color:'rgba(255,255,255,0.3)'}}>
                   {MAX_FREE - usageCount} free explanations remaining
                 </p>
               )}
