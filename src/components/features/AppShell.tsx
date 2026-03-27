@@ -890,73 +890,79 @@ export function AppShell() {
         {/* ═══ HOME ═══ */}
         {screen === 'home' && (
           <div className="flex flex-col" style={{background:'var(--bg0)',height:'100vh',overflow:'hidden'}}>
-            {/* Header — clean, Flo-style */}
-            <div className="flex justify-between items-start px-6 pt-12 pb-2">
-              <div>
-                <p className="text-[13px] mb-1" style={{color:'var(--t3)'}}>Good evening</p>
-                <h1 className="text-[26px] font-extrabold leading-tight" style={{color:'var(--t1)'}}>What did they ask?</h1>
-              </div>
-              <div className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[9px] font-bold mt-1" style={{background:'rgba(45,212,168,0.08)',color:'var(--ac)'}}>
+            {/* Top bar */}
+            <div className="flex justify-between items-center px-5 pt-10 pb-3">
+              <p className="text-[13px] font-medium" style={{color:'var(--t3)'}}>Good evening</p>
+              <div className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[9px] font-bold" style={{background:'rgba(45,212,168,0.08)',color:'var(--ac)'}}>
                 {selCountry ? COUNTRIES.find(c=>c.name===selCountry)?.flag : '🌍'} · {selBelief ? BELIEFS.find(b=>b.name===selBelief)?.icon : ''} · {!isPro ? `${MAX_FREE - usageCount} free` : 'Pro'}
               </div>
             </div>
 
-            {/* Main content — fixed layout, no scroll */}
-            <div className="flex-1 flex flex-col justify-between px-6 pb-2">
+            {/* Main content */}
+            <div className="flex-1 flex flex-col px-5 pb-1 overflow-hidden">
+
+              {/* Question card — the hero element */}
+              <div className="rounded-3xl p-6 mb-4 relative overflow-hidden" style={{background:'linear-gradient(145deg, rgba(45,212,168,0.12), rgba(129,140,248,0.08))',border:'1px solid rgba(45,212,168,0.15)'}}>
+                <div className="absolute -top-8 -right-8 w-28 h-28 rounded-full blur-[40px] pointer-events-none" style={{background:'rgba(45,212,168,0.15)'}} />
+                <h2 className="text-[22px] font-extrabold mb-1 relative z-10" style={{color:'var(--t1)'}}>What did they ask?</h2>
+                <p className="text-[12px] mb-4 relative z-10" style={{color:'var(--t3)'}}>Type or pick a common question below</p>
+                <textarea value={question} onChange={e => setQuestion(e.target.value)} rows={2}
+                  placeholder={'"What is sex?" or "Why did grandpa die?"'}
+                  className="w-full rounded-xl px-4 py-3 text-[15px] font-medium resize-none leading-relaxed outline-none relative z-10"
+                  style={{background:'var(--bg0)',border:'1.5px solid var(--brc)',color:'var(--t1)'}} />
+              </div>
+
               {/* Child selector */}
               {children.length > 0 && (
-                <div className="flex gap-2 mb-3">
+                <div className="flex gap-2 mb-4">
                   {children.map(c => (
                     <button key={c.id} onClick={() => setSelectedChild(c)}
-                      className="flex items-center gap-1.5 px-4 py-2 rounded-full text-[13px] font-semibold transition-all"
+                      className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl text-[13px] font-semibold transition-all"
                       style={{
-                        background: selectedChild?.id===c.id ? '#2dd4a8' : 'transparent',
-                        color: selectedChild?.id===c.id ? '#0A0E17' : 'var(--t3)',
-                        border: selectedChild?.id===c.id ? 'none' : '1.5px solid var(--brc)',
+                        background: selectedChild?.id===c.id ? '#2dd4a8' : 'var(--bg2)',
+                        color: selectedChild?.id===c.id ? '#0A0E17' : 'var(--t2)',
+                        border: selectedChild?.id===c.id ? 'none' : '1px solid var(--brc)',
+                        boxShadow: selectedChild?.id===c.id ? '0 4px 14px rgba(45,212,168,0.3)' : 'none',
                       }}>
-                      {c.name} <span className="text-[10px] opacity-60">({c.age})</span>
+                      <Baby size={14}/>{c.name} <span className="text-[10px] opacity-60">({c.age})</span>
                     </button>
                   ))}
-                  <button onClick={() => navigate('addchild')} className="flex items-center gap-1 px-3 py-2 rounded-full text-[12px] font-medium" style={{border:'1.5px dashed var(--brc)',color:'var(--t3)'}}>
+                  <button onClick={() => navigate('addchild')} className="flex items-center gap-1 px-3 py-2 rounded-2xl text-[11px] font-medium" style={{border:'1.5px dashed var(--brc)',color:'var(--t3)'}}>
                     <Plus size={12}/>Add
                   </button>
                 </div>
               )}
 
-              {/* Question input — clean centered card */}
-              <div className="flex-1 flex flex-col justify-center mb-3">
-                <div className="rounded-2xl p-5 relative" style={{background:'var(--bg2)',border:'1.5px solid var(--brc)'}}>
-                  <textarea value={question} onChange={e => setQuestion(e.target.value)} rows={3}
-                    placeholder={'"What is sex?" or "Why did grandpa die?"'}
-                    className="w-full bg-transparent border-none outline-none text-[17px] font-medium resize-none leading-relaxed"
-                    style={{color:'var(--t1)'}} />
+              {/* Common questions — 2-row grid */}
+              <div className="mb-4">
+                <p className="text-[10px] font-bold uppercase tracking-[0.15em] mb-2.5" style={{color:'var(--t3)'}}>Quick picks</p>
+                <div className="grid grid-cols-3 gap-2">
+                  {TOPICS.slice(0,6).map(t => (
+                    <button key={t.label} onClick={() => setQuestion(t.q)}
+                      className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-[12px] font-semibold transition-all active:scale-95"
+                      style={{background:'var(--bg2)',border:'1px solid var(--brc)',color:'var(--t2)'}}>
+                      <span className="text-base">{t.emoji}</span>{t.label}
+                    </button>
+                  ))}
                 </div>
               </div>
 
-              {/* Triggers — compact row */}
-              <div className="flex gap-1.5 flex-wrap mb-3">
-                {TRIGGERS.map(tr => (
-                  <button key={tr.key} onClick={() => setSelectedTriggers(prev => prev.includes(tr.key) ? prev.filter(x=>x!==tr.key) : [...prev,tr.key])}
-                    className="flex items-center gap-1 px-2.5 py-1.5 rounded-full text-[10px] font-semibold transition-all"
-                    style={{
-                      background: selectedTriggers.includes(tr.key) ? '#f472b6' : 'transparent',
-                      color: selectedTriggers.includes(tr.key) ? 'white' : 'var(--t3)',
-                      border: `1px solid ${selectedTriggers.includes(tr.key) ? '#f472b6' : 'var(--brc)'}`,
-                    }}>
-                    <tr.icon size={10}/>{tr.label}
-                  </button>
-                ))}
-              </div>
-
-              {/* Common questions — horizontal compact */}
-              <div className="flex gap-2 mb-4 overflow-x-auto" style={{scrollbarWidth:'none'}}>
-                {TOPICS.map(t => (
-                  <button key={t.label} onClick={() => setQuestion(t.q)}
-                    className="flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[11px] font-semibold transition-all active:scale-95"
-                    style={{background:'var(--bg2)',border:'1px solid var(--brc)',color:'var(--t2)'}}>
-                    <span>{t.emoji}</span>{t.label}
-                  </button>
-                ))}
+              {/* Triggers — inline compact */}
+              <div className="mb-4">
+                <p className="text-[10px] font-bold uppercase tracking-[0.15em] mb-2" style={{color:'var(--t3)'}}>Triggered by <span className="font-normal opacity-50">(optional)</span></p>
+                <div className="flex gap-1.5 flex-wrap">
+                  {TRIGGERS.map(tr => (
+                    <button key={tr.key} onClick={() => setSelectedTriggers(prev => prev.includes(tr.key) ? prev.filter(x=>x!==tr.key) : [...prev,tr.key])}
+                      className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[10px] font-semibold transition-all"
+                      style={{
+                        background: selectedTriggers.includes(tr.key) ? '#f472b6' : 'var(--bg2)',
+                        color: selectedTriggers.includes(tr.key) ? 'white' : 'var(--t3)',
+                        border: `1px solid ${selectedTriggers.includes(tr.key) ? '#f472b6' : 'var(--brc)'}`,
+                      }}>
+                      <tr.icon size={10}/>{tr.label}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {genError && (
@@ -966,12 +972,14 @@ export function AppShell() {
                 </div>
               )}
 
-              {/* Generate button */}
-              <button onClick={handleGenerate} className="w-full py-4 rounded-2xl text-[16px] font-bold flex items-center justify-center gap-2 transition-all active:scale-[0.97] mb-2"
-                style={{background:'#2dd4a8',color:'#0A0E17'}}>
-                <Sparkles size={18}/>Generate Explanation
-                {!isPro && <span className="text-[12px] font-semibold opacity-50 ml-1">({MAX_FREE - usageCount} free)</span>}
-              </button>
+              {/* Generate button — anchored at bottom */}
+              <div className="mt-auto pb-1">
+                <button onClick={handleGenerate} className="w-full py-4 rounded-2xl text-[15px] font-bold flex items-center justify-center gap-2 transition-all active:scale-[0.97]"
+                  style={{background:'#2dd4a8',color:'#0A0E17',boxShadow:'0 6px 24px rgba(45,212,168,0.25)'}}>
+                  <Sparkles size={18}/>Generate Explanation
+                  {!isPro && <span className="text-[12px] font-semibold opacity-50 ml-1">({MAX_FREE - usageCount} free)</span>}
+                </button>
+              </div>
             </div>
 
             <BottomNav active="home" onNav={s => navigate(s === 'home' ? 'home' : s === 'saved' ? 'saved' : 'settings')} />
