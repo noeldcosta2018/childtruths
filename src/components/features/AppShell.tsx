@@ -503,16 +503,12 @@ export function AppShell() {
   // RENDER
   // ═══════════════════════════════════════
   return (
-    <div className="flex flex-col items-center min-h-screen p-3" style={{background:'#000',fontFamily:'Plus Jakarta Sans, sans-serif'}}>
-      <div className="w-full max-w-[400px] rounded-[44px] overflow-hidden relative" style={{...themeVars, background:'var(--bg0)', boxShadow:'0 0 0 3px #2a2a2a,0 0 0 5px #111,0 20px 60px rgba(0,0,0,0.5)', minHeight:868, transition:'all 0.4s'}}>
-        {/* Notch */}
-        <div className="w-[126px] h-8 bg-black rounded-b-[18px] mx-auto relative z-50">
-          <div className="absolute right-5 top-2.5 w-2.5 h-2.5 rounded-full bg-[#1a1a2a]" />
-        </div>
+    <div className="flex flex-col items-center min-h-screen" style={{fontFamily:'Plus Jakarta Sans, sans-serif'}}>
+      <div className="w-full max-w-[500px] overflow-hidden relative" style={{...themeVars, background:'var(--bg0)', minHeight:'100vh', transition:'all 0.4s'}}>
 
         {/* Theme toggle */}
         {screen !== 'splash' && (
-          <button onClick={() => setDark(!dark)} className="absolute top-[42px] right-4 z-50 w-9 h-9 rounded-xl border flex items-center justify-center transition-all hover:border-[var(--ac)]"
+          <button onClick={() => setDark(!dark)} className="absolute top-4 right-4 z-50 w-9 h-9 rounded-xl border flex items-center justify-center transition-all hover:border-[var(--ac)]"
             style={{background:'var(--bg2)',borderColor:'var(--brc)'}}>
             {dark ? <Moon size={16} style={{color:'var(--t2)'}} /> : <Sun size={16} style={{color:'var(--t2)'}} />}
           </button>
