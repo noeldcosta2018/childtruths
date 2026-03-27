@@ -52,7 +52,7 @@ const TOPICS = [
 ];
 
 // Simulate API call to Claude
-async function generateLayers(question, childName, age, country, belief, trigger, triggerDetail, language) {
+async function generateLayers(question: string, childName: string, age: string, country: string, belief: string, trigger: string, triggerDetail: string, language: string) {
   const systemPrompt = `You are ChildTruths, an AI that helps parents explain difficult topics to children.
 You generate LAYERED explanations — 4 layers from simplest to most detailed.
 
