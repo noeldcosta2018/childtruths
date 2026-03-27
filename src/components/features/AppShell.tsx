@@ -588,44 +588,53 @@ export function AppShell() {
 
         {/* ═══ SPLASH ═══ */}
         {screen === 'splash' && (
-          <div className="flex flex-col items-center justify-center text-center min-h-[836px]" style={{background:'var(--bg0)'}}>
-            <FamilyLogo size={120} />
-            <div className="text-2xl font-extrabold mt-4" style={{fontFamily:'Baloo 2,cursive',color:'var(--t1)'}}>ChildTruths</div>
-            <Loader2 size={20} className="mt-6 animate-spin" style={{color:'var(--ac)'}} />
+          <div className="flex flex-col items-center justify-center text-center relative overflow-hidden" style={{background:'#0A0E17',minHeight:'100vh'}}>
+            {/* Background image */}
+            <div className="absolute inset-0 z-0">
+              <img src="https://images.unsplash.com/photo-1476703993599-0035a21b17a9?w=800&q=80&auto=format&fit=crop" alt="" className="w-full h-full object-cover" style={{opacity:0.35}} />
+              <div className="absolute inset-0" style={{background:'linear-gradient(0deg, #0A0E17 0%, transparent 50%, #0A0E17 100%)'}} />
+            </div>
+            <div className="relative z-10 flex flex-col items-center">
+              <FamilyLogo size={80} />
+              <div className="text-3xl font-extrabold mt-3" style={{fontFamily:'Baloo 2,cursive',color:'white'}}>ChildTruths</div>
+              <Loader2 size={20} className="mt-8 animate-spin" style={{color:'#2dd4a8'}} />
+            </div>
           </div>
         )}
 
         {/* ═══ ONBOARDING ═══ */}
         {screen === 'onboarding' && (
-          <div className="flex flex-col items-center justify-center text-center px-6 pb-10 min-h-[836px] relative overflow-hidden" style={{background:'var(--bg0)'}}>
-            <div className="absolute -top-16 -left-10 w-72 h-72 rounded-full blur-[60px] pointer-events-none" style={{background:'var(--acg)'}} />
-            <div className="absolute -bottom-10 -right-10 w-60 h-60 rounded-full blur-[60px] pointer-events-none" style={{background:'var(--a2g)'}} />
-
-            <div className="relative z-10 mb-6">
-              <FamilyLogo size={140} />
-            </div>
-            <h1 className="relative z-10 text-4xl font-extrabold mb-1" style={{fontFamily:'Baloo 2,cursive',color:'var(--t1)'}}>ChildTruths</h1>
-            <p className="relative z-10 text-lg font-bold mb-1" style={{fontFamily:'Baloo 2,cursive',color:'var(--ac)'}}>The hard talks, made simple</p>
-            <span className="relative z-10 text-[12px] font-semibold px-3 py-1 rounded-lg mb-5" style={{background:'var(--acg)',color:'var(--t3)'}}>childtruths.com</span>
-            <p className="relative z-10 text-sm leading-relaxed mb-8 max-w-[300px]" style={{color:'var(--t2)'}}>
-              Layered, honest explanations that match your child's age, culture, and beliefs. Start simple. Go deeper only if they keep asking.
-            </p>
-
-            <div className="relative z-10 grid grid-cols-3 gap-2.5 w-full mb-8">
-              {[
-                [Layers,"Layered"],[Heart,"Beliefs"],[Globe,"Cultural"],
-                [MessageCircle,"Multi-lang"],[Search,"Context"],[Star,"Age-tuned"]
-              ].map(([Icon,lb],i) => (
-                <div key={i} className="rounded-2xl border p-3 text-center transition-all hover:-translate-y-0.5" style={{background:'var(--bg2)',borderColor:'var(--brc)'}}>
-                  <Icon size={20} className="mx-auto mb-1" style={{color:'var(--ac)'}} />
-                  <div className="text-[9px] font-bold uppercase tracking-wider" style={{color:'var(--t3)'}}>{lb}</div>
-                </div>
-              ))}
+          <div className="flex flex-col relative overflow-hidden" style={{background:'#0A0E17',minHeight:'100vh'}}>
+            {/* Full-screen background image */}
+            <div className="absolute inset-0 z-0">
+              <img src="https://images.unsplash.com/photo-1476703993599-0035a21b17a9?w=800&q=80&auto=format&fit=crop" alt="" className="w-full h-full object-cover" style={{opacity:0.5}} />
+              <div className="absolute inset-0" style={{background:'linear-gradient(0deg, #0A0E17 5%, rgba(10,14,23,0.85) 45%, rgba(10,14,23,0.4) 70%, rgba(10,14,23,0.6) 100%)'}} />
             </div>
 
-            <button onClick={() => navigate('auth')} className="relative z-10 w-full max-w-[320px] py-4 rounded-2xl text-base font-bold transition-all hover:-translate-y-0.5" style={{background:'linear-gradient(135deg,var(--ac),#1AB5A0)',color: dark ? '#0A0E17' : '#fff',boxShadow:'0 8px 24px rgba(34,211,183,0.3)'}}>
-              Get Started
-            </button>
+            {/* Content at bottom like Upwork */}
+            <div className="relative z-10 flex flex-col flex-1 justify-end px-6 pb-10">
+              <div className="flex items-center gap-2 mb-4">
+                <FamilyLogo size={36} />
+                <span className="text-[13px] font-bold tracking-wide uppercase" style={{color:'rgba(255,255,255,0.5)',letterSpacing:'0.15em'}}>ChildTruths</span>
+              </div>
+
+              <h1 className="text-[38px] font-extrabold leading-[1.1] mb-3" style={{fontFamily:'Plus Jakarta Sans,sans-serif',color:'white'}}>
+                The hard talks,<br/>
+                <span style={{color:'#2dd4a8'}}>made simple.</span>
+              </h1>
+
+              <p className="text-[15px] leading-relaxed mb-8 max-w-[320px]" style={{color:'rgba(255,255,255,0.65)'}}>
+                Age-tuned, culturally aware explanations for every question your child asks. Start gentle. Go deeper only if they keep asking.
+              </p>
+
+              <button onClick={() => navigate('auth')} className="w-full py-4 rounded-2xl text-[15px] font-bold transition-all active:scale-[0.98]" style={{background:'#2dd4a8',color:'#0A0E17',boxShadow:'0 8px 32px rgba(45,212,168,0.35)'}}>
+                Get Started
+              </button>
+
+              <p className="text-center text-[12px] mt-4" style={{color:'rgba(255,255,255,0.35)'}}>
+                Already have an account? <button onClick={() => navigate('auth')} className="font-bold underline" style={{color:'rgba(255,255,255,0.6)'}}>Sign in</button>
+              </p>
+            </div>
           </div>
         )}
 
