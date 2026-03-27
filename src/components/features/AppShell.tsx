@@ -716,18 +716,110 @@ export function AppShell() {
                   ))}
                 </div>
                 <div>
-                  <p className="text-[13px] font-bold" style={{color:'#FFFFFF'}}>#1 App for Kids Explainers</p>
+                  <p className="text-[13px] font-bold" style={{color:'#FFFFFF'}}>#1 Parenting Conversations App</p>
                   <p className="text-[11px]" style={{color:'rgba(255,255,255,0.4)'}}>Trusted by thousands of parents</p>
                 </div>
               </div>
 
-              <button onClick={() => navigate('auth')} className="w-full py-4 rounded-2xl text-[15px] font-bold transition-all active:scale-[0.98]" style={{background:'#2dd4a8',color:'#0A0E17',boxShadow:'0 8px 32px rgba(45,212,168,0.35)'}}>
+              <button onClick={() => navigate('selling')} className="w-full py-4 rounded-2xl text-[15px] font-bold transition-all active:scale-[0.98]" style={{background:'#2dd4a8',color:'#0A0E17',boxShadow:'0 8px 32px rgba(45,212,168,0.35)'}}>
                 Get Started
               </button>
 
               <p className="text-center text-[12px] mt-4" style={{color:'rgba(255,255,255,0.35)'}}>
                 Already have an account? <button onClick={() => navigate('auth')} className="font-bold underline" style={{color:'rgba(255,255,255,0.6)'}}>Sign in</button>
               </p>
+            </div>
+          </div>
+        )}
+
+        {/* ═══ SELLING / FOMO PAGE ═══ */}
+        {screen === 'selling' && (
+          <div className="flex flex-col relative overflow-hidden" style={{background:'#0A0E17',minHeight:'100vh'}}>
+            <div className="flex-1 overflow-y-auto" style={{scrollbarWidth:'none'}}>
+
+              {/* Section 1: The Problem */}
+              <div className="px-6 pt-14 pb-10">
+                <p className="text-[13px] font-bold uppercase tracking-[0.2em] mb-4" style={{color:'#2dd4a8'}}>The problem</p>
+                <h2 className="text-[28px] font-extrabold leading-[1.15] mb-5" style={{color:'#FFFFFF'}}>
+                  Your child just asked<br/>a question you<br/><span style={{color:'#f472b6'}}>weren't ready for.</span>
+                </h2>
+                <div className="space-y-3">
+                  {[
+                    {emoji:'😰',text:'You freeze. You don\'t know what to say.'},
+                    {emoji:'🤥',text:'You make something up. They\'ll find the truth later.'},
+                    {emoji:'🙈',text:'You change the subject. They ask someone else.'},
+                    {emoji:'📱',text:'They Google it. And find things no child should see.'},
+                  ].map((item,i) => (
+                    <div key={i} className="flex items-start gap-3 p-4 rounded-2xl" style={{background:'rgba(255,255,255,0.04)'}}>
+                      <span className="text-[20px] flex-shrink-0">{item.emoji}</span>
+                      <p className="text-[15px] leading-relaxed" style={{color:'rgba(255,255,255,0.7)'}}>{item.text}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Section 2: The Solution */}
+              <div className="px-6 pb-10">
+                <p className="text-[13px] font-bold uppercase tracking-[0.2em] mb-4" style={{color:'#2dd4a8'}}>The solution</p>
+                <h2 className="text-[28px] font-extrabold leading-[1.15] mb-5" style={{color:'#FFFFFF'}}>
+                  ChildTruths gives you<br/>the <span style={{color:'#2dd4a8'}}>perfect words.</span>
+                </h2>
+                <div className="space-y-3">
+                  {[
+                    {emoji:'🧅',title:'4 Layered Answers',desc:'Start simple. Go deeper only if they keep asking.'},
+                    {emoji:'🕌',title:'Belief-Aware',desc:'Framed naturally in your family\'s faith — Islam, Christianity, Hindu, Secular, and more.'},
+                    {emoji:'🌍',title:'Culturally Tuned',desc:'A child in Dubai needs different context than one in New York.'},
+                    {emoji:'👶',title:'Age-Appropriate',desc:'What works for a 4-year-old is different from a 12-year-old.'},
+                    {emoji:'🗣️',title:'Read Aloud Ready',desc:'Every answer is written as if YOU are saying it. Natural, warm, loving.'},
+                  ].map((item,i) => (
+                    <div key={i} className="flex items-start gap-3 p-4 rounded-2xl" style={{background:'rgba(45,212,168,0.06)',border:'1px solid rgba(45,212,168,0.1)'}}>
+                      <span className="text-[20px] flex-shrink-0">{item.emoji}</span>
+                      <div>
+                        <p className="text-[15px] font-bold mb-0.5" style={{color:'#FFFFFF'}}>{item.title}</p>
+                        <p className="text-[13px] leading-relaxed" style={{color:'rgba(255,255,255,0.5)'}}>{item.desc}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Section 3: Social Proof */}
+              <div className="px-6 pb-10">
+                <p className="text-[13px] font-bold uppercase tracking-[0.2em] mb-4" style={{color:'#2dd4a8'}}>Parents love it</p>
+                <div className="space-y-3">
+                  {[
+                    {quote:'My 5-year-old asked about death after grandpa passed. ChildTruths gave me the exact words I needed. I cried.',name:'Sarah M.',location:'Dubai, UAE'},
+                    {quote:'Finally! An app that respects our Islamic values while being honest with our kids.',name:'Ahmed K.',location:'Riyadh, SA'},
+                    {quote:'My daughter asked "what is sex" at dinner. Instead of panicking, I opened the app. Layer 1 was perfect.',name:'Jessica R.',location:'London, UK'},
+                  ].map((item,i) => (
+                    <div key={i} className="p-5 rounded-2xl" style={{background:'rgba(255,255,255,0.04)'}}>
+                      <div className="flex gap-0.5 mb-2">{[1,2,3,4,5].map(s => <span key={s} className="text-[14px]">⭐</span>)}</div>
+                      <p className="text-[14px] italic leading-relaxed mb-3" style={{color:'rgba(255,255,255,0.75)'}}>"{item.quote}"</p>
+                      <p className="text-[12px] font-semibold" style={{color:'var(--ac)'}}>{item.name} <span style={{color:'rgba(255,255,255,0.3)'}}>· {item.location}</span></p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Section 4: Urgency */}
+              <div className="px-6 pb-8">
+                <div className="p-6 rounded-2xl text-center" style={{background:'linear-gradient(135deg, rgba(45,212,168,0.1), rgba(129,140,248,0.08))',border:'1px solid rgba(45,212,168,0.15)'}}>
+                  <p className="text-[24px] mb-2">🕐</p>
+                  <h3 className="text-[20px] font-extrabold mb-2" style={{color:'#FFFFFF'}}>The next question is coming.</h3>
+                  <p className="text-[14px] leading-relaxed mb-1" style={{color:'rgba(255,255,255,0.5)'}}>
+                    Every child asks. The only question is — will you be ready?
+                  </p>
+                  <p className="text-[13px] font-bold mt-3" style={{color:'#2dd4a8'}}>7 free explanations. No credit card needed.</p>
+                </div>
+              </div>
+
+            </div>
+
+            {/* Fixed CTA at bottom */}
+            <div className="px-6 pb-6 pt-3" style={{background:'linear-gradient(0deg, #0A0E17 80%, transparent 100%)'}}>
+              <button onClick={() => navigate('auth')} className="w-full py-4 rounded-2xl text-[16px] font-bold transition-all active:scale-[0.97]" style={{background:'#2dd4a8',color:'#0A0E17',boxShadow:'0 8px 32px rgba(45,212,168,0.35)'}}>
+                Start Free — No Card Needed
+              </button>
             </div>
           </div>
         )}
@@ -1067,9 +1159,9 @@ export function AppShell() {
             </div>
 
             {/* ── Quick topics — scrollable carousel ── */}
-            <div className="relative z-10 mt-6">
-              <p className="text-[11px] font-bold uppercase tracking-[0.2em] mb-3 px-5" style={{color:'rgba(255,255,255,0.3)',direction: isRTL ? 'rtl' : 'ltr'}}>{t.orPickTopic}</p>
-              <div className="flex gap-2.5 overflow-x-auto px-5" style={{scrollbarWidth:'none'}}>
+            <div className="relative z-10 mt-6 px-5" style={{direction: isRTL ? 'rtl' : 'ltr'}}>
+              <p className="text-[11px] font-bold uppercase tracking-[0.2em] mb-3" style={{color:'rgba(255,255,255,0.3)'}}>{t.orPickTopic}</p>
+              <div className="flex gap-2.5 overflow-x-auto -mx-5 px-5" style={{scrollbarWidth:'none'}}>
                 {topics.map(tp => (
                   <button key={tp.label} onClick={() => setQuestion(tp.q)}
                     className="flex-shrink-0 flex flex-col items-center justify-center rounded-2xl transition-all duration-150 active:scale-[0.95]"
