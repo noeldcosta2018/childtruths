@@ -10,7 +10,14 @@ export function getSupabaseClient(): SupabaseClient {
       // Return a dummy client that won't crash at build time
       return createClient('https://placeholder.supabase.co', 'placeholder-key')
     }
-    _supabase = createClient(url, key)
+    _supabase = createClient(url, key, {
+      auth: {
+        flowType: 'pkce',
+        autoRefreshToken: true,
+        persistSession: true,
+        detectSessionInUrl: true,
+      },
+    })
   }
   return _supabase
 }

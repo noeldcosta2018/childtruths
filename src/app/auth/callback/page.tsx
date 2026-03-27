@@ -1,32 +1,36 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
 
 export default function AuthCallback() {
+  const handled = useRef(false)
+
   useEffect(() => {
-    // Supabase client-side will automatically detect the code in the URL
-    // and exchange it for a session using the PKCE code verifier from localStorage
-    const handleCallback = async () => {
-      const { error } = await supabase.auth.exchangeCodeForSession(
-        window.location.href
-      )
+    if (handled.current) return
+    handled.current = true
 
-      if (error) {
-        console.error('Auth callback error:', error)
-      }
-
-      // Redirect to home - the AuthContext will pick up the session
-      window.location.href = '/'
-    }
-
-    // Check if there's a code in the URL
     const params = new URLSearchParams(window.location.search)
-    if (params.get('code')) {
-      handleCallback()
+    const code = params.get('code')
+
+    if (code) {
+      supabase.auth.exchangeCodeForSession(code).then(({ data, error }) => {
+        if (error) {
+          console.error('Auth callback error:', error.message)
+        } else {
+          console.log('Auth success, session established')
+        }
+        // Small delay to let AuthContext pick up the session
+        setTimeout(() => {
+          window.location.replace('/')
+        }, 500)
+      })
     } else {
-      // No code, just redirect home
-      window.location.href = '/'
+      // Maybe tokens are in the hash (implicit flow fallback)
+      // Let Supabase auto-detect from URL hash
+      supabase.auth.getSession().then(() => {
+        window.location.replace('/')
+      })
     }
   }, [])
 
