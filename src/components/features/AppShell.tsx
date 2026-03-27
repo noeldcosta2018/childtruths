@@ -899,7 +899,6 @@ export function AppShell() {
                   </div>
                   <span className="text-[17px] font-bold text-white">ChildTruths</span>
                 </div>
-                <p className="text-[11px] font-medium mt-1 ml-[47px]" style={{color:'rgba(45,212,168,0.7)'}}>✨ #1 Rated for Kids Explanations</p>
               </div>
               {children.length > 0 && selectedChild && (
                 <button onClick={() => {}} className="flex items-center gap-1.5 px-4 py-2 rounded-full" style={{border:'1.5px solid rgba(45,212,168,0.3)'}}>
@@ -910,7 +909,7 @@ export function AppShell() {
             </div>
 
             {/* ── Hero ── */}
-            <div className="relative z-10 px-5 mt-5">
+            <div className="relative z-10 px-5 mt-7">
               <div className="flex items-center gap-2 mb-1.5">
                 <div className="w-2 h-2 rounded-full" style={{background:'#2dd4a8'}} />
                 <p className="text-[14px] font-medium" style={{color:'rgba(255,255,255,0.5)'}}>We're here to help</p>
@@ -921,7 +920,7 @@ export function AppShell() {
             </div>
 
             {/* ── Question input ── */}
-            <div className="relative z-10 px-5 mt-4">
+            <div className="relative z-10 px-5 mt-6">
               <div className="rounded-2xl px-5 py-4" style={{background:'rgba(255,255,255,0.07)',border:'1px solid rgba(255,255,255,0.1)',backdropFilter:'blur(10px)'}}>
                 <textarea value={question} onChange={e => setQuestion(e.target.value)} rows={2}
                   placeholder={'"What is sex?" or "Why did grandpa die?"'}
@@ -930,23 +929,23 @@ export function AppShell() {
               </div>
             </div>
 
-            {/* ── Quick topics ── */}
-            <div className="relative z-10 px-5 mt-5">
-              <p className="text-[11px] font-bold uppercase tracking-[0.2em] mb-3" style={{color:'rgba(255,255,255,0.3)'}}>Or pick a topic</p>
-              <div className="grid grid-cols-3 gap-2.5">
-                {TOPICS.slice(0,6).map(t => (
+            {/* ── Quick topics — scrollable carousel ── */}
+            <div className="relative z-10 mt-6">
+              <p className="text-[11px] font-bold uppercase tracking-[0.2em] mb-3 px-5" style={{color:'rgba(255,255,255,0.3)'}}>Or pick a topic</p>
+              <div className="flex gap-2.5 overflow-x-auto px-5" style={{scrollbarWidth:'none'}}>
+                {TOPICS.map(t => (
                   <button key={t.label} onClick={() => setQuestion(t.q)}
-                    className="flex flex-col items-center justify-center py-4 rounded-2xl transition-all duration-150 active:scale-[0.95]"
-                    style={{background:'rgba(255,255,255,0.06)',border:'1px solid rgba(255,255,255,0.08)',backdropFilter:'blur(8px)'}}>
+                    className="flex-shrink-0 flex flex-col items-center justify-center rounded-2xl transition-all duration-150 active:scale-[0.95]"
+                    style={{background:'rgba(255,255,255,0.06)',border:'1px solid rgba(255,255,255,0.08)',backdropFilter:'blur(8px)',width:100,height:85}}>
                     <span className="text-[26px] mb-1.5">{t.emoji}</span>
-                    <span className="text-[13px] font-semibold" style={{color:'rgba(255,255,255,0.55)'}}>{t.label}</span>
+                    <span className="text-[12px] font-semibold" style={{color:'rgba(255,255,255,0.55)'}}>{t.label}</span>
                   </button>
                 ))}
               </div>
             </div>
 
             {/* ── Triggers ── */}
-            <div className="relative z-10 px-5 mt-5">
+            <div className="relative z-10 px-5 mt-7">
               <p className="text-[11px] font-bold uppercase tracking-[0.2em] mb-2.5" style={{color:'rgba(255,255,255,0.3)'}}>⚡ Triggered by</p>
               <div className="flex gap-2 flex-wrap">
                 {TRIGGERS.map(tr => {
