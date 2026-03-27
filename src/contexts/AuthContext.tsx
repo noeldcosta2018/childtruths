@@ -22,19 +22,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    // Set up the auth state listener FIRST so we don't miss any events
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        console.log('Auth state changed:', event, session ? 'has session' : 'no session')
+        setSession(session)
+        setUser(session?.user ?? null)
+        setLoading(false)
+
+        // Clean up URL hash after successful sign in
+        if (event === 'SIGNED_IN' && window.location.hash) {
+          // Remove the tokens from the URL without reloading
+          window.history.replaceState(null, '', window.location.pathname)
+        }
+      }
+    )
+
+    // Then check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session)
       setUser(session?.user ?? null)
       setLoading(false)
     })
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session)
-        setUser(session?.user ?? null)
-        setLoading(false)
-      }
-    )
 
     return () => subscription.unsubscribe()
   }, [])
