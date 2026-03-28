@@ -216,6 +216,28 @@ function FamilyLogo({ size = 120 }) {
   );
 }
 
+function LoadingStages({ stages }: { stages: { label: string; emoji: string }[] }) {
+  const [currentStage, setCurrentStage] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentStage(prev => Math.min(prev + 1, stages.length - 1));
+    }, 2500);
+    return () => clearInterval(interval);
+  }, [stages.length]);
+  return (
+    <div className="space-y-2 w-full max-w-xs">
+      {stages.map((s, i) => (
+        <div key={i} className="flex items-center gap-2 transition-all duration-500" style={{ opacity: i <= currentStage ? 1 : 0.25 }}>
+          <span className="text-sm">{i < currentStage ? '✓' : i === currentStage ? s.emoji : '○'}</span>
+          <span className="text-[13px] text-left" style={{ color: i <= currentStage ? 'var(--t1)' : 'var(--t3)', fontWeight: i === currentStage ? 600 : 400 }}>
+            {s.label}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function IconBtn({ icon: Icon, size = 18, onClick, className = "", badge }) {
   return (
     <button onClick={onClick} className={`relative flex items-center justify-center rounded-xl border transition-all duration-200 hover:border-[var(--ac)] active:scale-95 ${className}`}
@@ -689,7 +711,7 @@ export function AppShell() {
             {/* Full-screen background video */}
             <div className="absolute inset-0 z-0">
               <video autoPlay muted loop playsInline className="w-full h-full object-cover" style={{opacity:0.5}}>
-                <source src="https://videos.pexels.com/video-files/5728974/5728974-hd_1080_1920_30fps.mp4" type="video/mp4" />
+                <source src="https://videos.pexels.com/video-files/9096885/9096885-hd_1080_1920_24fps.mp4" type="video/mp4" />
               </video>
               <div className="absolute inset-0" style={{background:'linear-gradient(0deg, #0A0E17 5%, rgba(10,14,23,0.85) 45%, rgba(10,14,23,0.4) 70%, rgba(10,14,23,0.6) 100%)'}} />
             </div>
@@ -831,15 +853,15 @@ export function AppShell() {
           <div className="flex flex-col min-h-[836px] px-6 pt-6 pb-8" style={{background:'var(--bg0)'}}>
             <Logo size={28} className="mb-8" />
 
-            <h2 className="text-2xl font-extrabold mb-1" style={{fontFamily:'Baloo 2,cursive',color:'var(--t1)'}}>
+            <h2 className="text-3xl font-extrabold mb-1" style={{fontFamily:'Baloo 2,cursive',color:'var(--t1)'}}>
               {authMode === 'login' ? 'Welcome back' : authMode === 'signup' ? 'Create account' : 'Reset password'}
             </h2>
-            <p className="text-sm mb-6" style={{color:'var(--t3)'}}>
+            <p className="text-base mb-6" style={{color:'var(--t3)'}}>
               {authMode === 'login' ? 'Sign in to continue' : authMode === 'signup' ? 'Start your free trial — 7-day free trial' : 'We\'ll send you a reset link'}
             </p>
 
             {authMode !== 'forgot' && (
-              <button onClick={handleGoogleAuth} disabled={authLoading} className="w-full py-3 rounded-xl border text-sm font-semibold flex items-center justify-center gap-2 mb-4 transition-all hover:border-[var(--ac)]"
+              <button onClick={handleGoogleAuth} disabled={authLoading} className="w-full py-3.5 rounded-xl border text-base font-semibold flex items-center justify-center gap-2 mb-4 transition-all hover:border-[var(--ac)]"
                 style={{background:'var(--bg2)',borderColor:'var(--brc)',color:'var(--t1)'}}>
                 {authLoading ? <Loader2 size={16} className="animate-spin" /> : <>
                   <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.001-.001 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg>
@@ -875,7 +897,7 @@ export function AppShell() {
             )}
 
             <button onClick={() => handleAuth(authMode)} disabled={authLoading}
-              className="w-full py-3.5 rounded-xl text-[15px] font-bold transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2"
+              className="w-full py-4 rounded-xl text-[17px] font-bold transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2"
               style={{background:'linear-gradient(135deg,var(--ac),#1AB5A0)',color: dark ? '#0A0E17' : '#fff',boxShadow:'0 6px 20px rgba(34,211,183,0.25)',opacity: authLoading ? 0.6 : 1}}>
               {authLoading ? <Loader2 size={18} className="animate-spin" /> :
                 authMode === 'login' ? 'Sign In' : authMode === 'signup' ? 'Create Account' : 'Send Reset Link'}
@@ -1222,22 +1244,46 @@ export function AppShell() {
         )}
 
         {/* ═══ LOADING ═══ */}
-        {screen === 'loading' && (
+        {screen === 'loading' && (() => {
+          const stages = [
+            { label: `Understanding ${selectedChild?.name || 'your child'}'s question...`, emoji: '🔍' },
+            { label: 'Considering cultural context...', emoji: '🌍' },
+            { label: 'Crafting age-appropriate layers...', emoji: '🧸' },
+            { label: 'Adding belief-sensitive framing...', emoji: '💛' },
+            { label: 'Finalizing your explanation...', emoji: '✨' },
+          ];
+          return (
           <div className="flex flex-col min-h-[836px]" style={{background:'var(--bg0)'}}>
-            <div className="flex items-center gap-3 px-4 py-3 border-b" style={{background:'var(--bg1)',borderColor:'var(--brs)'}}>
+            <div className="flex items-center gap-3 px-5 py-4">
               <IconBtn icon={ArrowLeft} onClick={() => navigate('home')} />
-              <span className="text-sm font-bold" style={{color:'var(--t1)'}}>Creating layers...</span>
+              <span className="text-base font-bold" style={{color:'var(--t1)'}}>Creating your explanation</span>
             </div>
-            <div className="flex-1 flex flex-col items-center justify-center text-center px-6">
-              <div className="flex gap-2 mb-5">
-                {[0,1,2].map(i => <div key={i} className="w-3 h-3 rounded-full animate-bounce" style={{background:['var(--ac)','var(--a3)','var(--a2)'][i],animationDelay:`${i*0.2}s`}} />)}
+            <div className="flex-1 flex flex-col items-center justify-center text-center px-8">
+              {/* Animated rings */}
+              <div className="relative w-28 h-28 mb-8">
+                <div className="absolute inset-0 rounded-full border-4 animate-spin" style={{borderColor:'transparent',borderTopColor:'var(--ac)',animationDuration:'1.5s'}} />
+                <div className="absolute inset-2 rounded-full border-4 animate-spin" style={{borderColor:'transparent',borderBottomColor:'var(--a3)',animationDuration:'2s',animationDirection:'reverse'}} />
+                <div className="absolute inset-4 rounded-full border-4 animate-spin" style={{borderColor:'transparent',borderTopColor:'var(--a2)',animationDuration:'2.5s'}} />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <span className="text-3xl">{stages[Math.min(Math.floor((Date.now() / 2500) % stages.length), stages.length - 1)].emoji}</span>
+                </div>
               </div>
-              <p className="text-lg font-bold" style={{fontFamily:'Baloo 2,cursive',color:'var(--t2)'}}>
-                Building layered explanation for {selectedChild?.name}...
+
+              {/* Stage text */}
+              <p className="text-xl font-bold mb-3" style={{fontFamily:'Baloo 2,cursive',color:'var(--t1)'}}>
+                Personalizing for {selectedChild?.name}
               </p>
+              <LoadingStages stages={stages} />
+
+              {/* Progress bar */}
+              <div className="w-full max-w-xs mt-6 h-1.5 rounded-full overflow-hidden" style={{background:'var(--bg2)'}}>
+                <div className="h-full rounded-full animate-pulse" style={{background:'linear-gradient(90deg, var(--ac), var(--a3))',width:'70%',animation:'loadbar 3s ease-in-out infinite'}} />
+              </div>
             </div>
+            <style>{`@keyframes loadbar { 0%{width:10%} 50%{width:80%} 100%{width:95%} }`}</style>
           </div>
-        )}
+          );
+        })()}
 
         {/* ═══ RESULT ═══ */}
         {screen === 'result' && layers && (
@@ -1282,11 +1328,28 @@ export function AppShell() {
 
               {/* Actions — vertical icon layout */}
               <div className="flex gap-2 px-5 py-4">
-                {(() => { const t = UI_STRINGS[selLanguage]||UI_STRINGS['English']; return [
+                {(() => { const t = UI_STRINGS[selLanguage]||UI_STRINGS['English'];
+                const allText = layers.map((l,i) => `Layer ${i+1}: ${l.title}\n${l.quote}\n${l.note||''}`).join('\n\n');
+                return [
                   {icon:Bookmark,label:t.save,action:saveResult},
-                  {icon:Copy,label:t.copy,action:()=>navigator.clipboard?.writeText(layers[0]?.quote||'')},
-                  {icon:Share2,label:t.share,action:()=>{}},
-                  {icon:Volume2,label:t.read,action:()=>{}},
+                  {icon:Copy,label:t.copy,action:() => {
+                    navigator.clipboard?.writeText(allText).then(() => {
+                      alert('Copied to clipboard!');
+                    });
+                  }},
+                  {icon:Share2,label:t.share,action:() => {
+                    const msg = encodeURIComponent(`🧒 My child asked: "${question}"\n\nHere's what Kidzplainer suggested:\n\n${layers[0]?.quote || ''}\n\nGet age-appropriate answers: https://childtruths.vercel.app`);
+                    window.open(`https://wa.me/?text=${msg}`, '_blank');
+                  }},
+                  {icon:Volume2,label:t.read,action:() => {
+                    if ('speechSynthesis' in window) {
+                      window.speechSynthesis.cancel();
+                      const utterance = new SpeechSynthesisUtterance(layers[openLayer >= 0 ? openLayer : 0]?.quote || '');
+                      utterance.rate = 0.9;
+                      utterance.pitch = 1;
+                      window.speechSynthesis.speak(utterance);
+                    }
+                  }},
                 ]; })().map(a => (
                   <button key={a.label} onClick={a.action} className="flex-1 flex flex-col items-center gap-1.5 py-3.5 rounded-2xl transition-all active:scale-95"
                     style={{background:'var(--bg2)',border:'1px solid var(--brc)'}}>
