@@ -135,3 +135,40 @@ export async function getSubscription(userId: string) {
   if (error && error.code !== 'PGRST116') throw error
   return data
 }
+
+// ═══ REVIEWS ═══
+
+export async function submitReview(userId: string, email: string, stars: number, text: string) {
+  const { error } = await supabase
+    .from('reviews')
+    .insert({ user_id: userId, email, stars, text, approved: false })
+  if (error) throw error
+}
+
+export async function getApprovedReviews() {
+  const { data, error } = await supabase
+    .from('reviews')
+    .select('*')
+    .eq('approved', true)
+    .order('created_at', { ascending: false })
+  if (error) throw error
+  return data || []
+}
+
+export async function getPendingReviews() {
+  const { data, error } = await supabase
+    .from('reviews')
+    .select('*')
+    .eq('approved', false)
+    .order('created_at', { ascending: false })
+  if (error) throw error
+  return data || []
+}
+
+export async function approveReview(reviewId: string) {
+  const { error } = await supabase
+    .from('reviews')
+    .update({ approved: true })
+    .eq('id', reviewId)
+  if (error) throw error
+}

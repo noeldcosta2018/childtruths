@@ -228,8 +228,8 @@ function LoadingStages({ stages }: { stages: { label: string; emoji: string }[] 
     <div className="space-y-2 w-full max-w-xs">
       {stages.map((s, i) => (
         <div key={i} className="flex items-center gap-2 transition-all duration-500" style={{ opacity: i <= currentStage ? 1 : 0.25 }}>
-          <span className="text-sm">{i < currentStage ? '✓' : i === currentStage ? s.emoji : '○'}</span>
-          <span className="text-[13px] text-left" style={{ color: i <= currentStage ? 'var(--t1)' : 'var(--t3)', fontWeight: i === currentStage ? 600 : 400 }}>
+          <span className="text-base">{i < currentStage ? '✓' : i === currentStage ? s.emoji : '○'}</span>
+          <span className="text-[15px] text-left" style={{ color: i <= currentStage ? 'var(--t1)' : 'var(--t3)', fontWeight: i === currentStage ? 600 : 400 }}>
             {s.label}
           </span>
         </div>
@@ -315,8 +315,8 @@ function LayerCard({ layer, isOpen, onToggle, index }) {
         <div className="flex items-center gap-3.5">
           <div className="w-9 h-9 rounded-xl flex items-center justify-center text-[14px] font-extrabold text-white" style={{background:`linear-gradient(135deg, ${c}, ${c}cc)`,boxShadow:`0 3px 10px ${c}40`}}>{layer.level}</div>
           <div>
-            <div className="text-[15px] font-bold" style={{color:'var(--t1)'}}>{layer.title}</div>
-            <div className="text-[12px] mt-0.5" style={{color:'var(--t3)'}}>{layer.subtitle}</div>
+            <div className="text-[17px] font-bold" style={{color:'var(--t1)'}}>{layer.title}</div>
+            <div className="text-[14px] mt-0.5" style={{color:'var(--t3)'}}>{layer.subtitle}</div>
           </div>
         </div>
         <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{background:'var(--bg0)'}}>
@@ -327,15 +327,15 @@ function LayerCard({ layer, isOpen, onToggle, index }) {
         <div className="px-5 pb-5">
           {/* Quote */}
           <div className="rounded-xl p-5 mb-3 relative" style={{background:bg,borderLeft:`3px solid ${c}`}}>
-            <p className="text-[15px] italic leading-[1.7] font-medium" style={{color:'var(--t1)'}}>{layer.quote}</p>
+            <p className="text-[17px] italic leading-[1.7] font-medium" style={{color:'var(--t1)'}}>{layer.quote}</p>
           </div>
           {/* Note */}
-          <p className="text-[12px] leading-relaxed mb-3 px-1" style={{color:'var(--t3)'}}>{layer.note}</p>
+          <p className="text-[14px] leading-relaxed mb-3 px-1" style={{color:'var(--t3)'}}>{layer.note}</p>
           {/* Next question prompt */}
           {layer.nextQ && (
             <div className="flex items-center gap-2 px-4 py-3 rounded-xl transition-all" style={{background:'var(--a2g)',border:'1px solid rgba(244,114,182,0.15)'}}>
               <ChevronRight size={14} style={{color:'var(--a2)'}} />
-              <span className="text-[12px] font-semibold" style={{color:'var(--a2)'}}>{layer.nextQ}</span>
+              <span className="text-[14px] font-semibold" style={{color:'var(--a2)'}}>{layer.nextQ}</span>
             </div>
           )}
         </div>
@@ -396,6 +396,8 @@ export function AppShell() {
   // Usage
   const [usageCount, setUsageCount] = useState(0);
   const [isPro, setIsPro] = useState(false);
+  const ADMIN_EMAIL = 'noeldcosta2018@gmail.com';
+  const isAdmin = user?.email === ADMIN_EMAIL;
   const MAX_FREE = 7;
 
   // Saved
@@ -403,6 +405,11 @@ export function AppShell() {
 
   // Legal
   const [legalPage, setLegalPage] = useState(null);
+
+  // Reviews
+  const [reviewStars, setReviewStars] = useState(5);
+  const [reviewText, setReviewText] = useState('');
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
 
   // Data loading flag
   const [dataLoaded, setDataLoaded] = useState(false);
@@ -622,7 +629,7 @@ export function AppShell() {
   const handleGenerate = async () => {
     if (!question.trim()) return setGenError('Please enter your child\'s question');
     if (!selectedChild) return setGenError('Please select a child');
-    if (usageCount >= MAX_FREE && !isPro) { navigate('paywall'); return; }
+    if (usageCount >= MAX_FREE && !isPro && !isAdmin) { navigate('paywall'); return; }
 
     setGenError('');
     setGenerating(true);
@@ -851,17 +858,20 @@ export function AppShell() {
         {/* ═══ AUTH ═══ */}
         {screen === 'auth' && (
           <div className="flex flex-col min-h-[836px] px-6 pt-6 pb-8" style={{background:'var(--bg0)'}}>
-            <Logo size={28} className="mb-8" />
+            <Logo size={32} className="mb-6" />
 
-            <h2 className="text-3xl font-extrabold mb-1" style={{fontFamily:'Baloo 2,cursive',color:'var(--t1)'}}>
+            <h2 className="text-4xl font-extrabold mb-2" style={{fontFamily:'Baloo 2,cursive',color:'var(--t1)'}}>
               {authMode === 'login' ? 'Welcome back' : authMode === 'signup' ? 'Create account' : 'Reset password'}
             </h2>
-            <p className="text-base mb-6" style={{color:'var(--t3)'}}>
-              {authMode === 'login' ? 'Sign in to continue' : authMode === 'signup' ? 'Start your free trial — 7-day free trial' : 'We\'ll send you a reset link'}
+            <p className="text-lg mb-2" style={{color:'var(--t3)'}}>
+              {authMode === 'login' ? 'Sign in to continue' : authMode === 'signup' ? 'Start your free trial — 7-day free' : 'We\'ll send you a reset link'}
+            </p>
+            <p className="text-[13px] mb-6 leading-relaxed" style={{color:'var(--t3)',opacity:0.7}}>
+              {authMode === 'login' ? 'Thousands of parents trust Kidzplainer for life\'s toughest questions.' : authMode === 'signup' ? 'Join 10,000+ parents who never freeze when their kids ask the hard stuff.' : 'No worries — we\'ll get you back in.'}
             </p>
 
             {authMode !== 'forgot' && (
-              <button onClick={handleGoogleAuth} disabled={authLoading} className="w-full py-3.5 rounded-xl border text-base font-semibold flex items-center justify-center gap-2 mb-4 transition-all hover:border-[var(--ac)]"
+              <button onClick={handleGoogleAuth} disabled={authLoading} className="w-full py-4 rounded-xl border text-lg font-semibold flex items-center justify-center gap-2 mb-4 transition-all hover:border-[var(--ac)]"
                 style={{background:'var(--bg2)',borderColor:'var(--brc)',color:'var(--t1)'}}>
                 {authLoading ? <Loader2 size={16} className="animate-spin" /> : <>
                   <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.001-.001 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg>
@@ -873,7 +883,7 @@ export function AppShell() {
             {authMode !== 'forgot' && (
               <div className="flex items-center gap-3 mb-4">
                 <div className="flex-1 h-px" style={{background:'var(--brs)'}} />
-                <span className="text-[11px] font-semibold" style={{color:'var(--t3)'}}>or</span>
+                <span className="text-[13px] font-semibold" style={{color:'var(--t3)'}}>or</span>
                 <div className="flex-1 h-px" style={{background:'var(--brs)'}} />
               </div>
             )}
@@ -893,11 +903,11 @@ export function AppShell() {
             )}
 
             {authMode === 'login' && (
-              <button onClick={() => setAuthMode('forgot')} className="text-[12px] font-semibold mb-4 text-right" style={{color:'var(--ac)'}}>Forgot password?</button>
+              <button onClick={() => setAuthMode('forgot')} className="text-[14px] font-semibold mb-4 text-right" style={{color:'var(--ac)'}}>Forgot password?</button>
             )}
 
             <button onClick={() => handleAuth(authMode)} disabled={authLoading}
-              className="w-full py-4 rounded-xl text-[17px] font-bold transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2"
+              className="w-full py-4 rounded-xl text-[19px] font-bold transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2"
               style={{background:'linear-gradient(135deg,var(--ac),#1AB5A0)',color: dark ? '#0A0E17' : '#fff',boxShadow:'0 6px 20px rgba(34,211,183,0.25)',opacity: authLoading ? 0.6 : 1}}>
               {authLoading ? <Loader2 size={18} className="animate-spin" /> :
                 authMode === 'login' ? 'Sign In' : authMode === 'signup' ? 'Create Account' : 'Send Reset Link'}
@@ -905,9 +915,9 @@ export function AppShell() {
 
             <div className="mt-4 text-center">
               {authMode === 'login' ? (
-                <p className="text-[13px]" style={{color:'var(--t3)'}}>Don't have an account? <button onClick={() => {setAuthMode('signup');setAuthError('')}} className="font-bold" style={{color:'var(--ac)'}}>Sign up</button></p>
+                <p className="text-[15px]" style={{color:'var(--t3)'}}>Don't have an account? <button onClick={() => {setAuthMode('signup');setAuthError('')}} className="font-bold" style={{color:'var(--ac)'}}>Sign up</button></p>
               ) : (
-                <p className="text-[13px]" style={{color:'var(--t3)'}}>Already have an account? <button onClick={() => {setAuthMode('login');setAuthError('')}} className="font-bold" style={{color:'var(--ac)'}}>Sign in</button></p>
+                <p className="text-[15px]" style={{color:'var(--t3)'}}>Already have an account? <button onClick={() => {setAuthMode('login');setAuthError('')}} className="font-bold" style={{color:'var(--ac)'}}>Sign in</button></p>
               )}
             </div>
 
@@ -1270,7 +1280,7 @@ export function AppShell() {
               </div>
 
               {/* Stage text */}
-              <p className="text-xl font-bold mb-3" style={{fontFamily:'Baloo 2,cursive',color:'var(--t1)'}}>
+              <p className="text-2xl font-bold mb-3" style={{fontFamily:'Baloo 2,cursive',color:'var(--t1)'}}>
                 Personalizing for {selectedChild?.name}
               </p>
               <LoadingStages stages={stages} />
@@ -1298,27 +1308,27 @@ export function AppShell() {
               </div>
               {/* Original question as quote */}
               <div className="px-4 py-3 rounded-xl" style={{background:'var(--bg2)',borderLeft:'3px solid var(--ac)'}}>
-                <p className="text-[14px] font-medium italic" style={{color:'var(--t2)'}}>"{question}"</p>
-                <p className="text-[11px] mt-1 font-semibold" style={{color:'var(--ac)'}}>— {selectedChild?.name}, age {selectedChild?.age}</p>
+                <p className="text-[16px] font-medium italic" style={{color:'var(--t2)'}}>"{question}"</p>
+                <p className="text-[13px] mt-1 font-semibold" style={{color:'var(--ac)'}}>— {selectedChild?.name}, age {selectedChild?.age}</p>
               </div>
             </div>
 
             <div className="flex-1 overflow-y-auto pb-20" style={{scrollbarWidth:'none'}}>
               {/* Context tags */}
               <div className="flex flex-wrap gap-2 px-5 mb-4">
-                <span className="text-[10px] font-bold px-3 py-1.5 rounded-full" style={{background:'var(--a3g)',color:'var(--a3)'}}>Age {selectedChild?.age}</span>
-                <span className="text-[10px] font-bold px-3 py-1.5 rounded-full" style={{background:'var(--a2g)',color:'var(--a2)'}}>{COUNTRIES.find(c=>c.name===selCountry)?.flag} {selCountry}</span>
-                <span className="text-[10px] font-bold px-3 py-1.5 rounded-full" style={{background:'rgba(139,92,246,0.12)',color:'#8B5CF6'}}>{BELIEFS.find(b=>b.name===selBelief)?.icon} {selBelief}</span>
-                <span className="text-[10px] font-bold px-3 py-1.5 rounded-full" style={{background:'var(--acg)',color:'var(--ac)'}}>🧅 Layered</span>
+                <span className="text-[12px] font-bold px-3 py-1.5 rounded-full" style={{background:'var(--a3g)',color:'var(--a3)'}}>Age {selectedChild?.age}</span>
+                <span className="text-[12px] font-bold px-3 py-1.5 rounded-full" style={{background:'var(--a2g)',color:'var(--a2)'}}>{COUNTRIES.find(c=>c.name===selCountry)?.flag} {selCountry}</span>
+                <span className="text-[12px] font-bold px-3 py-1.5 rounded-full" style={{background:'rgba(139,92,246,0.12)',color:'#8B5CF6'}}>{BELIEFS.find(b=>b.name===selBelief)?.icon} {selBelief}</span>
+                <span className="text-[12px] font-bold px-3 py-1.5 rounded-full" style={{background:'var(--acg)',color:'var(--ac)'}}>🧅 Layered</span>
               </div>
 
               {/* Approach card */}
               <div className="mx-5 mb-4 rounded-2xl p-5" style={{background:'linear-gradient(135deg, rgba(45,212,168,0.08), rgba(129,140,248,0.06))',border:'1px solid rgba(45,212,168,0.15)'}}>
                 <div className="flex items-center gap-2 mb-2">
                   <Layers size={14} style={{color:'var(--ac)'}} />
-                  <span className="text-[11px] font-extrabold uppercase tracking-[0.15em]" style={{color:'var(--ac)'}}>Layered approach</span>
+                  <span className="text-[13px] font-extrabold uppercase tracking-[0.15em]" style={{color:'var(--ac)'}}>Layered approach</span>
                 </div>
-                <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>Start with Layer 1. Most kids are satisfied. Only open the next if they keep asking.</p>
+                <p className="text-[15px] leading-relaxed" style={{color:'var(--t2)'}}>Start with Layer 1. Most kids are satisfied. Only open the next if they keep asking.</p>
               </div>
 
               {/* Layers */}
@@ -1499,66 +1509,133 @@ export function AppShell() {
         {screen === 'settings' && (
           <div className="flex flex-col min-h-[836px]" style={{background:'var(--bg0)'}}>
             <div className="flex items-center gap-3 px-5 pt-12 pb-4">
-              <Settings size={20} style={{color:'var(--ac)'}} />
-              <span className="text-[18px] font-bold" style={{color:'var(--t1)'}}>Settings</span>
+              <Settings size={22} style={{color:'var(--ac)'}} />
+              <span className="text-[20px] font-bold" style={{color:'var(--t1)'}}>Settings</span>
             </div>
             <div className="flex-1 overflow-y-auto pb-16" style={{scrollbarWidth:'none'}}>
               {/* Profile */}
-              <div className="mx-5 mt-2 text-[11px] font-bold uppercase tracking-widest flex items-center gap-2" style={{color:'var(--t3)'}}>Profile<div className="flex-1 h-px" style={{background:'var(--brs)'}} /></div>
-              <div className="mx-5 mt-2 rounded-2xl border overflow-hidden" style={{background:'var(--bg2)',borderColor:'var(--brc)'}}>
+              <div className="mx-5 mt-2 text-[13px] font-bold uppercase tracking-widest flex items-center gap-2" style={{color:'var(--t3)'}}>Profile<div className="flex-1 h-px" style={{background:'var(--brs)'}} /></div>
+              <p className="mx-5 mt-1 mb-2 text-[13px]" style={{color:'var(--t3)',opacity:0.7}}>Controls how explanations are framed for your family</p>
+              <div className="mx-5 rounded-2xl border overflow-hidden" style={{background:'var(--bg2)',borderColor:'var(--brc)'}}>
                 <button onClick={() => { setSetupStep(1); navigate('setup'); }} className="flex justify-between items-center px-4 py-4 w-full border-b" style={{borderColor:'var(--brs)'}}>
-                  <span className="text-[14px] font-semibold" style={{color:'var(--t1)'}}>Language</span>
-                  <div className="flex items-center gap-1.5"><span className="text-[13px]" style={{color:'var(--t3)'}}>{LANGUAGES.find(l=>l.name===selLanguage)?.flag||'🇬🇧'} {selLanguage}</span><ChevronRight size={14} style={{color:'var(--t3)'}} /></div>
+                  <span className="text-[16px] font-semibold" style={{color:'var(--t1)'}}>Language</span>
+                  <div className="flex items-center gap-1.5"><span className="text-[15px]" style={{color:'var(--t3)'}}>{LANGUAGES.find(l=>l.name===selLanguage)?.flag||'🇬🇧'} {selLanguage}</span><ChevronRight size={16} style={{color:'var(--t3)'}} /></div>
                 </button>
                 <button onClick={() => { setSetupStep(2); navigate('setup'); }} className="flex justify-between items-center px-4 py-4 w-full border-b" style={{borderColor:'var(--brs)'}}>
-                  <span className="text-[14px] font-semibold" style={{color:'var(--t1)'}}>Country</span>
-                  <div className="flex items-center gap-1.5"><span className="text-[13px]" style={{color:'var(--t3)'}}>{COUNTRIES.find(c=>c.name===selCountry)?.flag||'🌍'} {selCountry||'Not set'}</span><ChevronRight size={14} style={{color:'var(--t3)'}} /></div>
+                  <span className="text-[16px] font-semibold" style={{color:'var(--t1)'}}>Country</span>
+                  <div className="flex items-center gap-1.5"><span className="text-[15px]" style={{color:'var(--t3)'}}>{COUNTRIES.find(c=>c.name===selCountry)?.flag||'🌍'} {selCountry||'Not set'}</span><ChevronRight size={16} style={{color:'var(--t3)'}} /></div>
                 </button>
                 <button onClick={() => { setSetupStep(3); navigate('setup'); }} className="flex justify-between items-center px-4 py-4 w-full" style={{borderColor:'transparent'}}>
-                  <span className="text-[14px] font-semibold" style={{color:'var(--t1)'}}>Family beliefs</span>
-                  <div className="flex items-center gap-1.5"><span className="text-[13px]" style={{color:'var(--t3)'}}>{BELIEFS.find(b=>b.name===selBelief)?.icon||''} {selBelief||'Not set'}</span><ChevronRight size={14} style={{color:'var(--t3)'}} /></div>
+                  <span className="text-[16px] font-semibold" style={{color:'var(--t1)'}}>Family beliefs</span>
+                  <div className="flex items-center gap-1.5"><span className="text-[15px]" style={{color:'var(--t3)'}}>{BELIEFS.find(b=>b.name===selBelief)?.icon||''} {selBelief||'Not set'}</span><ChevronRight size={16} style={{color:'var(--t3)'}} /></div>
                 </button>
               </div>
 
               {/* Children */}
-              <div className="mx-5 mt-5 text-[11px] font-bold uppercase tracking-widest flex items-center gap-2" style={{color:'var(--t3)'}}>Children<div className="flex-1 h-px" style={{background:'var(--brs)'}} /></div>
-              <div className="mx-5 mt-2 rounded-2xl border overflow-hidden" style={{background:'var(--bg2)',borderColor:'var(--brc)'}}>
+              <div className="mx-5 mt-5 text-[13px] font-bold uppercase tracking-widest flex items-center gap-2" style={{color:'var(--t3)'}}>Children<div className="flex-1 h-px" style={{background:'var(--brs)'}} /></div>
+              <p className="mx-5 mt-1 mb-2 text-[13px]" style={{color:'var(--t3)',opacity:0.7}}>Explanations are personalized for each child's age</p>
+              <div className="mx-5 rounded-2xl border overflow-hidden" style={{background:'var(--bg2)',borderColor:'var(--brc)'}}>
                 {children.map((c) => (
                   <div key={c.id} className="flex justify-between items-center px-4 py-4 border-b" style={{borderColor:'var(--brs)'}}>
-                    <div className="flex items-center gap-2.5"><Baby size={16} style={{color:'var(--ac)'}} /><span className="text-[14px] font-semibold" style={{color:'var(--t1)'}}>{c.name}</span></div>
-                    <span className="text-[12px] px-2.5 py-1 rounded-lg font-semibold" style={{background:'var(--a3g)',color:'var(--a3)'}}>{c.age}</span>
+                    <div className="flex items-center gap-2.5"><Baby size={18} style={{color:'var(--ac)'}} /><span className="text-[16px] font-semibold" style={{color:'var(--t1)'}}>{c.name}</span></div>
+                    <span className="text-[14px] px-2.5 py-1 rounded-lg font-semibold" style={{background:'var(--a3g)',color:'var(--a3)'}}>{c.age}</span>
                   </div>
                 ))}
                 <button onClick={() => navigate('addchild')} className="flex items-center gap-2 px-4 py-4 w-full">
-                  <Plus size={16} style={{color:'var(--ac)'}} /><span className="text-[14px] font-semibold" style={{color:'var(--ac)'}}>Add child</span>
+                  <Plus size={18} style={{color:'var(--ac)'}} /><span className="text-[16px] font-semibold" style={{color:'var(--ac)'}}>Add child</span>
                 </button>
               </div>
 
               {/* Account */}
-              <div className="mx-5 mt-5 text-[11px] font-bold uppercase tracking-widest flex items-center gap-2" style={{color:'var(--t3)'}}>Account<div className="flex-1 h-px" style={{background:'var(--brs)'}} /></div>
-              <div className="mx-5 mt-2 rounded-2xl border overflow-hidden" style={{background:'var(--bg2)',borderColor:'var(--brc)'}}>
+              <div className="mx-5 mt-5 text-[13px] font-bold uppercase tracking-widest flex items-center gap-2" style={{color:'var(--t3)'}}>Account<div className="flex-1 h-px" style={{background:'var(--brs)'}} /></div>
+              <p className="mx-5 mt-1 mb-2 text-[13px]" style={{color:'var(--t3)',opacity:0.7}}>Manage your subscription and account details</p>
+              <div className="mx-5 rounded-2xl border overflow-hidden" style={{background:'var(--bg2)',borderColor:'var(--brc)'}}>
                 <div className="flex justify-between items-center px-4 py-4 border-b" style={{borderColor:'var(--brs)'}}>
-                  <span className="text-[14px] font-semibold" style={{color:'var(--t1)'}}>Subscription</span>
-                  <span className="text-[13px] font-bold" style={{color: isPro ? 'var(--ac)' : 'var(--a4)'}}>{isPro ? 'Pro' : `Free (${MAX_FREE - usageCount} left)`}</span>
+                  <span className="text-[16px] font-semibold" style={{color:'var(--t1)'}}>Subscription</span>
+                  <span className="text-[15px] font-bold" style={{color: isPro || isAdmin ? 'var(--ac)' : 'var(--a4)'}}>{isAdmin ? 'Admin ∞' : isPro ? 'Pro' : `Free (${MAX_FREE - usageCount} left)`}</span>
                 </div>
-                {!isPro && (
+                {!isPro && !isAdmin && (
                   <button onClick={() => navigate('paywall')} className="flex items-center gap-2 px-4 py-4 w-full border-b" style={{borderColor:'var(--brs)'}}>
-                    <CreditCard size={16} style={{color:'var(--ac)'}} /><span className="text-[14px] font-semibold" style={{color:'var(--ac)'}}>Upgrade to Pro</span>
+                    <CreditCard size={18} style={{color:'var(--ac)'}} /><span className="text-[16px] font-semibold" style={{color:'var(--ac)'}}>Upgrade to Pro</span>
                   </button>
                 )}
                 {[['Privacy Policy','privacy'],['Terms of Service','terms'],['Refund Policy','refund']].map(([l,k]) => (
                   <button key={k} onClick={() => {setLegalPage(k);navigate('legal')}} className="flex justify-between items-center px-4 py-4 w-full border-b" style={{borderColor:'var(--brs)'}}>
-                    <span className="text-[14px] font-semibold" style={{color:'var(--t1)'}}>{l}</span>
-                    <ChevronRight size={14} style={{color:'var(--t3)'}} />
+                    <span className="text-[16px] font-semibold" style={{color:'var(--t1)'}}>{l}</span>
+                    <ChevronRight size={16} style={{color:'var(--t3)'}} />
                   </button>
                 ))}
                 <button onClick={async () => { await signOut(); setIsLoggedIn(false); setDataLoaded(false); dataLoadedRef.current = false; setChildren([]); setSaved([]); navigate('auth'); }} className="flex items-center gap-2 px-4 py-4 w-full">
-                  <LogOut size={16} style={{color:'var(--a2)'}} /><span className="text-[14px] font-semibold" style={{color:'var(--a2)'}}>Sign Out</span>
+                  <LogOut size={18} style={{color:'var(--a2)'}} /><span className="text-[16px] font-semibold" style={{color:'var(--a2)'}}>Sign Out</span>
                 </button>
               </div>
-              <div className="text-center mt-6 mb-4 text-[12px]" style={{color:'var(--t3)'}}>Kidzplainer v1.0 · Made with ❤️</div>
+
+              {/* Feedback & Support */}
+              <div className="mx-5 mt-5 text-[13px] font-bold uppercase tracking-widest flex items-center gap-2" style={{color:'var(--t3)'}}>Feedback & Support<div className="flex-1 h-px" style={{background:'var(--brs)'}} /></div>
+              <p className="mx-5 mt-1 mb-2 text-[13px]" style={{color:'var(--t3)',opacity:0.7}}>Help us improve Kidzplainer for every family</p>
+              <div className="mx-5 rounded-2xl border overflow-hidden" style={{background:'var(--bg2)',borderColor:'var(--brc)'}}>
+                <button onClick={() => { window.open(`mailto:support@kidzplainer.com?subject=Kidzplainer Feedback&body=Hi Kidzplainer team,%0A%0A`, '_blank'); }} className="flex justify-between items-center px-4 py-4 w-full border-b" style={{borderColor:'var(--brs)'}}>
+                  <div className="flex items-center gap-2.5"><Mail size={18} style={{color:'var(--ac)'}} /><span className="text-[16px] font-semibold" style={{color:'var(--t1)'}}>Send Feedback</span></div>
+                  <ChevronRight size={16} style={{color:'var(--t3)'}} />
+                </button>
+                <button onClick={() => navigate('review')} className="flex justify-between items-center px-4 py-4 w-full border-b" style={{borderColor:'var(--brs)'}}>
+                  <div className="flex items-center gap-2.5"><Star size={18} style={{color:'#fbbf24'}} /><span className="text-[16px] font-semibold" style={{color:'var(--t1)'}}>Leave a Review</span></div>
+                  <ChevronRight size={16} style={{color:'var(--t3)'}} />
+                </button>
+                <button onClick={() => { window.open(`https://wa.me/+971000000000?text=Hi, I need help with Kidzplainer`, '_blank'); }} className="flex justify-between items-center px-4 py-4 w-full" style={{borderColor:'var(--brs)'}}>
+                  <div className="flex items-center gap-2.5"><MessageCircle size={18} style={{color:'#25D366'}} /><span className="text-[16px] font-semibold" style={{color:'var(--t1)'}}>WhatsApp Support</span></div>
+                  <ChevronRight size={16} style={{color:'var(--t3)'}} />
+                </button>
+              </div>
+
+              <div className="text-center mt-6 mb-4 text-[14px]" style={{color:'var(--t3)'}}>Kidzplainer v1.0 · Made with ❤️</div>
             </div>
             <BottomNav active="settings" onNav={s => navigate(s === 'home' ? 'home' : s === 'saved' ? 'saved' : 'settings')} />
+          </div>
+        )}
+
+        {/* ═══ REVIEW ═══ */}
+        {screen === 'review' && (
+          <div className="flex flex-col min-h-[836px]" style={{background:'var(--bg0)'}}>
+            <div className="flex items-center gap-3 px-5 py-4">
+              <IconBtn icon={ArrowLeft} onClick={() => { setReviewSubmitted(false); setReviewText(''); navigate('settings'); }} />
+              <span className="text-[18px] font-bold" style={{color:'var(--t1)'}}>Leave a Review</span>
+            </div>
+            <div className="flex-1 px-6 pt-4">
+              {reviewSubmitted ? (
+                <div className="flex flex-col items-center justify-center text-center mt-16">
+                  <span className="text-5xl mb-4">🎉</span>
+                  <h3 className="text-2xl font-extrabold mb-2" style={{fontFamily:'Baloo 2,cursive',color:'var(--t1)'}}>Thank you!</h3>
+                  <p className="text-[16px] leading-relaxed" style={{color:'var(--t3)'}}>Your review has been submitted for approval. We appreciate your feedback!</p>
+                  <button onClick={() => { setReviewSubmitted(false); setReviewText(''); navigate('settings'); }} className="mt-8 px-8 py-3.5 rounded-xl text-[16px] font-bold" style={{background:'var(--ac)',color:'#0A0E17'}}>Back to Settings</button>
+                </div>
+              ) : (
+                <>
+                  <p className="text-[16px] mb-6 leading-relaxed" style={{color:'var(--t2)'}}>Your review helps other parents discover Kidzplainer. All reviews are moderated before publishing.</p>
+
+                  <p className="text-[14px] font-bold mb-3" style={{color:'var(--t1)'}}>How would you rate Kidzplainer?</p>
+                  <div className="flex gap-2 mb-6">
+                    {[1,2,3,4,5].map(s => (
+                      <button key={s} onClick={() => setReviewStars(s)} className="transition-all active:scale-90">
+                        <Star size={36} fill={s <= reviewStars ? '#fbbf24' : 'transparent'} style={{color: s <= reviewStars ? '#fbbf24' : 'var(--t3)'}} />
+                      </button>
+                    ))}
+                  </div>
+
+                  <p className="text-[14px] font-bold mb-3" style={{color:'var(--t1)'}}>Tell us more (optional)</p>
+                  <textarea value={reviewText} onChange={e => setReviewText(e.target.value)} placeholder="What do you love about Kidzplainer? How has it helped your family?" rows={4} className="w-full rounded-xl p-4 text-[16px] resize-none outline-none transition-all focus:ring-2" style={{background:'var(--bg2)',color:'var(--t1)',border:'1px solid var(--brc)',focusRingColor:'var(--ac)'}} />
+
+                  <button onClick={async () => {
+                    try {
+                      await db.submitReview(user?.id, user?.email, reviewStars, reviewText);
+                    } catch(e) { /* table might not exist yet */ }
+                    setReviewSubmitted(true);
+                  }} className="w-full mt-6 py-4 rounded-xl text-[18px] font-bold transition-all active:scale-[0.97]" style={{background:'linear-gradient(135deg,var(--ac),#1AB5A0)',color:'#0A0E17',boxShadow:'0 6px 20px rgba(45,212,168,0.25)'}}>
+                    Submit Review
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         )}
 

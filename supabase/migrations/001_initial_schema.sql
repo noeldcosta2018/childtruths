@@ -124,3 +124,19 @@ CREATE INDEX idx_explanations_user_id ON explanations(user_id);
 CREATE INDEX idx_explanations_created ON explanations(created_at DESC);
 CREATE INDEX idx_subscriptions_user_id ON subscriptions(user_id);
 CREATE INDEX idx_usage_tracking_user_month ON usage_tracking(user_id, month);
+
+-- ═══ REVIEWS ═══
+CREATE TABLE IF NOT EXISTS reviews (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  email TEXT,
+  stars INTEGER NOT NULL CHECK (stars >= 1 AND stars <= 5),
+  text TEXT DEFAULT '',
+  approved BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE reviews ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can insert own reviews" ON reviews FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "Anyone can read approved reviews" ON reviews FOR SELECT USING (approved = true OR auth.uid() = user_id);
+CREATE POLICY "Admin can update reviews" ON reviews FOR UPDATE USING (auth.uid() = user_id OR auth.jwt() ->> 'email' = 'noeldcosta2018@gmail.com');
