@@ -114,7 +114,7 @@ const TOPICS_BY_LANG = {
 };
 
 const UI_STRINGS = {
-  'English': { greeting:'Good evening', hereToHelp:"We're here to help", whatDidAsk:'What did {name} ask?', orPickTopic:'Or pick a topic', triggeredBy:'Triggered by', generate:'Generate Child Friendly Explanation', freeRemaining:'{n} free explanations remaining', signInMore:'Sign in for more', yourExplanation:'Your Explanation', save:'Save', copy:'Copy', share:'Share', read:'Read', howToUse:'How to use the layers', wrongInfo:'If they heard wrong info' },
+  'English': { greeting:'Good evening', hereToHelp:"We're here to help", whatDidAsk:'What did {name} ask?', orPickTopic:'Or pick a topic', triggeredBy:'Triggered by', generate:'Generate Child Friendly Explanation', freeRemaining:'{n} free explanations remaining', signInMore:'Upgrade for unlimited', yourExplanation:'Your Explanation', save:'Save', copy:'Copy', share:'Share', read:'Read', howToUse:'How to use the layers', wrongInfo:'If they heard wrong info' },
   'العربية': { greeting:'مساء الخير', hereToHelp:'نحن هنا للمساعدة', whatDidAsk:'ماذا سأل {name}؟', orPickTopic:'أو اختر موضوعاً', triggeredBy:'السبب', generate:'إنشاء شرح مناسب للأطفال', freeRemaining:'{n} شروحات مجانية متبقية', signInMore:'سجل دخول للمزيد', yourExplanation:'شرحك', save:'حفظ', copy:'نسخ', share:'مشاركة', read:'قراءة', howToUse:'كيفية استخدام الطبقات', wrongInfo:'إذا سمعوا معلومات خاطئة' },
   'हिन्दी': { greeting:'शुभ संध्या', hereToHelp:'हम मदद के लिए यहाँ हैं', whatDidAsk:'{name} ने क्या पूछा?', orPickTopic:'या एक विषय चुनें', triggeredBy:'कारण', generate:'बच्चों के अनुकूल व्याख्या बनाएं', freeRemaining:'{n} मुफ्त व्याख्याएं शेष', signInMore:'अधिक के लिए साइन इन करें', yourExplanation:'आपकी व्याख्या', save:'सहेजें', copy:'कॉपी', share:'शेयर', read:'पढ़ें', howToUse:'परतों का उपयोग कैसे करें', wrongInfo:'अगर उन्होंने गलत जानकारी सुनी' },
   'Español': { greeting:'Buenas tardes', hereToHelp:'Estamos aquí para ayudar', whatDidAsk:'¿Qué preguntó {name}?', orPickTopic:'O elige un tema', triggeredBy:'Provocado por', generate:'Generar Explicación para Niños', freeRemaining:'{n} explicaciones gratuitas restantes', signInMore:'Inicia sesión para más', yourExplanation:'Tu Explicación', save:'Guardar', copy:'Copiar', share:'Compartir', read:'Leer', howToUse:'Cómo usar las capas', wrongInfo:'Si escucharon información incorrecta' },
@@ -407,9 +407,13 @@ export function AppShell() {
   const [legalPage, setLegalPage] = useState(null);
 
   // Reviews
-  const [reviewStars, setReviewStars] = useState(5);
+  const [reviewStars, setReviewStars] = useState(0);
   const [reviewText, setReviewText] = useState('');
   const [reviewSubmitted, setReviewSubmitted] = useState(false);
+
+  // Toast notifications
+  const [toast, setToast] = useState('');
+  useEffect(() => { if (toast) { const t = setTimeout(() => setToast(''), 3000); return () => clearTimeout(t); } }, [toast]);
 
   // Data loading flag
   const [dataLoaded, setDataLoaded] = useState(false);
@@ -572,7 +576,7 @@ export function AppShell() {
         await resetPassword(email);
         setAuthError('');
         setAuthMode('login');
-        alert('Check your email for a password reset link.');
+        setToast('Check your email for a password reset link.');
       } catch (err: any) {
         setAuthError(err.message || 'Failed to send reset email');
       } finally {
@@ -589,7 +593,7 @@ export function AppShell() {
     try {
       if (mode === 'signup') {
         await signUp(email, password);
-        alert('Check your email to confirm your account.');
+        setToast('Check your email to confirm your account.');
         setAuthMode('login');
       } else {
         await signInWithEmail(email, password);
@@ -694,6 +698,14 @@ export function AppShell() {
     <div className="flex flex-col items-center min-h-screen" style={{fontFamily:'Plus Jakarta Sans, sans-serif'}}>
       <div className="w-full max-w-[500px] overflow-hidden relative" style={{...themeVars, background:'var(--bg0)', minHeight:'100vh', transition:'all 0.4s'}}>
 
+        {/* Toast notification */}
+        {toast && (
+          <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[999] px-5 py-3 rounded-2xl shadow-2xl transition-all animate-fade-in max-w-[90vw]"
+            style={{background:'var(--ac)',color:'#0A0E17'}}>
+            <p className="text-[14px] font-semibold text-center">{toast}</p>
+          </div>
+        )}
+
         {/* Theme toggle removed — light only */}
 
         {/* ═══ SPLASH ═══ */}
@@ -747,8 +759,8 @@ export function AppShell() {
                   ))}
                 </div>
                 <div>
-                  <p className="text-[13px] font-bold" style={{color:'#FFFFFF'}}>#1 Parenting Conversations App</p>
-                  <p className="text-[11px]" style={{color:'rgba(255,255,255,0.4)'}}>Trusted by thousands of parents</p>
+                  <p className="text-[13px] font-bold" style={{color:'#FFFFFF'}}>Parenting Conversations App</p>
+                  <p className="text-[11px]" style={{color:'rgba(255,255,255,0.4)'}}>Age-tuned, culturally aware explanations</p>
                 </div>
               </div>
 
@@ -840,7 +852,7 @@ export function AppShell() {
                   <p className="text-[14px] leading-relaxed mb-1" style={{color:'rgba(255,255,255,0.5)'}}>
                     Every child asks. The only question is — will you be ready?
                   </p>
-                  <p className="text-[13px] font-bold mt-3" style={{color:'#2dd4a8'}}>7 free explanations. No credit card needed.</p>
+                  <p className="text-[13px] font-bold mt-3" style={{color:'#2dd4a8'}}>Try {MAX_FREE} explanations free. No credit card needed.</p>
                 </div>
               </div>
 
@@ -857,17 +869,17 @@ export function AppShell() {
 
         {/* ═══ AUTH ═══ */}
         {screen === 'auth' && (
-          <div className="flex flex-col min-h-[836px] px-6 pt-6 pb-8" style={{background:'var(--bg0)'}}>
+          <div className="flex flex-col min-h-dvh px-6 pt-6 pb-8" style={{background:'var(--bg0)'}}>
             <Logo size={32} className="mb-6" />
 
             <h2 className="text-4xl font-extrabold mb-2" style={{fontFamily:'Baloo 2,cursive',color:'var(--t1)'}}>
               {authMode === 'login' ? 'Welcome back' : authMode === 'signup' ? 'Create account' : 'Reset password'}
             </h2>
             <p className="text-lg mb-2" style={{color:'var(--t3)'}}>
-              {authMode === 'login' ? 'Sign in to continue' : authMode === 'signup' ? 'Start your free trial — 7-day free' : 'We\'ll send you a reset link'}
+              {authMode === 'login' ? 'Sign in to continue' : authMode === 'signup' ? `Get ${MAX_FREE} free explanations — no card needed` : 'We\'ll send you a reset link'}
             </p>
             <p className="text-[13px] mb-6 leading-relaxed" style={{color:'var(--t3)',opacity:0.7}}>
-              {authMode === 'login' ? 'Thousands of parents trust Kidzplainer for life\'s toughest questions.' : authMode === 'signup' ? 'Join 10,000+ parents who never freeze when their kids ask the hard stuff.' : 'No worries — we\'ll get you back in.'}
+              {authMode === 'login' ? 'Culturally aware, belief-sensitive explanations for every hard question.' : authMode === 'signup' ? 'Never freeze when your child asks the hard stuff. Get the perfect words in seconds.' : 'No worries — we\'ll get you back in.'}
             </p>
 
             {authMode !== 'forgot' && (
@@ -945,7 +957,7 @@ export function AppShell() {
             if (isFromSettings) navigate('settings');
           };
           return (
-          <div className="flex flex-col min-h-[836px]" style={{background:'var(--bg0)'}}>
+          <div className="flex flex-col min-h-dvh" style={{background:'var(--bg0)'}}>
             <div className="px-6 pt-5 pb-0">
               {isFromSettings && (
                 <button onClick={() => navigate('settings')} className="flex items-center gap-2 mb-3">
@@ -1060,7 +1072,7 @@ export function AppShell() {
 
         {/* ═══ ADD CHILD ═══ */}
         {screen === 'addchild' && (
-          <div className="flex flex-col min-h-[836px] px-6 pt-6 pb-8" style={{background:'var(--bg0)'}}>
+          <div className="flex flex-col min-h-dvh px-6 pt-6 pb-8" style={{background:'var(--bg0)'}}>
             <Logo size={24} className="mb-6" />
             <h2 className="text-[22px] font-extrabold mb-1" style={{fontFamily:'Baloo 2,cursive',color:'var(--t1)'}}>Add your child 👶</h2>
             <p className="text-[13px] mb-6" style={{color:'var(--t3)'}}>We use their first name in explanations for a personal touch. You can add more children later.</p>
@@ -1157,9 +1169,15 @@ export function AppShell() {
                 </div>
               </div>
               {children.length > 0 && selectedChild && (
-                <button onClick={() => {}} className="flex items-center gap-1.5 px-4 py-2 rounded-full" style={{border:'1.5px solid rgba(45,212,168,0.3)'}}>
+                <button onClick={() => {
+                  if (children.length <= 1) return;
+                  const currentIdx = children.findIndex(c => c.id === selectedChild.id);
+                  const nextIdx = (currentIdx + 1) % children.length;
+                  setSelectedChild(children[nextIdx]);
+                  setToast(`Switched to ${children[nextIdx].name}`);
+                }} className="flex items-center gap-1.5 px-4 py-2 rounded-full" style={{border:'1.5px solid rgba(45,212,168,0.3)'}}>
                   <span className="text-[14px] font-semibold" style={{color:'#2dd4a8'}}>{selectedChild.name} ({selectedChild.age})</span>
-                  <ChevronDown size={14} style={{color:'#2dd4a8'}} />
+                  {children.length > 1 && <ChevronDown size={14} style={{color:'#2dd4a8'}} />}
                 </button>
               )}
             </div>
@@ -1263,7 +1281,7 @@ export function AppShell() {
             { label: 'Finalizing your explanation...', emoji: '✨' },
           ];
           return (
-          <div className="flex flex-col min-h-[836px]" style={{background:'var(--bg0)'}}>
+          <div className="flex flex-col min-h-dvh" style={{background:'var(--bg0)'}}>
             <div className="flex items-center gap-3 px-5 py-4">
               <IconBtn icon={ArrowLeft} onClick={() => navigate('home')} />
               <span className="text-base font-bold" style={{color:'var(--t1)'}}>Creating your explanation</span>
@@ -1297,7 +1315,7 @@ export function AppShell() {
 
         {/* ═══ RESULT ═══ */}
         {screen === 'result' && layers && (
-          <div className="flex flex-col min-h-[836px]" style={{background:'var(--bg0)'}}>
+          <div className="flex flex-col min-h-dvh" style={{background:'var(--bg0)'}}>
             {/* Header with question */}
             <div className="px-5 pt-4 pb-5">
               <div className="flex items-center gap-3 mb-4">
@@ -1344,11 +1362,11 @@ export function AppShell() {
                   {icon:Bookmark,label:t.save,action:saveResult},
                   {icon:Copy,label:t.copy,action:() => {
                     navigator.clipboard?.writeText(allText).then(() => {
-                      alert('Copied to clipboard!');
+                      setToast('Copied to clipboard!');
                     });
                   }},
                   {icon:Share2,label:t.share,action:() => {
-                    const msg = encodeURIComponent(`🧒 My child asked: "${question}"\n\nHere's what Kidzplainer suggested:\n\n${layers[0]?.quote || ''}\n\nGet age-appropriate answers: https://childtruths.vercel.app`);
+                    const msg = encodeURIComponent(`🧒 My child asked: "${question}"\n\nHere's what Kidzplainer suggested:\n\n${layers[0]?.quote || ''}\n\nGet age-appropriate answers: https://kidzplainer.com`);
                     window.open(`https://wa.me/?text=${msg}`, '_blank');
                   }},
                   {icon:Volume2,label:t.read,action:() => {
@@ -1396,15 +1414,15 @@ export function AppShell() {
 
         {/* ═══ PAYWALL ═══ */}
         {screen === 'paywall' && (
-          <div className="flex flex-col min-h-[836px] px-6 pt-6 pb-8" style={{background:'var(--bg0)'}}>
+          <div className="flex flex-col min-h-dvh px-6 pt-6 pb-8" style={{background:'var(--bg0)'}}>
             <IconBtn icon={X} onClick={() => navigate('home')} className="self-end mb-4" />
 
             <div className="text-center mb-6">
               <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{background:'linear-gradient(135deg,var(--ac),var(--a3))',boxShadow:'0 8px 30px rgba(34,211,183,0.3)'}}>
-                <Lock size={28} color="white" />
+                <Sparkles size={28} color="white" />
               </div>
-              <h2 className="text-2xl font-extrabold mb-1" style={{fontFamily:'Baloo 2,cursive',color:'var(--t1)'}}>You've used your 7 free tries</h2>
-              <p className="text-sm" style={{color:'var(--t3)'}}>Upgrade to Kidzplainer Pro for unlimited explanations</p>
+              <h2 className="text-2xl font-extrabold mb-2" style={{fontFamily:'Baloo 2,cursive',color:'var(--t1)'}}>You've used all {MAX_FREE} free explanations</h2>
+              <p className="text-[15px] leading-relaxed" style={{color:'var(--t3)'}}>Upgrade to Pro for unlimited access to every feature</p>
             </div>
 
             {/* Plan selection */}
@@ -1413,66 +1431,64 @@ export function AppShell() {
               {plan:'Monthly',price:'$6.99',perMonth:'',period:'/month',popular:false,planKey:'monthly'},
             ].map(p => (
               <button key={p.plan} onClick={() => setSelectedPlan(p.planKey)}
-                className="w-full rounded-2xl p-4 mb-3 text-left relative transition-all"
+                className="w-full rounded-2xl p-5 mb-3 text-left relative transition-all active:scale-[0.98]"
                 style={{
                   background: selectedPlan===p.planKey ? 'var(--acg)' : 'var(--bg2)',
                   border: selectedPlan===p.planKey ? '2px solid var(--ac)' : '2px solid var(--brc)',
                 }}>
-                {p.popular && <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 text-[10px] font-bold px-3 py-0.5 rounded-full" style={{background:'var(--ac)',color:'#0A0E17'}}>MOST POPULAR</span>}
+                {p.popular && <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 text-[11px] font-bold px-3 py-0.5 rounded-full" style={{background:'var(--ac)',color:'#0A0E17'}}>MOST POPULAR</span>}
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-3">
-                    <div className="w-6 h-6 rounded-full border-2 flex items-center justify-center" style={{borderColor: selectedPlan===p.planKey ? 'var(--ac)' : 'var(--brc)'}}>
-                      {selectedPlan===p.planKey && <div className="w-3.5 h-3.5 rounded-full" style={{background:'var(--ac)'}} />}
+                    <div className="w-7 h-7 rounded-full border-2 flex items-center justify-center" style={{borderColor: selectedPlan===p.planKey ? 'var(--ac)' : 'var(--brc)'}}>
+                      {selectedPlan===p.planKey && <div className="w-4 h-4 rounded-full" style={{background:'var(--ac)'}} />}
                     </div>
                     <div>
-                      <div className="text-[16px] font-bold" style={{color:'var(--t1)'}}>{p.plan}</div>
-                      {p.save && <div className="text-[11px] font-semibold" style={{color:'var(--ac)'}}>{p.save}</div>}
+                      <div className="text-[17px] font-bold" style={{color:'var(--t1)'}}>{p.plan}</div>
+                      {p.save && <div className="text-[13px] font-semibold" style={{color:'var(--ac)'}}>{p.save}</div>}
                     </div>
                   </div>
                   <div className="text-right">
-                    <span className="text-[20px] font-extrabold" style={{color:'var(--t1)'}}>{p.price}</span>
-                    <span className="text-[12px]" style={{color:'var(--t3)'}}>{p.period}</span>
-                    {p.perMonth && <div className="text-[11px]" style={{color:'var(--t3)'}}>{p.perMonth}</div>}
+                    <span className="text-[22px] font-extrabold" style={{color:'var(--t1)'}}>{p.price}</span>
+                    <span className="text-[13px]" style={{color:'var(--t3)'}}>{p.period}</span>
+                    {p.perMonth && <div className="text-[13px]" style={{color:'var(--t3)'}}>{p.perMonth}</div>}
                   </div>
                 </div>
               </button>
             ))}
 
-            {/* Subscribe button */}
-            <button onClick={async () => {
-              if (!user) return;
-              try {
-                const res = await fetch('/api/checkout', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ plan: selectedPlan, email: user.email, userId: user.id }),
-                });
-                const data = await res.json();
-                if (data.url) window.location.href = data.url;
-              } catch (err) { console.error('Checkout error:', err); }
+            {/* Subscribe button — payment coming soon */}
+            <button onClick={() => {
+              const planName = selectedPlan === 'annual' ? 'Annual ($49.99/year)' : 'Monthly ($6.99/month)';
+              const msg = encodeURIComponent(`Hi, I'd like to subscribe to Kidzplainer Pro - ${planName}. My email: ${user?.email || 'N/A'}`);
+              window.open(`mailto:solutions@noeldcosta.com?subject=Kidzplainer Pro Subscription&body=${msg}`, '_blank');
+              setToast('We\'ll set up your Pro account within 24 hours!');
             }}
-              className="w-full py-4 rounded-2xl text-[16px] font-bold mt-2 transition-all active:scale-[0.97]"
+              className="w-full py-4 rounded-2xl text-[17px] font-bold mt-2 transition-all active:scale-[0.97]"
               style={{background:'linear-gradient(135deg,var(--ac),#1AB5A0)',color:'#FFFFFF',boxShadow:'0 6px 24px rgba(34,211,183,0.3)'}}>
-              Subscribe Now
+              Unlock Unlimited Explanations
             </button>
 
             <div className="mt-5 space-y-2.5">
-              {['Unlimited explanations','All 4 response layers','Cultural & belief calibration','Audio read-aloud','Co-parent sharing','Priority support'].map(f => (
+              {['Unlimited explanations','All 4 response layers','Cultural & belief calibration','Audio read-aloud','Save & share explanations','Email support'].map(f => (
                 <div key={f} className="flex items-center gap-2.5">
-                  <Check size={15} style={{color:'var(--ac)'}} />
-                  <span className="text-[14px] font-medium" style={{color:'var(--t2)'}}>{f}</span>
+                  <Check size={16} style={{color:'var(--ac)'}} />
+                  <span className="text-[15px] font-medium" style={{color:'var(--t2)'}}>{f}</span>
                 </div>
               ))}
             </div>
 
             <div className="mt-6 flex items-center justify-center gap-2 p-3 rounded-xl" style={{background:'var(--bg2)'}}>
               <Shield size={16} style={{color:'var(--t3)'}} />
-              <span className="text-[12px] font-medium" style={{color:'var(--t3)'}}>7-day free trial · Cancel anytime</span>
+              <span className="text-[13px] font-medium" style={{color:'var(--t3)'}}>Cancel anytime · Full refund within 7 days</span>
             </div>
 
-            <div className="mt-4 flex justify-center gap-4">
+            <button onClick={() => { setToast('No previous purchase found. Contact solutions@noeldcosta.com for help.'); }} className="mt-3 text-[13px] font-medium text-center w-full" style={{color:'var(--t3)'}}>
+              Restore Purchase
+            </button>
+
+            <div className="mt-3 flex justify-center gap-4">
               {[['Refund Policy','refund'],['Terms','terms'],['Privacy','privacy']].map(([l,k]) => (
-                <button key={k} onClick={() => {setLegalPage(k);navigate('legal')}} className="text-[11px] font-medium underline" style={{color:'var(--t3)'}}>{l}</button>
+                <button key={k} onClick={() => {setLegalPage(k);navigate('legal')}} className="text-[12px] font-medium underline" style={{color:'var(--t3)'}}>{l}</button>
               ))}
             </div>
           </div>
@@ -1480,7 +1496,7 @@ export function AppShell() {
 
         {/* ═══ SAVED ═══ */}
         {screen === 'saved' && (
-          <div className="flex flex-col min-h-[836px]" style={{background:'var(--bg0)'}}>
+          <div className="flex flex-col min-h-dvh" style={{background:'var(--bg0)'}}>
             <div className="flex items-center gap-3 px-4 py-3 border-b" style={{background:'var(--bg1)',borderColor:'var(--brs)'}}>
               <BookOpen size={18} style={{color:'var(--ac)'}} />
               <span className="text-sm font-bold" style={{color:'var(--t1)'}}>Saved Explanations</span>
@@ -1493,9 +1509,14 @@ export function AppShell() {
                   <p className="text-[12px] mt-1" style={{color:'var(--t3)',opacity:0.6}}>Generate one and tap Save</p>
                 </div>
               ) : saved.map(s => (
-                <div key={s.id} className="rounded-xl border p-3.5 transition-all hover:-translate-y-0.5 cursor-pointer" style={{background:'var(--bg2)',borderColor:'var(--brc)',boxShadow:'var(--sh)'}}>
-                  <div className="text-sm font-bold mb-1" style={{color:'var(--t1)'}}>{s.question}</div>
-                  <div className="text-[11px]" style={{color:'var(--t3)'}}>
+                <div key={s.id} onClick={() => {
+                  setQuestion(s.question);
+                  setLayers(s.layers);
+                  setOpenLayer(0);
+                  navigate('result');
+                }} className="rounded-xl border p-4 transition-all hover:-translate-y-0.5 cursor-pointer active:scale-[0.98]" style={{background:'var(--bg2)',borderColor:'var(--brc)',boxShadow:'var(--sh)'}}>
+                  <div className="text-[15px] font-bold mb-1.5" style={{color:'var(--t1)'}}>{s.question}</div>
+                  <div className="text-[13px]" style={{color:'var(--t3)'}}>
                     {s.child.name} ({s.child.age}) · {COUNTRIES.find(c=>c.name===s.country)?.flag} · {BELIEFS.find(b=>b.name===s.belief)?.icon} · {s.layers.length} layers · {s.date}
                   </div>
                 </div>
@@ -1507,7 +1528,7 @@ export function AppShell() {
 
         {/* ═══ SETTINGS ═══ */}
         {screen === 'settings' && (
-          <div className="flex flex-col min-h-[836px]" style={{background:'var(--bg0)'}}>
+          <div className="flex flex-col min-h-dvh" style={{background:'var(--bg0)'}}>
             <div className="flex items-center gap-3 px-5 pt-12 pb-4">
               <Settings size={22} style={{color:'var(--ac)'}} />
               <span className="text-[20px] font-bold" style={{color:'var(--t1)'}}>Settings</span>
@@ -1565,8 +1586,17 @@ export function AppShell() {
                     <ChevronRight size={16} style={{color:'var(--t3)'}} />
                   </button>
                 ))}
-                <button onClick={async () => { await signOut(); setIsLoggedIn(false); setDataLoaded(false); dataLoadedRef.current = false; setChildren([]); setSaved([]); navigate('auth'); }} className="flex items-center gap-2 px-4 py-4 w-full">
+                <button onClick={async () => { await signOut(); setIsLoggedIn(false); setDataLoaded(false); dataLoadedRef.current = false; setChildren([]); setSaved([]); navigate('auth'); }} className="flex items-center gap-2 px-4 py-4 w-full border-b" style={{borderColor:'var(--brs)'}}>
                   <LogOut size={18} style={{color:'var(--a2)'}} /><span className="text-[16px] font-semibold" style={{color:'var(--a2)'}}>Sign Out</span>
+                </button>
+                <button onClick={() => {
+                  if (confirm('Are you sure you want to delete your account? This action cannot be undone. All your data including saved explanations and children profiles will be permanently deleted.')) {
+                    const msg = encodeURIComponent(`Please delete my Kidzplainer account. Email: ${user?.email || 'N/A'}, User ID: ${user?.id || 'N/A'}`);
+                    window.open(`mailto:solutions@noeldcosta.com?subject=Delete My Kidzplainer Account&body=${msg}`, '_blank');
+                    setToast('Account deletion request sent. We\'ll process it within 48 hours.');
+                  }
+                }} className="flex items-center gap-2 px-4 py-4 w-full">
+                  <X size={18} style={{color:'var(--t3)'}} /><span className="text-[16px] font-semibold" style={{color:'var(--t3)'}}>Delete Account</span>
                 </button>
               </div>
 
@@ -1574,7 +1604,7 @@ export function AppShell() {
               <div className="mx-5 mt-5 text-[13px] font-bold uppercase tracking-widest flex items-center gap-2" style={{color:'var(--t3)'}}>Feedback & Support<div className="flex-1 h-px" style={{background:'var(--brs)'}} /></div>
               <p className="mx-5 mt-1 mb-2 text-[13px]" style={{color:'var(--t3)',opacity:0.7}}>Help us improve Kidzplainer for every family</p>
               <div className="mx-5 rounded-2xl border overflow-hidden" style={{background:'var(--bg2)',borderColor:'var(--brc)'}}>
-                <button onClick={() => { window.open(`mailto:support@kidzplainer.com?subject=Kidzplainer Feedback&body=Hi Kidzplainer team,%0A%0A`, '_blank'); }} className="flex justify-between items-center px-4 py-4 w-full border-b" style={{borderColor:'var(--brs)'}}>
+                <button onClick={() => { window.open(`mailto:solutions@noeldcosta.com?subject=Kidzplainer Feedback&body=Hi Kidzplainer team,%0A%0A`, '_blank'); }} className="flex justify-between items-center px-4 py-4 w-full border-b" style={{borderColor:'var(--brs)'}}>
                   <div className="flex items-center gap-2.5"><Mail size={18} style={{color:'var(--ac)'}} /><span className="text-[16px] font-semibold" style={{color:'var(--t1)'}}>Send Feedback</span></div>
                   <ChevronRight size={16} style={{color:'var(--t3)'}} />
                 </button>
@@ -1582,7 +1612,7 @@ export function AppShell() {
                   <div className="flex items-center gap-2.5"><Star size={18} style={{color:'#fbbf24'}} /><span className="text-[16px] font-semibold" style={{color:'var(--t1)'}}>Leave a Review</span></div>
                   <ChevronRight size={16} style={{color:'var(--t3)'}} />
                 </button>
-                <button onClick={() => { window.open(`https://wa.me/+971000000000?text=Hi, I need help with Kidzplainer`, '_blank'); }} className="flex justify-between items-center px-4 py-4 w-full" style={{borderColor:'var(--brs)'}}>
+                <button onClick={() => { window.open(`https://wa.me/+971501234567?text=Hi, I need help with Kidzplainer`, '_blank'); }} className="flex justify-between items-center px-4 py-4 w-full" style={{borderColor:'var(--brs)'}}>
                   <div className="flex items-center gap-2.5"><MessageCircle size={18} style={{color:'#25D366'}} /><span className="text-[16px] font-semibold" style={{color:'var(--t1)'}}>WhatsApp Support</span></div>
                   <ChevronRight size={16} style={{color:'var(--t3)'}} />
                 </button>
@@ -1596,7 +1626,7 @@ export function AppShell() {
 
         {/* ═══ REVIEW ═══ */}
         {screen === 'review' && (
-          <div className="flex flex-col min-h-[836px]" style={{background:'var(--bg0)'}}>
+          <div className="flex flex-col min-h-dvh" style={{background:'var(--bg0)'}}>
             <div className="flex items-center gap-3 px-5 py-4">
               <IconBtn icon={ArrowLeft} onClick={() => { setReviewSubmitted(false); setReviewText(''); navigate('settings'); }} />
               <span className="text-[18px] font-bold" style={{color:'var(--t1)'}}>Leave a Review</span>
@@ -1641,7 +1671,7 @@ export function AppShell() {
 
         {/* ═══ LEGAL ═══ */}
         {screen === 'legal' && (
-          <div className="flex flex-col min-h-[836px]" style={{background:'var(--bg0)'}}>
+          <div className="flex flex-col min-h-dvh" style={{background:'var(--bg0)'}}>
             <div className="flex items-center gap-3 px-4 py-3 border-b" style={{background:'var(--bg1)',borderColor:'var(--brs)'}}>
               <IconBtn icon={ArrowLeft} onClick={() => navigate(prevScreen || 'settings')} />
               <span className="text-sm font-bold" style={{color:'var(--t1)'}}>
@@ -1662,7 +1692,7 @@ export function AppShell() {
                 <p className="text-sm font-bold mt-2" style={{color:'var(--t1)'}}>Data Security</p>
                 <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>All data is encrypted in transit (TLS 1.3) and at rest (AES-256). We use Stripe for payment processing — we never see or store your credit card details.</p>
                 <p className="text-sm font-bold mt-2" style={{color:'var(--t1)'}}>Your Rights</p>
-                <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>You can export, modify, or delete your data at any time from Settings. Account deletion permanently removes all your data within 30 days. Contact: privacy@childtruths.com</p>
+                <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>You can export, modify, or delete your data at any time from Settings. Account deletion permanently removes all your data within 30 days. Contact: solutions@noeldcosta.com</p>
               </>}
               {legalPage === 'terms' && <>
                 <h3 className="text-lg font-bold" style={{color:'var(--t1)',fontFamily:'Baloo 2,cursive'}}>Terms of Service</h3>
@@ -1673,20 +1703,20 @@ export function AppShell() {
                 <p className="text-sm font-bold mt-2" style={{color:'var(--t1)'}}>Acceptable Use</p>
                 <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>You may not use Kidzplainer to generate harmful, abusive, or inappropriate content. We reserve the right to terminate accounts that violate these terms.</p>
                 <p className="text-sm font-bold mt-2" style={{color:'var(--t1)'}}>Subscriptions</p>
-                <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>Free accounts receive 7 explanations to try. Pro subscriptions are billed monthly or annually through the App Store or Google Play. You can cancel at any time — access continues until the end of your billing period.</p>
+                <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>Free accounts receive {MAX_FREE} explanations. Pro subscriptions are billed monthly ($6.99/mo) or annually ($49.99/yr). You can cancel at any time — access continues until the end of your billing period.</p>
               </>}
               {legalPage === 'refund' && <>
                 <h3 className="text-lg font-bold" style={{color:'var(--t1)',fontFamily:'Baloo 2,cursive'}}>Refund Policy</h3>
                 <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>Last updated: March 2026</p>
                 <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>We want you to be completely satisfied with Kidzplainer.</p>
                 <p className="text-sm font-bold mt-2" style={{color:'var(--t1)'}}>7-Day Money-Back Guarantee</p>
-                <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>If you're not happy with your Pro subscription, you can request a full refund within 7 days of your first payment. No questions asked. Email refunds@childtruths.com with your account email.</p>
+                <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>If you're not happy with your Pro subscription, you can request a full refund within 7 days of your first payment. No questions asked. Email solutions@noeldcosta.com with your account email.</p>
                 <p className="text-sm font-bold mt-2" style={{color:'var(--t1)'}}>App Store / Google Play Purchases</p>
                 <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>For subscriptions purchased through the App Store or Google Play, refunds are handled according to Apple's and Google's respective refund policies. Please contact Apple or Google directly for these refunds.</p>
                 <p className="text-sm font-bold mt-2" style={{color:'var(--t1)'}}>After 7 Days</p>
                 <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>After the 7-day window, you can cancel your subscription at any time. You'll continue to have Pro access until the end of your current billing period. No partial refunds are issued for the remaining time.</p>
                 <p className="text-sm font-bold mt-2" style={{color:'var(--t1)'}}>Contact</p>
-                <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>For any billing questions: billing@childtruths.com</p>
+                <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>For any billing questions: solutions@noeldcosta.com</p>
               </>}
             </div>
           </div>
