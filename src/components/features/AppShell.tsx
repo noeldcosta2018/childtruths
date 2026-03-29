@@ -1430,115 +1430,119 @@ export function AppShell() {
 
         {/* ═══ PAYWALL ═══ */}
         {screen === 'paywall' && (
-          <div className="flex flex-col min-h-dvh relative overflow-hidden" style={{background:'#0A0E17'}}>
-            {/* Dramatic gradient background like ElevenLabs */}
+          <div className="flex flex-col min-h-dvh relative overflow-hidden" style={{background:'#000000'}}>
+            {/* ElevenLabs-style dramatic glow — warm red/orange behind, teal accent */}
             <div className="absolute inset-0 z-0">
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full" style={{background:'radial-gradient(circle, rgba(34,211,183,0.15) 0%, rgba(34,211,183,0.05) 40%, transparent 70%)'}} />
-              <div className="absolute bottom-0 right-0 w-[300px] h-[300px] rounded-full" style={{background:'radial-gradient(circle, rgba(99,102,241,0.1) 0%, transparent 70%)'}} />
+              <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full" style={{background:'radial-gradient(circle, rgba(255,80,50,0.18) 0%, rgba(255,120,80,0.08) 30%, transparent 65%)'}} />
+              <div className="absolute top-[10%] right-[-20%] w-[400px] h-[400px] rounded-full" style={{background:'radial-gradient(circle, rgba(220,60,60,0.12) 0%, transparent 60%)'}} />
+              <div className="absolute bottom-[20%] left-[-10%] w-[300px] h-[300px] rounded-full" style={{background:'radial-gradient(circle, rgba(34,211,183,0.08) 0%, transparent 60%)'}} />
             </div>
 
-            <div className="relative z-10 flex flex-col px-6 pt-6 pb-8">
-              {/* Close button */}
-              <IconBtn icon={X} onClick={() => navigate('home')} className="self-end mb-2" />
-
-              {/* Hero pricing — ElevenLabs bold style */}
-              <div className="text-center mb-6">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-5" style={{background:'rgba(34,211,183,0.12)',border:'1px solid rgba(34,211,183,0.25)'}}>
-                  <Sparkles size={14} style={{color:'var(--ac)'}} />
-                  <span className="text-[13px] font-semibold tracking-wide" style={{color:'var(--ac)'}}>7 DAYS FREE</span>
+            <div className="relative z-10 flex flex-col h-full px-6 pt-8 pb-6">
+              {/* Top bar — close + badge */}
+              <div className="flex justify-between items-center mb-8">
+                <IconBtn icon={X} onClick={() => navigate('home')} />
+                <div className="flex items-center gap-1.5 px-3 py-1 rounded-full" style={{background:'rgba(34,211,183,0.1)',border:'1px solid rgba(34,211,183,0.2)'}}>
+                  <Sparkles size={12} style={{color:'#22D3B7'}} />
+                  <span className="text-[11px] font-bold tracking-widest" style={{color:'#22D3B7'}}>PRO</span>
                 </div>
+              </div>
 
-                <h1 className="text-[44px] font-black leading-[1.05] tracking-tight mb-1" style={{fontFamily:'Baloo 2,cursive',color:'white'}}>
+              {/* HERO — Giant price like ElevenLabs $11,000,000 */}
+              <div className="text-center flex-1 flex flex-col justify-center" style={{marginTop:'-2rem'}}>
+                <p className="text-[16px] font-medium tracking-wide mb-3" style={{color:'rgba(255,255,255,0.4)'}}>
+                  UNLIMITED EXPLANATIONS
+                </p>
+                <h1 className="font-black leading-none tracking-tighter" style={{
+                  fontSize: selectedPlan === 'annual' ? '72px' : '80px',
+                  fontFamily:'system-ui, -apple-system, sans-serif',
+                  color:'white',
+                  textShadow:'0 0 80px rgba(255,100,60,0.3), 0 0 160px rgba(255,80,50,0.15)',
+                }}>
                   {selectedPlan === 'annual' ? '$49.99' : '$4.99'}
                 </h1>
-                <p className="text-[18px] font-medium" style={{color:'rgba(255,255,255,0.5)'}}>
-                  {selectedPlan === 'annual' ? 'per year · $4.17/mo' : 'per month'}
+                <p className="text-[20px] font-light mt-2" style={{color:'rgba(255,255,255,0.45)'}}>
+                  {selectedPlan === 'annual' ? 'per year' : 'per month'}
                 </p>
-                <p className="text-[15px] mt-3 leading-relaxed max-w-[280px] mx-auto" style={{color:'rgba(255,255,255,0.6)'}}>
-                  Unlimited explanations for every tough question your child asks.
-                </p>
+
+                {/* Plan pills — ElevenLabs minimal style */}
+                <div className="flex gap-2 mx-auto mt-8">
+                  {[
+                    {key:'monthly',label:'Monthly'},
+                    {key:'annual',label:'Annual'},
+                  ].map(p => (
+                    <button key={p.key} onClick={() => setSelectedPlan(p.key)}
+                      className="px-7 py-2.5 rounded-full text-[15px] font-semibold transition-all"
+                      style={{
+                        background: selectedPlan===p.key ? 'white' : 'rgba(255,255,255,0.08)',
+                        color: selectedPlan===p.key ? '#000000' : 'rgba(255,255,255,0.45)',
+                        border: selectedPlan===p.key ? 'none' : '1px solid rgba(255,255,255,0.1)',
+                      }}>
+                      {p.label}
+                    </button>
+                  ))}
+                </div>
+
+                {selectedPlan === 'annual' && (
+                  <p className="text-[14px] font-medium mt-3" style={{color:'#22D3B7'}}>
+                    That&apos;s just $4.17/mo — save 17%
+                  </p>
+                )}
               </div>
 
-              {/* Plan toggle — pill style */}
-              <div className="flex p-1 rounded-2xl mb-5 mx-auto" style={{background:'rgba(255,255,255,0.06)',border:'1px solid rgba(255,255,255,0.08)'}}>
-                {[
-                  {key:'monthly',label:'Monthly',price:'$4.99'},
-                  {key:'annual',label:'Annual',price:'$49.99',badge:'Save 17%'},
-                ].map(p => (
-                  <button key={p.key} onClick={() => setSelectedPlan(p.key)}
-                    className="relative px-6 py-2.5 rounded-xl text-[15px] font-bold transition-all"
-                    style={{
-                      background: selectedPlan===p.key ? 'var(--ac)' : 'transparent',
-                      color: selectedPlan===p.key ? '#0A0E17' : 'rgba(255,255,255,0.5)',
-                    }}>
-                    {p.label}
-                    {p.badge && selectedPlan===p.key && (
-                      <span className="absolute -top-2 -right-1 text-[9px] font-black px-1.5 py-0.5 rounded-full" style={{background:'#FF6B6B',color:'white'}}>{p.badge}</span>
-                    )}
-                  </button>
-                ))}
-              </div>
+              {/* Bottom section — CTA + details */}
+              <div className="mt-auto">
+                {/* Feature pills */}
+                <div className="flex flex-wrap gap-2 justify-center mb-6">
+                  {['Unlimited','All 4 Layers','Cultural','Audio','Save & Share'].map(f => (
+                    <span key={f} className="text-[12px] font-medium px-3 py-1.5 rounded-full" style={{background:'rgba(255,255,255,0.06)',color:'rgba(255,255,255,0.5)',border:'1px solid rgba(255,255,255,0.08)'}}>
+                      {f}
+                    </span>
+                  ))}
+                </div>
 
-              {/* Subscribe CTA */}
-              <button onClick={async () => {
-                if (!user || !session) { setToast('Please sign in first'); return; }
-                setGenerating(true);
-                try {
-                  const res = await fetch('/api/checkout', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ plan: selectedPlan, email: user.email, userId: user.id }),
-                  });
-                  const data = await res.json();
-                  if (data.url) {
-                    window.location.href = data.url;
-                  } else {
-                    setToast(data.error || 'Failed to start checkout');
+                {/* CTA — prominent like ElevenLabs "Sign up" */}
+                <button onClick={async () => {
+                  if (!user || !session) { setToast('Please sign in first'); return; }
+                  setGenerating(true);
+                  try {
+                    const res = await fetch('/api/checkout', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ plan: selectedPlan, email: user.email, userId: user.id }),
+                    });
+                    const data = await res.json();
+                    if (data.url) {
+                      window.location.href = data.url;
+                    } else {
+                      setToast(data.error || 'Failed to start checkout');
+                      setGenerating(false);
+                    }
+                  } catch {
+                    setToast('Something went wrong. Please try again.');
                     setGenerating(false);
                   }
-                } catch {
-                  setToast('Something went wrong. Please try again.');
-                  setGenerating(false);
-                }
-              }}
-                disabled={generating}
-                className="w-full py-4 rounded-2xl text-[18px] font-extrabold transition-all active:scale-[0.97] flex items-center justify-center gap-2"
-                style={{background:'linear-gradient(135deg,#22D3B7,#1AB5A0)',color:'#FFFFFF',boxShadow:'0 8px 32px rgba(34,211,183,0.35)',opacity: generating ? 0.7 : 1}}>
-                {generating ? <><Loader2 size={20} className="animate-spin" /> Processing...</> : 'Start Free Trial →'}
-              </button>
+                }}
+                  disabled={generating}
+                  className="w-full py-4.5 rounded-full text-[18px] font-bold transition-all active:scale-[0.97] flex items-center justify-center gap-2"
+                  style={{background:'white',color:'#000000',boxShadow:'0 0 40px rgba(255,255,255,0.1)',opacity: generating ? 0.7 : 1, padding:'18px'}}>
+                  {generating ? <><Loader2 size={20} className="animate-spin" /> Processing...</> : 'Start 7-Day Free Trial'}
+                </button>
 
-              <p className="text-center text-[13px] mt-2.5" style={{color:'rgba(255,255,255,0.35)'}}>
-                7 days free · then {selectedPlan === 'annual' ? '$49.99/year' : '$4.99/month'} · cancel anytime
-              </p>
+                <p className="text-center text-[13px] mt-3" style={{color:'rgba(255,255,255,0.3)'}}>
+                  {selectedPlan === 'annual' ? '$49.99/year' : '$4.99/month'} after trial · Cancel anytime
+                </p>
 
-              {/* Payment methods */}
-              <div className="flex items-center justify-center gap-4 mt-4">
-                <span className="text-[13px] font-semibold px-3 py-1 rounded-lg" style={{background:'rgba(255,255,255,0.06)',color:'rgba(255,255,255,0.5)'}}>Apple Pay</span>
-                <span className="text-[13px] font-semibold px-3 py-1 rounded-lg" style={{background:'rgba(255,255,255,0.06)',color:'rgba(255,255,255,0.5)'}}>Google Pay</span>
-                <span className="text-[13px] font-semibold px-3 py-1 rounded-lg" style={{background:'rgba(255,255,255,0.06)',color:'rgba(255,255,255,0.5)'}}>💳 Card</span>
-              </div>
-
-              {/* Features list */}
-              <div className="mt-6 grid grid-cols-2 gap-3">
-                {[
-                  {icon:'♾️',text:'Unlimited explanations'},
-                  {icon:'🧅',text:'All 4 response layers'},
-                  {icon:'🌍',text:'Cultural calibration'},
-                  {icon:'🔊',text:'Audio read-aloud'},
-                  {icon:'💾',text:'Save & share'},
-                  {icon:'⚡',text:'Priority support'},
-                ].map(f => (
-                  <div key={f.text} className="flex items-center gap-2.5 p-3 rounded-xl" style={{background:'rgba(255,255,255,0.04)'}}>
-                    <span className="text-[16px]">{f.icon}</span>
-                    <span className="text-[13px] font-medium" style={{color:'rgba(255,255,255,0.7)'}}>{f.text}</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Trust bar */}
-              <div className="mt-5 flex items-center justify-center gap-2 py-3 rounded-xl" style={{background:'rgba(255,255,255,0.03)',border:'1px solid rgba(255,255,255,0.06)'}}>
-                <Shield size={14} style={{color:'rgba(255,255,255,0.3)'}} />
-                <span className="text-[12px] font-medium" style={{color:'rgba(255,255,255,0.35)'}}>Cancel anytime · No commitment · Secure payment</span>
+                {/* Payment methods — subtle */}
+                <div className="flex items-center justify-center gap-3 mt-3">
+                  <span className="text-[11px] font-medium" style={{color:'rgba(255,255,255,0.25)'}}>Apple Pay</span>
+                  <span className="text-[11px]" style={{color:'rgba(255,255,255,0.15)'}}>·</span>
+                  <span className="text-[11px] font-medium" style={{color:'rgba(255,255,255,0.25)'}}>Google Pay</span>
+                  <span className="text-[11px]" style={{color:'rgba(255,255,255,0.15)'}}>·</span>
+                  <span className="text-[11px] font-medium" style={{color:'rgba(255,255,255,0.25)'}}>Samsung Pay</span>
+                  <span className="text-[11px]" style={{color:'rgba(255,255,255,0.15)'}}>·</span>
+                  <span className="text-[11px] font-medium" style={{color:'rgba(255,255,255,0.25)'}}>Card</span>
+                </div>
               </div>
 
               {isPro && (
@@ -1553,7 +1557,7 @@ export function AppShell() {
                     if (data.url) window.location.href = data.url;
                     else setToast('Could not open subscription manager');
                   } catch { setToast('Something went wrong'); }
-                }} className="mt-4 text-[14px] font-semibold text-center w-full underline" style={{color:'var(--ac)'}}>
+                }} className="mt-4 text-[14px] font-semibold text-center w-full underline" style={{color:'#22D3B7'}}>
                   Manage Subscription
                 </button>
               )}
