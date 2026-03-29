@@ -414,6 +414,7 @@ export function AppShell() {
   const [generating, setGenerating] = useState(false);
   const [genError, setGenError] = useState('');
   const [selectedPlan, setSelectedPlan] = useState('annual');
+  const [isSpeaking, setIsSpeaking] = useState(false);
 
   // Usage
   const [usageCount, setUsageCount] = useState(0);
@@ -440,7 +441,15 @@ export function AppShell() {
   // Data loading flag
   const [dataLoaded, setDataLoaded] = useState(false);
 
-  const navigate = (s) => { setPrevScreen(screen); setScreen(s); };
+  const navigate = (s) => {
+    // Stop any ongoing TTS when leaving result screen
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+    setIsSpeaking(false);
+    setPrevScreen(screen);
+    setScreen(s);
+  };
 
   // Handle auth state from Supabase
   const dataLoadedRef = useRef(false);
@@ -1474,7 +1483,12 @@ export function AppShell() {
 
               {/* Layers */}
               {layers.map((l, i) => (
-                <LayerCard key={i} layer={l} index={i} isOpen={openLayer === i} onToggle={() => setOpenLayer(openLayer === i ? -1 : i)} />
+                <LayerCard key={i} layer={l} index={i} isOpen={openLayer === i} onToggle={() => {
+                  // Stop speech when switching layers
+                  if (typeof window !== 'undefined' && 'speechSynthesis' in window) window.speechSynthesis.cancel();
+                  setIsSpeaking(false);
+                  setOpenLayer(openLayer === i ? -1 : i);
+                }} />
               ))}
 
               {/* Actions */}
@@ -1491,14 +1505,39 @@ export function AppShell() {
                       const msg = encodeURIComponent(`🧒 My child asked: "${question}"\n\nHere's what Kidzplainer suggested:\n\n${layers[0]?.quote || ''}\n\nGet age-appropriate answers: https://kidzplainer.com`);
                       window.open(`https://wa.me/?text=${msg}`, '_blank');
                     },color:'#f472b6'},
-                    {icon:Volume2,label:t.read,action:() => {
-                      if ('speechSynthesis' in window) {
+                    {icon: isSpeaking ? X : Volume2, label: isSpeaking ? 'Stop' : t.read, action:() => {
+                      if (!('speechSynthesis' in window)) return;
+                      if (isSpeaking) {
                         window.speechSynthesis.cancel();
-                        const utterance = new SpeechSynthesisUtterance(layers[openLayer >= 0 ? openLayer : 0]?.quote || '');
-                        utterance.rate = 0.9;
-                        window.speechSynthesis.speak(utterance);
+                        setIsSpeaking(false);
+                        return;
                       }
-                    },color:'#fbbf24'},
+                      const text = layers[openLayer >= 0 ? openLayer : 0]?.quote || '';
+                      const utterance = new SpeechSynthesisUtterance(text);
+                      // Pick the most natural-sounding voice available
+                      const voices = window.speechSynthesis.getVoices();
+                      const preferred = [
+                        'Google UK English Female','Google US English','Samantha',
+                        'Karen','Moira','Tessa','Victoria','Fiona',
+                        'Google UK English Male','Daniel','Alex',
+                      ];
+                      let picked = null;
+                      for (const name of preferred) {
+                        picked = voices.find(v => v.name === name) || picked;
+                        if (picked?.name === name) break;
+                      }
+                      // Fallback: first en-US or en-GB voice
+                      if (!picked) picked = voices.find(v => /en-US|en-GB|en-AU/i.test(v.lang)) || voices[0];
+                      if (picked) utterance.voice = picked;
+                      utterance.rate = 0.88;
+                      utterance.pitch = 1.05;
+                      utterance.volume = 1;
+                      utterance.onstart = () => setIsSpeaking(true);
+                      utterance.onend = () => setIsSpeaking(false);
+                      utterance.onerror = () => setIsSpeaking(false);
+                      window.speechSynthesis.cancel();
+                      window.speechSynthesis.speak(utterance);
+                    },color: isSpeaking ? '#f87171' : '#fbbf24'},
                   ].map(a => (
                     <button key={a.label} onClick={a.action}
                       className="flex items-center gap-4 w-full px-5 py-4 mb-2 rounded-2xl transition-all active:scale-[0.98]"
