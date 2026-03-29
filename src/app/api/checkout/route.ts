@@ -18,16 +18,17 @@ export async function POST(request: NextRequest) {
 
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
-      payment_method_types: ['card'],
       customer_email: email,
       line_items: [{ price: priceId, quantity: 1 }],
       metadata: { user_id: userId },
+      payment_method_types: ['card'],
       success_url: `${appUrl}?checkout=success`,
       cancel_url: `${appUrl}?checkout=cancel`,
       subscription_data: {
         trial_period_days: 7,
         metadata: { user_id: userId },
       },
+      allow_promotion_codes: true,
     })
 
     return NextResponse.json({ url: session.url })

@@ -520,6 +520,22 @@ export function AppShell() {
     }
   }, [user, session, authContextLoading]);
 
+  // Handle Stripe checkout redirect
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const checkoutStatus = params.get('checkout');
+    if (checkoutStatus === 'success') {
+      setToast('Subscription activated! Welcome to Pro.');
+      setIsPro(true);
+      // Clean up URL
+      window.history.replaceState({}, '', window.location.pathname);
+    } else if (checkoutStatus === 'cancel') {
+      setToast('Checkout cancelled. You can try again anytime.');
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }, []);
+
   // Splash timer - wait for auth to finish loading before deciding
   useEffect(() => {
     if (screen === 'splash') {
@@ -1258,7 +1274,7 @@ export function AppShell() {
                 <Sparkles size={19}/>
                 {t.generate}
               </button>
-              {!isPro && (
+              {!isPro && !isAdmin && (
                 <p className="text-center text-[12px] mt-3 flex items-center justify-center gap-1.5" style={{color:'rgba(255,255,255,0.3)'}}>
                   <AlertCircle size={12}/> {t.freeRemaining.replace('{n}', String(MAX_FREE - usageCount))} · <span style={{color:'#2dd4a8',fontWeight:600}}>{t.signInMore}</span>
                 </p>
@@ -1421,14 +1437,14 @@ export function AppShell() {
               <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{background:'linear-gradient(135deg,var(--ac),var(--a3))',boxShadow:'0 8px 30px rgba(34,211,183,0.3)'}}>
                 <Sparkles size={28} color="white" />
               </div>
-              <h2 className="text-2xl font-extrabold mb-2" style={{fontFamily:'Baloo 2,cursive',color:'var(--t1)'}}>You've used all {MAX_FREE} free explanations</h2>
-              <p className="text-[15px] leading-relaxed" style={{color:'var(--t3)'}}>Upgrade to Pro for unlimited access to every feature</p>
+              <h2 className="text-2xl font-extrabold mb-2" style={{fontFamily:'Baloo 2,cursive',color:'var(--t1)'}}>Start your 7-day free trial</h2>
+              <p className="text-[15px] leading-relaxed" style={{color:'var(--t3)'}}>Unlimited explanations for every tough question. Cancel anytime.</p>
             </div>
 
             {/* Plan selection */}
             {[
-              {plan:'Annual',price:'$49.99',perMonth:'$4.17/mo',period:'/year',popular:true,save:'Save 40%',planKey:'annual'},
-              {plan:'Monthly',price:'$6.99',perMonth:'',period:'/month',popular:false,planKey:'monthly'},
+              {plan:'Annual',price:'$29.99',perMonth:'$2.50/mo',period:'/year',popular:true,save:'Save 50%',planKey:'annual'},
+              {plan:'Monthly',price:'$4.99',perMonth:'',period:'/month',popular:false,planKey:'monthly'},
             ].map(p => (
               <button key={p.plan} onClick={() => setSelectedPlan(p.planKey)}
                 className="w-full rounded-2xl p-5 mb-3 text-left relative transition-all active:scale-[0.98]"
@@ -1436,7 +1452,7 @@ export function AppShell() {
                   background: selectedPlan===p.planKey ? 'var(--acg)' : 'var(--bg2)',
                   border: selectedPlan===p.planKey ? '2px solid var(--ac)' : '2px solid var(--brc)',
                 }}>
-                {p.popular && <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 text-[11px] font-bold px-3 py-0.5 rounded-full" style={{background:'var(--ac)',color:'#0A0E17'}}>MOST POPULAR</span>}
+                {p.popular && <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 text-[11px] font-bold px-3 py-0.5 rounded-full" style={{background:'var(--ac)',color:'#0A0E17'}}>BEST VALUE</span>}
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-3">
                     <div className="w-7 h-7 rounded-full border-2 flex items-center justify-center" style={{borderColor: selectedPlan===p.planKey ? 'var(--ac)' : 'var(--brc)'}}>
@@ -1456,20 +1472,54 @@ export function AppShell() {
               </button>
             ))}
 
-            {/* Subscribe button — payment coming soon */}
-            <button onClick={() => {
-              const planName = selectedPlan === 'annual' ? 'Annual ($49.99/year)' : 'Monthly ($6.99/month)';
-              const msg = encodeURIComponent(`Hi, I'd like to subscribe to Kidzplainer Pro - ${planName}. My email: ${user?.email || 'N/A'}`);
-              window.open(`mailto:solutions@noeldcosta.com?subject=Kidzplainer Pro Subscription&body=${msg}`, '_blank');
-              setToast('We\'ll set up your Pro account within 24 hours!');
+            {/* Subscribe button — Stripe Checkout */}
+            <button onClick={async () => {
+              if (!user || !session) { setToast('Please sign in first'); return; }
+              setGenerating(true);
+              try {
+                const res = await fetch('/api/checkout', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ plan: selectedPlan, email: user.email, userId: user.id }),
+                });
+                const data = await res.json();
+                if (data.url) {
+                  window.location.href = data.url;
+                } else {
+                  setToast(data.error || 'Failed to start checkout');
+                  setGenerating(false);
+                }
+              } catch (err) {
+                setToast('Something went wrong. Please try again.');
+                setGenerating(false);
+              }
             }}
-              className="w-full py-4 rounded-2xl text-[17px] font-bold mt-2 transition-all active:scale-[0.97]"
-              style={{background:'linear-gradient(135deg,var(--ac),#1AB5A0)',color:'#FFFFFF',boxShadow:'0 6px 24px rgba(34,211,183,0.3)'}}>
-              Unlock Unlimited Explanations
+              disabled={generating}
+              className="w-full py-4 rounded-2xl text-[17px] font-bold mt-2 transition-all active:scale-[0.97] flex items-center justify-center gap-2"
+              style={{background:'linear-gradient(135deg,var(--ac),#1AB5A0)',color:'#FFFFFF',boxShadow:'0 6px 24px rgba(34,211,183,0.3)',opacity: generating ? 0.7 : 1}}>
+              {generating ? <><Loader2 size={18} className="animate-spin" /> Processing...</> : 'Start Free Trial'}
             </button>
 
+            <p className="text-center text-[12px] mt-2" style={{color:'var(--t3)'}}>
+              7 days free, then {selectedPlan === 'annual' ? '$29.99/year' : '$4.99/month'}. Cancel anytime.
+            </p>
+
+            {/* Apple Pay / Google Pay badges */}
+            <div className="flex items-center justify-center gap-3 mt-4">
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg" style={{background:'var(--bg2)',border:'1px solid var(--brc)'}}>
+                <span className="text-[13px] font-semibold" style={{color:'var(--t2)'}}>Apple Pay</span>
+              </div>
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg" style={{background:'var(--bg2)',border:'1px solid var(--brc)'}}>
+                <span className="text-[13px] font-semibold" style={{color:'var(--t2)'}}>Google Pay</span>
+              </div>
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg" style={{background:'var(--bg2)',border:'1px solid var(--brc)'}}>
+                <CreditCard size={14} style={{color:'var(--t3)'}} />
+                <span className="text-[13px] font-semibold" style={{color:'var(--t2)'}}>Card</span>
+              </div>
+            </div>
+
             <div className="mt-5 space-y-2.5">
-              {['Unlimited explanations','All 4 response layers','Cultural & belief calibration','Audio read-aloud','Save & share explanations','Email support'].map(f => (
+              {['Unlimited explanations','All 4 response layers','Cultural & belief calibration','Audio read-aloud','Save & share explanations','Priority support'].map(f => (
                 <div key={f} className="flex items-center gap-2.5">
                   <Check size={16} style={{color:'var(--ac)'}} />
                   <span className="text-[15px] font-medium" style={{color:'var(--t2)'}}>{f}</span>
@@ -1479,12 +1529,25 @@ export function AppShell() {
 
             <div className="mt-6 flex items-center justify-center gap-2 p-3 rounded-xl" style={{background:'var(--bg2)'}}>
               <Shield size={16} style={{color:'var(--t3)'}} />
-              <span className="text-[13px] font-medium" style={{color:'var(--t3)'}}>Cancel anytime · Full refund within 7 days</span>
+              <span className="text-[13px] font-medium" style={{color:'var(--t3)'}}>Cancel anytime during your free trial</span>
             </div>
 
-            <button onClick={() => { setToast('No previous purchase found. Contact solutions@noeldcosta.com for help.'); }} className="mt-3 text-[13px] font-medium text-center w-full" style={{color:'var(--t3)'}}>
-              Restore Purchase
-            </button>
+            {isPro && (
+              <button onClick={async () => {
+                if (!session) return;
+                try {
+                  const res = await fetch('/api/manage-subscription', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${session.access_token}` },
+                  });
+                  const data = await res.json();
+                  if (data.url) window.location.href = data.url;
+                  else setToast('Could not open subscription manager');
+                } catch { setToast('Something went wrong'); }
+              }} className="mt-3 text-[14px] font-semibold text-center w-full underline" style={{color:'var(--ac)'}}>
+                Manage Subscription
+              </button>
+            )}
 
             <div className="mt-3 flex justify-center gap-4">
               {[['Refund Policy','refund'],['Terms','terms'],['Privacy','privacy']].map(([l,k]) => (
@@ -1578,6 +1641,22 @@ export function AppShell() {
                 {!isPro && !isAdmin && (
                   <button onClick={() => navigate('paywall')} className="flex items-center gap-2 px-4 py-4 w-full border-b" style={{borderColor:'var(--brs)'}}>
                     <CreditCard size={18} style={{color:'var(--ac)'}} /><span className="text-[16px] font-semibold" style={{color:'var(--ac)'}}>Upgrade to Pro</span>
+                  </button>
+                )}
+                {isPro && !isAdmin && (
+                  <button onClick={async () => {
+                    if (!session) return;
+                    try {
+                      const res = await fetch('/api/manage-subscription', {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${session.access_token}` },
+                      });
+                      const data = await res.json();
+                      if (data.url) window.location.href = data.url;
+                      else setToast('Could not open subscription manager');
+                    } catch { setToast('Something went wrong'); }
+                  }} className="flex items-center gap-2 px-4 py-4 w-full border-b" style={{borderColor:'var(--brs)'}}>
+                    <CreditCard size={18} style={{color:'var(--ac)'}} /><span className="text-[16px] font-semibold" style={{color:'var(--ac)'}}>Manage Subscription</span>
                   </button>
                 )}
                 {[['Privacy Policy','privacy'],['Terms of Service','terms'],['Refund Policy','refund']].map(([l,k]) => (

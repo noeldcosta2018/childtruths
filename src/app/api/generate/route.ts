@@ -29,6 +29,10 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
+    // Admin bypass — never restrict admin
+    const ADMIN_EMAIL = 'noeldcosta2018@gmail.com'
+    const isAdmin = user.email === ADMIN_EMAIL
+
     // Usage check
     const month = new Date().toISOString().slice(0, 7)
     const { data: usageData } = await supabaseAdmin
@@ -51,7 +55,7 @@ export async function POST(request: NextRequest) {
     const isPro = !!subscription
     const MAX_FREE = 7
 
-    if (currentUsage >= MAX_FREE && !isPro) {
+    if (currentUsage >= MAX_FREE && !isPro && !isAdmin) {
       return NextResponse.json({ error: 'Free limit reached. Please upgrade.' }, { status: 402 })
     }
 
