@@ -1093,7 +1093,6 @@ export function AppShell() {
           </div>
           );
         })()}
-        )}
 
         {/* ═══ ADD CHILD ═══ */}
         {screen === 'addchild' && (
@@ -1585,10 +1584,11 @@ export function AppShell() {
                 </button>
               )}
 
-            <div className="mt-3 flex justify-center gap-4">
-              {[['Refund Policy','refund'],['Terms','terms'],['Privacy','privacy']].map(([l,k]) => (
-                <button key={k} onClick={() => {setLegalPage(k);navigate('legal')}} className="text-[12px] font-medium underline" style={{color:'var(--t3)'}}>{l}</button>
-              ))}
+              <div className="mt-3 flex justify-center gap-4">
+                {[['Refund Policy','refund'],['Terms','terms'],['Privacy','privacy']].map(([l,k]) => (
+                  <button key={k} onClick={() => {setLegalPage(k);navigate('legal')}} className="text-[12px] font-medium underline" style={{color:'rgba(255,255,255,0.25)'}}>{l}</button>
+                ))}
+              </div>
             </div>
           </div>
         )}
