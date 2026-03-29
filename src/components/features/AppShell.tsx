@@ -550,11 +550,11 @@ export function AppShell() {
 
   // Theme
   useEffect(() => {
-    document.documentElement.style.setProperty('--bg0', dark ? '#0A0E17' : '#F8FAFC');
+    document.documentElement.style.setProperty('--bg0', dark ? '#000000' : '#F8FAFC');
   }, [dark]);
 
   const themeVars = dark ? {
-    '--bg0':'#0A0E17','--bg1':'#111827','--bg2':'#1A2235','--bgi':'#141C2E',
+    '--bg0':'#000000','--bg1':'#0A0A0A','--bg2':'#111111','--bgi':'#0D0D0D',
     '--brs':'rgba(255,255,255,0.06)','--brc':'rgba(255,255,255,0.08)',
     '--t1':'#F1F5F9','--t2':'#94A3B8','--t3':'#64748B',
     '--ac':'#22D3B7','--acg':'rgba(34,211,183,0.15)','--acs':'rgba(34,211,183,0.1)',
@@ -564,7 +564,7 @@ export function AppShell() {
     '--sh':'0 4px 24px rgba(0,0,0,0.3)',
     '--nav':'rgba(10,14,23,0.95)',
     '--chb':'rgba(255,255,255,0.06)','--chbr':'rgba(255,255,255,0.1)',
-    '--chat':'#0A0E17',
+    '--chat':'#000000',
     '--sg':'linear-gradient(135deg,rgba(34,211,183,0.08),rgba(129,140,248,0.06),rgba(244,114,182,0.04))',
   } : {
     '--bg0':'#F8FAFC','--bg1':'#FFFFFF','--bg2':'#FFFFFF','--bgi':'#F1F5F9',
@@ -717,7 +717,7 @@ export function AppShell() {
         {/* Toast notification */}
         {toast && (
           <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[999] px-5 py-3 rounded-2xl shadow-2xl transition-all animate-fade-in max-w-[90vw]"
-            style={{background:'var(--ac)',color:'#0A0E17'}}>
+            style={{background:'var(--ac)',color:'#000000'}}>
             <p className="text-[14px] font-semibold text-center">{toast}</p>
           </div>
         )}
@@ -726,11 +726,11 @@ export function AppShell() {
 
         {/* ═══ SPLASH ═══ */}
         {screen === 'splash' && (
-          <div className="flex flex-col items-center justify-center text-center relative overflow-hidden" style={{background:'#0A0E17',minHeight:'100vh'}}>
+          <div className="flex flex-col items-center justify-center text-center relative overflow-hidden" style={{background:'#000000',minHeight:'100vh'}}>
             {/* Background image */}
             <div className="absolute inset-0 z-0">
               <img src="https://images.unsplash.com/photo-1476703993599-0035a21b17a9?w=800&q=80&auto=format&fit=crop" alt="" className="w-full h-full object-cover" style={{opacity:0.35}} />
-              <div className="absolute inset-0" style={{background:'linear-gradient(0deg, #0A0E17 0%, transparent 50%, #0A0E17 100%)'}} />
+              <div className="absolute inset-0" style={{background:'linear-gradient(0deg, #000000 0%, transparent 50%, #000000 100%)'}} />
             </div>
             <div className="relative z-10 flex flex-col items-center">
               <FamilyLogo size={80} />
@@ -742,13 +742,13 @@ export function AppShell() {
 
         {/* ═══ ONBOARDING ═══ */}
         {screen === 'onboarding' && (
-          <div className="flex flex-col relative overflow-hidden" style={{background:'#0A0E17',minHeight:'100vh'}}>
+          <div className="flex flex-col relative overflow-hidden" style={{background:'#000000',minHeight:'100vh'}}>
             {/* Full-screen background video */}
             <div className="absolute inset-0 z-0">
               <video autoPlay muted loop playsInline className="w-full h-full object-cover" style={{opacity:0.5}}>
                 <source src="https://videos.pexels.com/video-files/9096885/9096885-hd_1080_1920_24fps.mp4" type="video/mp4" />
               </video>
-              <div className="absolute inset-0" style={{background:'linear-gradient(0deg, #0A0E17 5%, rgba(10,14,23,0.85) 45%, rgba(10,14,23,0.4) 70%, rgba(10,14,23,0.6) 100%)'}} />
+              <div className="absolute inset-0" style={{background:'linear-gradient(0deg, #000000 5%, rgba(10,14,23,0.85) 45%, rgba(10,14,23,0.4) 70%, rgba(10,14,23,0.6) 100%)'}} />
             </div>
 
             {/* Content at bottom like Upwork */}
@@ -780,7 +780,7 @@ export function AppShell() {
                 </div>
               </div>
 
-              <button onClick={() => navigate('selling')} className="w-full py-4 rounded-2xl text-[15px] font-bold transition-all active:scale-[0.98]" style={{background:'#2dd4a8',color:'#0A0E17',boxShadow:'0 8px 32px rgba(45,212,168,0.35)'}}>
+              <button onClick={() => navigate('selling')} className="w-full py-4 rounded-2xl text-[15px] font-bold transition-all active:scale-[0.98]" style={{background:'#2dd4a8',color:'#000000',boxShadow:'0 8px 32px rgba(45,212,168,0.35)'}}>
                 Get Started
               </button>
 
@@ -793,7 +793,7 @@ export function AppShell() {
 
         {/* ═══ SELLING / FOMO PAGE ═══ */}
         {screen === 'selling' && (
-          <div className="flex flex-col relative overflow-hidden" style={{background:'#0A0E17',minHeight:'100vh'}}>
+          <div className="flex flex-col relative overflow-hidden" style={{background:'#000000',minHeight:'100vh'}}>
             <div className="flex-1 overflow-y-auto" style={{scrollbarWidth:'none'}}>
 
               {/* Section 1: The Problem */}
@@ -875,8 +875,8 @@ export function AppShell() {
             </div>
 
             {/* Fixed CTA at bottom */}
-            <div className="px-6 pb-6 pt-3" style={{background:'linear-gradient(0deg, #0A0E17 80%, transparent 100%)'}}>
-              <button onClick={() => navigate('auth')} className="w-full py-4 rounded-2xl text-[16px] font-bold transition-all active:scale-[0.97]" style={{background:'#2dd4a8',color:'#0A0E17',boxShadow:'0 8px 32px rgba(45,212,168,0.35)'}}>
+            <div className="px-6 pb-6 pt-3" style={{background:'linear-gradient(0deg, #000000 80%, transparent 100%)'}}>
+              <button onClick={() => navigate('auth')} className="w-full py-4 rounded-2xl text-[16px] font-bold transition-all active:scale-[0.97]" style={{background:'#2dd4a8',color:'#000000',boxShadow:'0 8px 32px rgba(45,212,168,0.35)'}}>
                 Start Free — No Card Needed
               </button>
             </div>
@@ -1162,7 +1162,7 @@ export function AppShell() {
               navigate('home');
             }} disabled={children.length === 0 && (!childName.trim() || !childAge)}
               className="w-full py-3.5 rounded-xl text-[15px] font-bold transition-all hover:-translate-y-0.5 mt-2"
-              style={{background:'linear-gradient(135deg,var(--ac),#1AB5A0)',color: dark ? '#0A0E17' : '#fff',boxShadow:'0 6px 20px rgba(34,211,183,0.25)',opacity:(children.length>0||(childName.trim()&&childAge))?1:0.3}}>
+              style={{background:'linear-gradient(135deg,var(--ac),#1AB5A0)',color: dark ? '#000000' : '#fff',boxShadow:'0 6px 20px rgba(34,211,183,0.25)',opacity:(children.length>0||(childName.trim()&&childAge))?1:0.3}}>
               Continue to app →
             </button>
 
@@ -1175,11 +1175,11 @@ export function AppShell() {
 
         {/* ═══ HOME ═══ */}
         {screen === 'home' && (
-          <div className="flex flex-col relative" style={{height:'100vh',overflow:'hidden',background:'#0B1120'}}>
-            {/* Background photo */}
+          <div className="flex flex-col relative" style={{height:'100vh',overflow:'hidden',background:'#000000'}}>
+            {/* ElevenLabs-style warm glow on pure black */}
             <div className="absolute inset-0 z-0">
-              <img src="https://images.unsplash.com/photo-1543342384-1f1350e27861?w=800&q=80&auto=format&fit=crop" alt="" className="w-full h-full object-cover" style={{opacity:0.12}} />
-              <div className="absolute inset-0" style={{background:'linear-gradient(180deg, rgba(11,17,32,0.7) 0%, rgba(11,17,32,0.92) 50%, rgba(11,17,32,0.98) 100%)'}} />
+              <div className="absolute top-[-15%] right-[-10%] w-[400px] h-[400px] rounded-full" style={{background:'radial-gradient(circle, rgba(255,80,50,0.12) 0%, rgba(255,100,60,0.04) 40%, transparent 65%)'}} />
+              <div className="absolute bottom-[10%] left-[-15%] w-[350px] h-[350px] rounded-full" style={{background:'radial-gradient(circle, rgba(45,212,168,0.06) 0%, transparent 60%)'}} />
             </div>
 
             {/* ── Top bar ── */}
@@ -1757,7 +1757,7 @@ export function AppShell() {
                   <span className="text-5xl mb-4">🎉</span>
                   <h3 className="text-2xl font-extrabold mb-2" style={{fontFamily:'Baloo 2,cursive',color:'var(--t1)'}}>Thank you!</h3>
                   <p className="text-[16px] leading-relaxed" style={{color:'var(--t3)'}}>Your review has been submitted for approval. We appreciate your feedback!</p>
-                  <button onClick={() => { setReviewSubmitted(false); setReviewText(''); navigate('settings'); }} className="mt-8 px-8 py-3.5 rounded-xl text-[16px] font-bold" style={{background:'var(--ac)',color:'#0A0E17'}}>Back to Settings</button>
+                  <button onClick={() => { setReviewSubmitted(false); setReviewText(''); navigate('settings'); }} className="mt-8 px-8 py-3.5 rounded-xl text-[16px] font-bold" style={{background:'var(--ac)',color:'#000000'}}>Back to Settings</button>
                 </div>
               ) : (
                 <>
@@ -1780,7 +1780,7 @@ export function AppShell() {
                       await db.submitReview(user?.id, user?.email, reviewStars, reviewText);
                     } catch(e) { /* table might not exist yet */ }
                     setReviewSubmitted(true);
-                  }} className="w-full mt-6 py-4 rounded-xl text-[18px] font-bold transition-all active:scale-[0.97]" style={{background:'linear-gradient(135deg,var(--ac),#1AB5A0)',color:'#0A0E17',boxShadow:'0 6px 20px rgba(45,212,168,0.25)'}}>
+                  }} className="w-full mt-6 py-4 rounded-xl text-[18px] font-bold transition-all active:scale-[0.97]" style={{background:'linear-gradient(135deg,var(--ac),#1AB5A0)',color:'#000000',boxShadow:'0 6px 20px rgba(45,212,168,0.25)'}}>
                     Submit Review
                   </button>
                 </>
