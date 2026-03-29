@@ -225,11 +225,11 @@ function LoadingStages({ stages }: { stages: { label: string; emoji: string }[] 
     return () => clearInterval(interval);
   }, [stages.length]);
   return (
-    <div className="space-y-2 w-full max-w-xs">
+    <div className="space-y-3 w-full max-w-xs">
       {stages.map((s, i) => (
-        <div key={i} className="flex items-center gap-2 transition-all duration-500" style={{ opacity: i <= currentStage ? 1 : 0.25 }}>
-          <span className="text-base">{i < currentStage ? '✓' : i === currentStage ? s.emoji : '○'}</span>
-          <span className="text-[15px] text-left" style={{ color: i <= currentStage ? 'var(--t1)' : 'var(--t3)', fontWeight: i === currentStage ? 600 : 400 }}>
+        <div key={i} className="flex items-center gap-3 transition-all duration-500" style={{ opacity: i <= currentStage ? 1 : 0.2 }}>
+          <span className="text-[18px] w-6 text-center">{i < currentStage ? <span style={{color:'#22D3B7'}}>&#10003;</span> : i === currentStage ? s.emoji : <span style={{color:'rgba(255,255,255,0.2)'}}>&#9675;</span>}</span>
+          <span className="text-[16px] text-left" style={{ color: i <= currentStage ? '#FFFFFF' : 'rgba(255,255,255,0.3)', fontWeight: i === currentStage ? 600 : 400 }}>
             {s.label}
           </span>
         </div>
@@ -306,36 +306,36 @@ function BottomNav({ active, onNav }) {
 
 function LayerCard({ layer, isOpen, onToggle, index }) {
   const colors = ['#2dd4a8','#818cf8','#f472b6','#fbbf24'];
-  const bgColors = ['rgba(45,212,168,0.08)','rgba(129,140,248,0.08)','rgba(244,114,182,0.08)','rgba(251,191,36,0.08)'];
+  const bgColors = ['rgba(45,212,168,0.06)','rgba(129,140,248,0.06)','rgba(244,114,182,0.06)','rgba(251,191,36,0.06)'];
   const c = colors[index] || colors[0];
   const bg = bgColors[index] || bgColors[0];
   return (
-    <div className="mx-5 mb-3 rounded-2xl overflow-hidden transition-all" style={{background:'var(--bg2)',border: isOpen ? `1px solid ${c}33` : '1px solid var(--brc)',boxShadow: isOpen ? `0 4px 20px ${c}15` : 'none'}}>
+    <div className="mx-5 mb-3 rounded-2xl overflow-hidden transition-all" style={{background:'rgba(255,255,255,0.03)',border: isOpen ? `1px solid ${c}33` : '1px solid rgba(255,255,255,0.06)',boxShadow: isOpen ? `0 4px 20px ${c}15` : 'none'}}>
       <button onClick={onToggle} className="w-full flex justify-between items-center p-5 text-left">
         <div className="flex items-center gap-3.5">
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center text-[14px] font-extrabold text-white" style={{background:`linear-gradient(135deg, ${c}, ${c}cc)`,boxShadow:`0 3px 10px ${c}40`}}>{layer.level}</div>
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center text-[15px] font-extrabold text-white" style={{background:`linear-gradient(135deg, ${c}, ${c}cc)`,boxShadow:`0 3px 10px ${c}40`}}>{layer.level}</div>
           <div>
-            <div className="text-[17px] font-bold" style={{color:'var(--t1)'}}>{layer.title}</div>
-            <div className="text-[14px] mt-0.5" style={{color:'var(--t3)'}}>{layer.subtitle}</div>
+            <div className="text-[18px] font-bold" style={{color:'#FFFFFF'}}>{layer.title}</div>
+            <div className="text-[15px] mt-0.5" style={{color:'rgba(255,255,255,0.4)'}}>{layer.subtitle}</div>
           </div>
         </div>
-        <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{background:'var(--bg0)'}}>
-          <ChevronDown size={16} style={{color:'var(--t3)',transition:'transform 0.3s ease',transform:isOpen?'rotate(180deg)':'rotate(0)'}} />
+        <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{background:'rgba(255,255,255,0.06)'}}>
+          <ChevronDown size={16} style={{color:'rgba(255,255,255,0.4)',transition:'transform 0.3s ease',transform:isOpen?'rotate(180deg)':'rotate(0)'}} />
         </div>
       </button>
       <div style={{maxHeight:isOpen?800:0,overflow:'hidden',transition:'max-height 0.5s ease-in-out'}}>
         <div className="px-5 pb-5">
           {/* Quote */}
           <div className="rounded-xl p-5 mb-3 relative" style={{background:bg,borderLeft:`3px solid ${c}`}}>
-            <p className="text-[17px] italic leading-[1.7] font-medium" style={{color:'var(--t1)'}}>{layer.quote}</p>
+            <p className="text-[18px] italic leading-[1.7] font-medium" style={{color:'#FFFFFF'}}>{layer.quote}</p>
           </div>
           {/* Note */}
-          <p className="text-[14px] leading-relaxed mb-3 px-1" style={{color:'var(--t3)'}}>{layer.note}</p>
+          <p className="text-[15px] leading-relaxed mb-3 px-1" style={{color:'rgba(255,255,255,0.4)'}}>{layer.note}</p>
           {/* Next question prompt */}
           {layer.nextQ && (
-            <div className="flex items-center gap-2 px-4 py-3 rounded-xl transition-all" style={{background:'var(--a2g)',border:'1px solid rgba(244,114,182,0.15)'}}>
-              <ChevronRight size={14} style={{color:'var(--a2)'}} />
-              <span className="text-[14px] font-semibold" style={{color:'var(--a2)'}}>{layer.nextQ}</span>
+            <div className="flex items-center gap-2 px-4 py-3 rounded-xl transition-all" style={{background:'rgba(244,114,182,0.06)',border:'1px solid rgba(244,114,182,0.1)'}}>
+              <ChevronRight size={14} style={{color:'#f472b6'}} />
+              <span className="text-[15px] font-semibold" style={{color:'#f472b6'}}>{layer.nextQ}</span>
             </div>
           )}
         </div>
@@ -885,74 +885,83 @@ export function AppShell() {
 
         {/* ═══ AUTH ═══ */}
         {screen === 'auth' && (
-          <div className="flex flex-col min-h-dvh px-6 pt-6 pb-8" style={{background:'var(--bg0)'}}>
-            <Logo size={32} className="mb-6" />
-
-            <h2 className="text-4xl font-extrabold mb-2" style={{fontFamily:'Baloo 2,cursive',color:'var(--t1)'}}>
-              {authMode === 'login' ? 'Welcome back' : authMode === 'signup' ? 'Create account' : 'Reset password'}
-            </h2>
-            <p className="text-lg mb-2" style={{color:'var(--t3)'}}>
-              {authMode === 'login' ? 'Sign in to continue' : authMode === 'signup' ? `Get ${MAX_FREE} free explanations — no card needed` : 'We\'ll send you a reset link'}
-            </p>
-            <p className="text-[13px] mb-6 leading-relaxed" style={{color:'var(--t3)',opacity:0.7}}>
-              {authMode === 'login' ? 'Culturally aware, belief-sensitive explanations for every hard question.' : authMode === 'signup' ? 'Never freeze when your child asks the hard stuff. Get the perfect words in seconds.' : 'No worries — we\'ll get you back in.'}
-            </p>
-
-            {authMode !== 'forgot' && (
-              <button onClick={handleGoogleAuth} disabled={authLoading} className="w-full py-4 rounded-xl border text-lg font-semibold flex items-center justify-center gap-2 mb-4 transition-all hover:border-[var(--ac)]"
-                style={{background:'var(--bg2)',borderColor:'var(--brc)',color:'var(--t1)'}}>
-                {authLoading ? <Loader2 size={16} className="animate-spin" /> : <>
-                  <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.001-.001 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg>
-                  Continue with Google
-                </>}
-              </button>
-            )}
-
-            {authMode !== 'forgot' && (
-              <div className="flex items-center gap-3 mb-4">
-                <div className="flex-1 h-px" style={{background:'var(--brs)'}} />
-                <span className="text-[13px] font-semibold" style={{color:'var(--t3)'}}>or</span>
-                <div className="flex-1 h-px" style={{background:'var(--brs)'}} />
-              </div>
-            )}
-
-            <Input label="Email" icon={Mail} type="email" value={email} onChange={setEmail} placeholder="parent@example.com" error={authError && authError.includes('email') ? authError : ''} />
-
-            {authMode !== 'forgot' && (
-              <Input label="Password" icon={KeyRound} type="password" value={password} onChange={setPassword} placeholder="••••••••" error={authError && authError.includes('assword') ? authError : ''} />
-            )}
-
-            {authMode === 'signup' && (
-              <Input label="Confirm Password" icon={KeyRound} type="password" value={confirmPass} onChange={setConfirmPass} placeholder="••••••••" error={authError && authError.includes('match') ? authError : ''} />
-            )}
-
-            {authError && !authError.includes('email') && !authError.includes('assword') && !authError.includes('match') && (
-              <p className="text-[12px] font-medium flex items-center gap-1 mb-3" style={{color:'var(--a2)'}}><AlertCircle size={14}/>{authError}</p>
-            )}
-
-            {authMode === 'login' && (
-              <button onClick={() => setAuthMode('forgot')} className="text-[14px] font-semibold mb-4 text-right" style={{color:'var(--ac)'}}>Forgot password?</button>
-            )}
-
-            <button onClick={() => handleAuth(authMode)} disabled={authLoading}
-              className="w-full py-4 rounded-xl text-[19px] font-bold transition-all hover:-translate-y-0.5 flex items-center justify-center gap-2"
-              style={{background:'linear-gradient(135deg,var(--ac),#1AB5A0)',color: dark ? '#0A0E17' : '#fff',boxShadow:'0 6px 20px rgba(34,211,183,0.25)',opacity: authLoading ? 0.6 : 1}}>
-              {authLoading ? <Loader2 size={18} className="animate-spin" /> :
-                authMode === 'login' ? 'Sign In' : authMode === 'signup' ? 'Create Account' : 'Send Reset Link'}
-            </button>
-
-            <div className="mt-4 text-center">
-              {authMode === 'login' ? (
-                <p className="text-[15px]" style={{color:'var(--t3)'}}>Don't have an account? <button onClick={() => {setAuthMode('signup');setAuthError('')}} className="font-bold" style={{color:'var(--ac)'}}>Sign up</button></p>
-              ) : (
-                <p className="text-[15px]" style={{color:'var(--t3)'}}>Already have an account? <button onClick={() => {setAuthMode('login');setAuthError('')}} className="font-bold" style={{color:'var(--ac)'}}>Sign in</button></p>
-              )}
+          <div className="flex flex-col min-h-dvh relative overflow-hidden" style={{background:'#000000'}}>
+            {/* Warm glow background like paywall */}
+            <div className="absolute inset-0 z-0">
+              <div className="absolute top-[-15%] left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full" style={{background:'radial-gradient(circle, rgba(45,212,168,0.12) 0%, rgba(34,211,183,0.05) 35%, transparent 65%)'}} />
+              <div className="absolute top-[30%] right-[-15%] w-[350px] h-[350px] rounded-full" style={{background:'radial-gradient(circle, rgba(129,140,248,0.08) 0%, transparent 60%)'}} />
+              <div className="absolute bottom-[10%] left-[-10%] w-[300px] h-[300px] rounded-full" style={{background:'radial-gradient(circle, rgba(45,212,168,0.06) 0%, transparent 60%)'}} />
             </div>
 
-            <div className="mt-auto pt-6 flex justify-center gap-4">
-              {[['Privacy Policy','privacy'],['Terms of Service','terms']].map(([l,k]) => (
-                <button key={k} onClick={() => {setLegalPage(k);navigate('legal')}} className="text-[11px] font-medium" style={{color:'var(--t3)'}}>{l}</button>
-              ))}
+            <div className="relative z-10 flex flex-col min-h-dvh px-6 pt-8 pb-8">
+              <Logo size={32} className="mb-8" />
+
+              <h2 className="text-5xl font-extrabold mb-3 leading-[1.1]" style={{fontFamily:'Baloo 2,cursive',color:'#FFFFFF'}}>
+                {authMode === 'login' ? 'Welcome back' : authMode === 'signup' ? 'Create account' : 'Reset password'}
+              </h2>
+              <p className="text-[20px] font-medium mb-2" style={{color:'rgba(255,255,255,0.5)'}}>
+                {authMode === 'login' ? 'Sign in to continue' : authMode === 'signup' ? `Get ${MAX_FREE} free explanations — no card needed` : 'We\'ll send you a reset link'}
+              </p>
+              <p className="text-[15px] mb-8 leading-relaxed" style={{color:'rgba(255,255,255,0.35)'}}>
+                {authMode === 'login' ? 'Culturally aware, belief-sensitive explanations for every hard question your child asks.' : authMode === 'signup' ? 'Never freeze when your child asks the hard stuff. Get the perfect words in seconds.' : 'No worries — we\'ll get you back in.'}
+              </p>
+
+              {authMode !== 'forgot' && (
+                <button onClick={handleGoogleAuth} disabled={authLoading} className="w-full py-4.5 rounded-2xl text-[18px] font-bold flex items-center justify-center gap-3 mb-5 transition-all active:scale-[0.97]"
+                  style={{background:'white',color:'#000000',boxShadow:'0 0 40px rgba(255,255,255,0.08)',padding:'18px'}}>
+                  {authLoading ? <Loader2 size={18} className="animate-spin" /> : <>
+                    <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.001-.001 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg>
+                    Continue with Google
+                  </>}
+                </button>
+              )}
+
+              {authMode !== 'forgot' && (
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="flex-1 h-px" style={{background:'rgba(255,255,255,0.1)'}} />
+                  <span className="text-[14px] font-semibold" style={{color:'rgba(255,255,255,0.3)'}}>or</span>
+                  <div className="flex-1 h-px" style={{background:'rgba(255,255,255,0.1)'}} />
+                </div>
+              )}
+
+              <Input label="Email" icon={Mail} type="email" value={email} onChange={setEmail} placeholder="parent@example.com" error={authError && authError.includes('email') ? authError : ''} />
+
+              {authMode !== 'forgot' && (
+                <Input label="Password" icon={KeyRound} type="password" value={password} onChange={setPassword} placeholder="••••••••" error={authError && authError.includes('assword') ? authError : ''} />
+              )}
+
+              {authMode === 'signup' && (
+                <Input label="Confirm Password" icon={KeyRound} type="password" value={confirmPass} onChange={setConfirmPass} placeholder="••••••••" error={authError && authError.includes('match') ? authError : ''} />
+              )}
+
+              {authError && !authError.includes('email') && !authError.includes('assword') && !authError.includes('match') && (
+                <p className="text-[14px] font-medium flex items-center gap-1 mb-3" style={{color:'var(--a2)'}}><AlertCircle size={14}/>{authError}</p>
+              )}
+
+              {authMode === 'login' && (
+                <button onClick={() => setAuthMode('forgot')} className="text-[15px] font-semibold mb-5 text-right" style={{color:'#22D3B7'}}>Forgot password?</button>
+              )}
+
+              <button onClick={() => handleAuth(authMode)} disabled={authLoading}
+                className="w-full py-4.5 rounded-2xl text-[19px] font-bold transition-all active:scale-[0.97] flex items-center justify-center gap-2"
+                style={{background:'linear-gradient(135deg,#22D3B7,#1AB5A0)',color:'#000000',boxShadow:'0 8px 30px rgba(34,211,183,0.25)',opacity: authLoading ? 0.6 : 1, padding:'18px'}}>
+                {authLoading ? <Loader2 size={18} className="animate-spin" /> :
+                  authMode === 'login' ? 'Sign In' : authMode === 'signup' ? 'Create Account' : 'Send Reset Link'}
+              </button>
+
+              <div className="mt-5 text-center">
+                {authMode === 'login' ? (
+                  <p className="text-[16px]" style={{color:'rgba(255,255,255,0.4)'}}>Don't have an account? <button onClick={() => {setAuthMode('signup');setAuthError('')}} className="font-bold" style={{color:'#22D3B7'}}>Sign up</button></p>
+                ) : (
+                  <p className="text-[16px]" style={{color:'rgba(255,255,255,0.4)'}}>Already have an account? <button onClick={() => {setAuthMode('login');setAuthError('')}} className="font-bold" style={{color:'#22D3B7'}}>Sign in</button></p>
+                )}
+              </div>
+
+              <div className="mt-auto pt-6 flex justify-center gap-4">
+                {[['Privacy Policy','privacy'],['Terms of Service','terms']].map(([l,k]) => (
+                  <button key={k} onClick={() => {setLegalPage(k);navigate('legal')}} className="text-[13px] font-medium" style={{color:'rgba(255,255,255,0.25)'}}>{l}</button>
+                ))}
+              </div>
             </div>
           </div>
         )}
@@ -1207,11 +1216,11 @@ export function AppShell() {
               const isRTL = selLanguage === 'العربية';
               return (<>
             <div className="relative z-10 px-5 mt-7" style={{direction: isRTL ? 'rtl' : 'ltr'}}>
-              <div className="flex items-center gap-2 mb-1.5">
+              <div className="flex items-center gap-2 mb-2">
                 <div className="w-2 h-2 rounded-full" style={{background:'#2dd4a8'}} />
-                <p className="text-[14px] font-medium" style={{color:'rgba(255,255,255,0.5)'}}>{t.hereToHelp}</p>
+                <p className="text-[16px] font-medium" style={{color:'rgba(255,255,255,0.5)'}}>{t.hereToHelp}</p>
               </div>
-              <h1 className="text-[28px] font-extrabold leading-[1.2]" style={{color:'#FFFFFF'}}>
+              <h1 className="text-[32px] font-extrabold leading-[1.15]" style={{color:'#FFFFFF'}}>
                 {t.whatDidAsk.replace('{name}', selectedChild?.name || 'they')}
               </h1>
             </div>
@@ -1221,21 +1230,21 @@ export function AppShell() {
               <div className="rounded-2xl px-5 py-4" style={{background:'rgba(255,255,255,0.07)',border:'1px solid rgba(255,255,255,0.1)',backdropFilter:'blur(10px)'}}>
                 <textarea value={question} onChange={e => setQuestion(e.target.value)} rows={2}
                   placeholder={topics[0]?.q || '"What is sex?"'}
-                  className="w-full bg-transparent border-none outline-none text-[17px] font-medium resize-none leading-relaxed placeholder:text-[rgba(255,255,255,0.25)]"
+                  className="w-full bg-transparent border-none outline-none text-[19px] font-medium resize-none leading-relaxed placeholder:text-[rgba(255,255,255,0.25)]"
                   style={{color:'#FFFFFF',direction: isRTL ? 'rtl' : 'ltr'}} />
               </div>
             </div>
 
             {/* ── Quick topics — scrollable carousel ── */}
             <div className="relative z-10 mt-6 px-5" style={{direction: isRTL ? 'rtl' : 'ltr'}}>
-              <p className="text-[11px] font-bold uppercase tracking-[0.2em] mb-3" style={{color:'rgba(255,255,255,0.3)'}}>{t.orPickTopic}</p>
+              <p className="text-[13px] font-bold uppercase tracking-[0.2em] mb-3" style={{color:'rgba(255,255,255,0.3)'}}>{t.orPickTopic}</p>
               <div className="flex gap-2.5 overflow-x-auto -mx-5 px-5" style={{scrollbarWidth:'none'}}>
                 {topics.map(tp => (
                   <button key={tp.label} onClick={() => setQuestion(tp.q)}
                     className="flex-shrink-0 flex flex-col items-center justify-center rounded-2xl transition-all duration-150 active:scale-[0.95]"
                     style={{background:'rgba(255,255,255,0.06)',border:'1px solid rgba(255,255,255,0.08)',backdropFilter:'blur(8px)',width:100,height:85}}>
                     <span className="text-[26px] mb-1.5">{tp.emoji}</span>
-                    <span className="text-[12px] font-semibold" style={{color:'rgba(255,255,255,0.55)'}}>{tp.label}</span>
+                    <span className="text-[14px] font-semibold" style={{color:'rgba(255,255,255,0.55)'}}>{tp.label}</span>
                   </button>
                 ))}
               </div>
@@ -1243,11 +1252,11 @@ export function AppShell() {
 
             {/* ── Triggers — 3x2 grid ── */}
             <div className="relative z-10 px-5 mt-7" style={{direction: isRTL ? 'rtl' : 'ltr'}}>
-              <p className="text-[11px] font-bold uppercase tracking-[0.2em] mb-2.5" style={{color:'rgba(255,255,255,0.3)'}}>⚡ {t.triggeredBy}</p>
+              <p className="text-[13px] font-bold uppercase tracking-[0.2em] mb-2.5" style={{color:'rgba(255,255,255,0.3)'}}>⚡ {t.triggeredBy}</p>
               <div className="grid grid-cols-3 gap-2">
                 {TRIGGERS.map((tr, idx) => (
                     <button key={tr.key} onClick={() => setSelectedTriggers(prev => prev.includes(tr.key) ? prev.filter(x=>x!==tr.key) : [...prev,tr.key])}
-                      className="flex items-center justify-center gap-1.5 px-2 py-2.5 rounded-xl text-[12px] font-medium transition-all duration-150"
+                      className="flex items-center justify-center gap-1.5 px-2 py-2.5 rounded-xl text-[14px] font-medium transition-all duration-150"
                       style={{
                         background: selectedTriggers.includes(tr.key) ? '#2dd4a8' : 'rgba(255,255,255,0.06)',
                         color: selectedTriggers.includes(tr.key) ? '#0B1120' : 'rgba(255,255,255,0.5)',
@@ -1269,15 +1278,17 @@ export function AppShell() {
             {/* ── CTA ── */}
             <div className="relative z-10 mt-auto px-5 pb-2">
               <button onClick={handleGenerate}
-                className="w-full py-[17px] rounded-2xl text-[17px] font-bold flex items-center justify-center gap-2.5 transition-all duration-200 active:scale-[0.97]"
+                className="w-full py-[18px] rounded-2xl text-[19px] font-bold flex items-center justify-center gap-2.5 transition-all duration-200 active:scale-[0.97]"
                 style={{background:'linear-gradient(135deg, #2dd4a8, #20c997)',color:'#FFFFFF',boxShadow:'0 8px 30px rgba(45,212,168,0.3)'}}>
                 <Sparkles size={19}/>
                 {t.generate}
               </button>
               {!isPro && !isAdmin && (
-                <p className="text-center text-[12px] mt-3 flex items-center justify-center gap-1.5" style={{color:'rgba(255,255,255,0.3)'}}>
-                  <AlertCircle size={12}/> {t.freeRemaining.replace('{n}', String(MAX_FREE - usageCount))} · <span style={{color:'#2dd4a8',fontWeight:600}}>{t.signInMore}</span>
-                </p>
+                <div className="mt-3 mx-auto flex items-center gap-2 px-4 py-2.5 rounded-full" style={{background:'rgba(255,255,255,0.06)',border:'1px solid rgba(255,255,255,0.08)'}}>
+                  <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{background:'rgba(45,212,168,0.15)'}}><AlertCircle size={12} style={{color:'#22D3B7'}} /></div>
+                  <span className="text-[14px] font-semibold" style={{color:'rgba(255,255,255,0.5)'}}>{t.freeRemaining.replace('{n}', String(MAX_FREE - usageCount))}</span>
+                  <span className="text-[14px] font-bold" style={{color:'#22D3B7'}}>{t.signInMore}</span>
+                </div>
               )}
             </div>
               </>);
@@ -1291,37 +1302,44 @@ export function AppShell() {
         {screen === 'loading' && (() => {
           const stages = [
             { label: `Understanding ${selectedChild?.name || 'your child'}'s question...`, emoji: '🔍' },
-            { label: 'Considering cultural context...', emoji: '🌍' },
-            { label: 'Crafting age-appropriate layers...', emoji: '🧸' },
+            { label: 'Applying cultural context...', emoji: '🌍' },
+            { label: 'Building age-appropriate layers...', emoji: '🧸' },
             { label: 'Adding belief-sensitive framing...', emoji: '💛' },
             { label: 'Finalizing your explanation...', emoji: '✨' },
           ];
           return (
-          <div className="flex flex-col min-h-dvh" style={{background:'var(--bg0)'}}>
-            <div className="flex items-center gap-3 px-5 py-4">
-              <IconBtn icon={ArrowLeft} onClick={() => navigate('home')} />
-              <span className="text-base font-bold" style={{color:'var(--t1)'}}>Creating your explanation</span>
+          <div className="flex flex-col min-h-dvh relative overflow-hidden" style={{background:'#000000'}}>
+            {/* Warm glow background */}
+            <div className="absolute inset-0 z-0">
+              <div className="absolute top-[20%] left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full" style={{background:'radial-gradient(circle, rgba(45,212,168,0.1) 0%, rgba(129,140,248,0.05) 40%, transparent 65%)'}} />
+              <div className="absolute bottom-[20%] left-[-10%] w-[300px] h-[300px] rounded-full" style={{background:'radial-gradient(circle, rgba(244,114,182,0.06) 0%, transparent 60%)'}} />
             </div>
-            <div className="flex-1 flex flex-col items-center justify-center text-center px-8">
-              {/* Animated rings */}
-              <div className="relative w-28 h-28 mb-8">
-                <div className="absolute inset-0 rounded-full border-4 animate-spin" style={{borderColor:'transparent',borderTopColor:'var(--ac)',animationDuration:'1.5s'}} />
-                <div className="absolute inset-2 rounded-full border-4 animate-spin" style={{borderColor:'transparent',borderBottomColor:'var(--a3)',animationDuration:'2s',animationDirection:'reverse'}} />
-                <div className="absolute inset-4 rounded-full border-4 animate-spin" style={{borderColor:'transparent',borderTopColor:'var(--a2)',animationDuration:'2.5s'}} />
+
+            <div className="relative z-10 flex items-center gap-3 px-5 py-5">
+              <IconBtn icon={ArrowLeft} onClick={() => navigate('home')} />
+              <span className="text-[18px] font-bold" style={{color:'#FFFFFF'}}>Creating your explanation</span>
+            </div>
+            <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-8">
+              {/* Animated rings — bigger */}
+              <div className="relative w-36 h-36 mb-10">
+                <div className="absolute inset-0 rounded-full border-[3px] animate-spin" style={{borderColor:'transparent',borderTopColor:'#22D3B7',animationDuration:'1.5s'}} />
+                <div className="absolute inset-3 rounded-full border-[3px] animate-spin" style={{borderColor:'transparent',borderBottomColor:'#818cf8',animationDuration:'2s',animationDirection:'reverse'}} />
+                <div className="absolute inset-6 rounded-full border-[3px] animate-spin" style={{borderColor:'transparent',borderTopColor:'#f472b6',animationDuration:'2.5s'}} />
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-3xl">{stages[Math.min(Math.floor((Date.now() / 2500) % stages.length), stages.length - 1)].emoji}</span>
+                  <span className="text-4xl">{stages[Math.min(Math.floor((Date.now() / 2500) % stages.length), stages.length - 1)].emoji}</span>
                 </div>
               </div>
 
-              {/* Stage text */}
-              <p className="text-2xl font-bold mb-3" style={{fontFamily:'Baloo 2,cursive',color:'var(--t1)'}}>
+              {/* Stage text — bigger */}
+              <p className="text-[28px] font-extrabold mb-2 leading-tight" style={{fontFamily:'Baloo 2,cursive',color:'#FFFFFF'}}>
                 Personalizing for {selectedChild?.name}
               </p>
+              <p className="text-[15px] font-medium mb-6" style={{color:'rgba(255,255,255,0.35)'}}>Crafting the perfect words for your conversation</p>
               <LoadingStages stages={stages} />
 
               {/* Progress bar */}
-              <div className="w-full max-w-xs mt-6 h-1.5 rounded-full overflow-hidden" style={{background:'var(--bg2)'}}>
-                <div className="h-full rounded-full animate-pulse" style={{background:'linear-gradient(90deg, var(--ac), var(--a3))',width:'70%',animation:'loadbar 3s ease-in-out infinite'}} />
+              <div className="w-full max-w-xs mt-8 h-2 rounded-full overflow-hidden" style={{background:'rgba(255,255,255,0.06)'}}>
+                <div className="h-full rounded-full" style={{background:'linear-gradient(90deg, #22D3B7, #818cf8)',width:'70%',animation:'loadbar 3s ease-in-out infinite'}} />
               </div>
             </div>
             <style>{`@keyframes loadbar { 0%{width:10%} 50%{width:80%} 100%{width:95%} }`}</style>
@@ -1331,38 +1349,43 @@ export function AppShell() {
 
         {/* ═══ RESULT ═══ */}
         {screen === 'result' && layers && (
-          <div className="flex flex-col min-h-dvh" style={{background:'var(--bg0)'}}>
+          <div className="flex flex-col min-h-dvh relative overflow-hidden" style={{background:'#000000'}}>
+            {/* Subtle glow */}
+            <div className="absolute inset-0 z-0">
+              <div className="absolute top-[-5%] left-1/2 -translate-x-1/2 w-[400px] h-[300px] rounded-full" style={{background:'radial-gradient(circle, rgba(45,212,168,0.06) 0%, transparent 65%)'}} />
+            </div>
+
             {/* Header with question */}
-            <div className="px-5 pt-4 pb-5">
-              <div className="flex items-center gap-3 mb-4">
-                <button onClick={() => navigate('home')} className="w-9 h-9 rounded-full flex items-center justify-center transition-all active:scale-90" style={{background:'var(--bg2)',border:'1px solid var(--brc)'}}>
-                  <ArrowLeft size={16} style={{color:'var(--t2)'}} />
+            <div className="relative z-10 px-5 pt-5 pb-5">
+              <div className="flex items-center gap-3 mb-5">
+                <button onClick={() => navigate('home')} className="w-10 h-10 rounded-full flex items-center justify-center transition-all active:scale-90" style={{background:'rgba(255,255,255,0.06)',border:'1px solid rgba(255,255,255,0.1)'}}>
+                  <ArrowLeft size={16} style={{color:'#FFFFFF'}} />
                 </button>
-                <span className="text-[15px] font-bold" style={{color:'var(--t1)'}}>{(UI_STRINGS[selLanguage]||UI_STRINGS['English']).yourExplanation}</span>
+                <span className="text-[18px] font-bold" style={{color:'#FFFFFF'}}>{(UI_STRINGS[selLanguage]||UI_STRINGS['English']).yourExplanation}</span>
               </div>
               {/* Original question as quote */}
-              <div className="px-4 py-3 rounded-xl" style={{background:'var(--bg2)',borderLeft:'3px solid var(--ac)'}}>
-                <p className="text-[16px] font-medium italic" style={{color:'var(--t2)'}}>"{question}"</p>
-                <p className="text-[13px] mt-1 font-semibold" style={{color:'var(--ac)'}}>— {selectedChild?.name}, age {selectedChild?.age}</p>
+              <div className="px-5 py-4 rounded-2xl" style={{background:'rgba(255,255,255,0.04)',borderLeft:'3px solid #22D3B7'}}>
+                <p className="text-[18px] font-medium italic leading-relaxed" style={{color:'rgba(255,255,255,0.7)'}}>"{question}"</p>
+                <p className="text-[15px] mt-2 font-semibold" style={{color:'#22D3B7'}}>-- {selectedChild?.name}, age {selectedChild?.age}</p>
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto pb-20" style={{scrollbarWidth:'none'}}>
+            <div className="relative z-10 flex-1 overflow-y-auto pb-20" style={{scrollbarWidth:'none'}}>
               {/* Context tags */}
               <div className="flex flex-wrap gap-2 px-5 mb-4">
-                <span className="text-[12px] font-bold px-3 py-1.5 rounded-full" style={{background:'var(--a3g)',color:'var(--a3)'}}>Age {selectedChild?.age}</span>
-                <span className="text-[12px] font-bold px-3 py-1.5 rounded-full" style={{background:'var(--a2g)',color:'var(--a2)'}}>{COUNTRIES.find(c=>c.name===selCountry)?.flag} {selCountry}</span>
-                <span className="text-[12px] font-bold px-3 py-1.5 rounded-full" style={{background:'rgba(139,92,246,0.12)',color:'#8B5CF6'}}>{BELIEFS.find(b=>b.name===selBelief)?.icon} {selBelief}</span>
-                <span className="text-[12px] font-bold px-3 py-1.5 rounded-full" style={{background:'var(--acg)',color:'var(--ac)'}}>🧅 Layered</span>
+                <span className="text-[13px] font-bold px-3.5 py-1.5 rounded-full" style={{background:'rgba(129,140,248,0.1)',color:'#818cf8'}}>Age {selectedChild?.age}</span>
+                <span className="text-[13px] font-bold px-3.5 py-1.5 rounded-full" style={{background:'rgba(244,114,182,0.1)',color:'#f472b6'}}>{COUNTRIES.find(c=>c.name===selCountry)?.flag} {selCountry}</span>
+                <span className="text-[13px] font-bold px-3.5 py-1.5 rounded-full" style={{background:'rgba(139,92,246,0.1)',color:'#8B5CF6'}}>{BELIEFS.find(b=>b.name===selBelief)?.icon} {selBelief}</span>
+                <span className="text-[13px] font-bold px-3.5 py-1.5 rounded-full" style={{background:'rgba(45,212,168,0.1)',color:'#22D3B7'}}>Layered</span>
               </div>
 
               {/* Approach card */}
-              <div className="mx-5 mb-4 rounded-2xl p-5" style={{background:'linear-gradient(135deg, rgba(45,212,168,0.08), rgba(129,140,248,0.06))',border:'1px solid rgba(45,212,168,0.15)'}}>
+              <div className="mx-5 mb-4 rounded-2xl p-5" style={{background:'rgba(45,212,168,0.04)',border:'1px solid rgba(45,212,168,0.1)'}}>
                 <div className="flex items-center gap-2 mb-2">
-                  <Layers size={14} style={{color:'var(--ac)'}} />
-                  <span className="text-[13px] font-extrabold uppercase tracking-[0.15em]" style={{color:'var(--ac)'}}>Layered approach</span>
+                  <Layers size={15} style={{color:'#22D3B7'}} />
+                  <span className="text-[14px] font-extrabold uppercase tracking-[0.15em]" style={{color:'#22D3B7'}}>Layered approach</span>
                 </div>
-                <p className="text-[15px] leading-relaxed" style={{color:'var(--t2)'}}>Start with Layer 1. Most kids are satisfied. Only open the next if they keep asking.</p>
+                <p className="text-[16px] leading-relaxed" style={{color:'rgba(255,255,255,0.5)'}}>Start with Layer 1. Most kids are satisfied. Only open the next if they keep asking.</p>
               </div>
 
               {/* Layers */}
@@ -1395,31 +1418,31 @@ export function AppShell() {
                     }
                   }},
                 ]; })().map(a => (
-                  <button key={a.label} onClick={a.action} className="flex-1 flex flex-col items-center gap-1.5 py-3.5 rounded-2xl transition-all active:scale-95"
-                    style={{background:'var(--bg2)',border:'1px solid var(--brc)'}}>
-                    <a.icon size={18} style={{color:'var(--t2)'}} />
-                    <span className="text-[10px] font-bold" style={{color:'var(--t3)'}}>{a.label}</span>
+                  <button key={a.label} onClick={a.action} className="flex-1 flex flex-col items-center gap-2 py-4 rounded-2xl transition-all active:scale-95"
+                    style={{background:'rgba(255,255,255,0.04)',border:'1px solid rgba(255,255,255,0.08)'}}>
+                    <a.icon size={20} style={{color:'#22D3B7'}} />
+                    <span className="text-[12px] font-bold" style={{color:'rgba(255,255,255,0.5)'}}>{a.label}</span>
                   </button>
                 ))}
               </div>
 
               {/* Tips */}
               {parentTip && (
-                <div className="mx-5 mb-3 rounded-2xl p-5" style={{background:'linear-gradient(135deg, rgba(45,212,168,0.06), rgba(45,212,168,0.02))',border:'1px solid rgba(45,212,168,0.12)'}}>
+                <div className="mx-5 mb-3 rounded-2xl p-5" style={{background:'rgba(45,212,168,0.04)',border:'1px solid rgba(45,212,168,0.1)'}}>
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-base">💡</span>
-                    <span className="text-[11px] font-extrabold uppercase tracking-[0.12em]" style={{color:'var(--ac)'}}>{(UI_STRINGS[selLanguage]||UI_STRINGS['English']).howToUse}</span>
+                    <span className="text-lg">💡</span>
+                    <span className="text-[13px] font-extrabold uppercase tracking-[0.12em]" style={{color:'#22D3B7'}}>{(UI_STRINGS[selLanguage]||UI_STRINGS['English']).howToUse}</span>
                   </div>
-                  <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>{parentTip}</p>
+                  <p className="text-[15px] leading-relaxed" style={{color:'rgba(255,255,255,0.5)'}}>{parentTip}</p>
                 </div>
               )}
               {misinfoTip && (
-                <div className="mx-5 mb-3 rounded-2xl p-5" style={{background:'linear-gradient(135deg, rgba(251,191,36,0.06), rgba(251,191,36,0.02))',border:'1px solid rgba(251,191,36,0.12)'}}>
+                <div className="mx-5 mb-3 rounded-2xl p-5" style={{background:'rgba(251,191,36,0.04)',border:'1px solid rgba(251,191,36,0.1)'}}>
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-base">⚠️</span>
-                    <span className="text-[11px] font-extrabold uppercase tracking-[0.12em]" style={{color:'var(--a4)'}}>{(UI_STRINGS[selLanguage]||UI_STRINGS['English']).wrongInfo}</span>
+                    <span className="text-lg">⚠️</span>
+                    <span className="text-[13px] font-extrabold uppercase tracking-[0.12em]" style={{color:'#fbbf24'}}>{(UI_STRINGS[selLanguage]||UI_STRINGS['English']).wrongInfo}</span>
                   </div>
-                  <p className="text-[13px] leading-relaxed" style={{color:'var(--t2)'}}>{misinfoTip}</p>
+                  <p className="text-[15px] leading-relaxed" style={{color:'rgba(255,255,255,0.5)'}}>{misinfoTip}</p>
                 </div>
               )}
             </div>
@@ -1604,56 +1627,61 @@ export function AppShell() {
 
         {/* ═══ SETTINGS ═══ */}
         {screen === 'settings' && (
-          <div className="flex flex-col min-h-dvh" style={{background:'var(--bg0)'}}>
-            <div className="flex items-center gap-3 px-5 pt-12 pb-4">
-              <Settings size={22} style={{color:'var(--ac)'}} />
-              <span className="text-[20px] font-bold" style={{color:'var(--t1)'}}>Settings</span>
+          <div className="flex flex-col min-h-dvh relative overflow-hidden" style={{background:'#000000'}}>
+            {/* Subtle glow */}
+            <div className="absolute inset-0 z-0">
+              <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[400px] h-[400px] rounded-full" style={{background:'radial-gradient(circle, rgba(45,212,168,0.06) 0%, transparent 65%)'}} />
             </div>
-            <div className="flex-1 overflow-y-auto pb-16" style={{scrollbarWidth:'none'}}>
+
+            <div className="relative z-10 flex items-center gap-3 px-5 pt-12 pb-5">
+              <Settings size={24} style={{color:'#22D3B7'}} />
+              <span className="text-[24px] font-extrabold" style={{color:'#FFFFFF'}}>Settings</span>
+            </div>
+            <div className="relative z-10 flex-1 overflow-y-auto pb-16" style={{scrollbarWidth:'none'}}>
               {/* Profile */}
-              <div className="mx-5 mt-2 text-[13px] font-bold uppercase tracking-widest flex items-center gap-2" style={{color:'var(--t3)'}}>Profile<div className="flex-1 h-px" style={{background:'var(--brs)'}} /></div>
-              <p className="mx-5 mt-1 mb-2 text-[13px]" style={{color:'var(--t3)',opacity:0.7}}>Controls how explanations are framed for your family</p>
-              <div className="mx-5 rounded-2xl border overflow-hidden" style={{background:'var(--bg2)',borderColor:'var(--brc)'}}>
-                <button onClick={() => { setSetupStep(1); navigate('setup'); }} className="flex justify-between items-center px-4 py-4 w-full border-b" style={{borderColor:'var(--brs)'}}>
-                  <span className="text-[16px] font-semibold" style={{color:'var(--t1)'}}>Language</span>
-                  <div className="flex items-center gap-1.5"><span className="text-[15px]" style={{color:'var(--t3)'}}>{LANGUAGES.find(l=>l.name===selLanguage)?.flag||'🇬🇧'} {selLanguage}</span><ChevronRight size={16} style={{color:'var(--t3)'}} /></div>
+              <div className="mx-5 mt-2 text-[14px] font-bold uppercase tracking-widest flex items-center gap-2" style={{color:'rgba(255,255,255,0.4)'}}>Profile<div className="flex-1 h-px" style={{background:'rgba(255,255,255,0.06)'}} /></div>
+              <p className="mx-5 mt-1.5 mb-3 text-[14px] leading-relaxed" style={{color:'rgba(255,255,255,0.3)'}}>Controls how explanations are framed for your family</p>
+              <div className="mx-5 rounded-2xl overflow-hidden" style={{background:'rgba(255,255,255,0.04)',border:'1px solid rgba(255,255,255,0.08)'}}>
+                <button onClick={() => { setSetupStep(1); navigate('setup'); }} className="flex justify-between items-center px-5 py-4.5 w-full border-b transition-all active:bg-white/5" style={{borderColor:'rgba(255,255,255,0.06)',padding:'18px 20px'}}>
+                  <div><span className="text-[17px] font-semibold block" style={{color:'#FFFFFF'}}>Language</span><span className="text-[13px]" style={{color:'rgba(255,255,255,0.3)'}}>Explanation output language</span></div>
+                  <div className="flex items-center gap-2"><span className="text-[16px] font-medium" style={{color:'rgba(255,255,255,0.5)'}}>{LANGUAGES.find(l=>l.name===selLanguage)?.flag||'🇬🇧'} {selLanguage}</span><ChevronRight size={16} style={{color:'rgba(255,255,255,0.3)'}} /></div>
                 </button>
-                <button onClick={() => { setSetupStep(2); navigate('setup'); }} className="flex justify-between items-center px-4 py-4 w-full border-b" style={{borderColor:'var(--brs)'}}>
-                  <span className="text-[16px] font-semibold" style={{color:'var(--t1)'}}>Country</span>
-                  <div className="flex items-center gap-1.5"><span className="text-[15px]" style={{color:'var(--t3)'}}>{COUNTRIES.find(c=>c.name===selCountry)?.flag||'🌍'} {selCountry||'Not set'}</span><ChevronRight size={16} style={{color:'var(--t3)'}} /></div>
+                <button onClick={() => { setSetupStep(2); navigate('setup'); }} className="flex justify-between items-center px-5 py-4.5 w-full border-b transition-all active:bg-white/5" style={{borderColor:'rgba(255,255,255,0.06)',padding:'18px 20px'}}>
+                  <div><span className="text-[17px] font-semibold block" style={{color:'#FFFFFF'}}>Country</span><span className="text-[13px]" style={{color:'rgba(255,255,255,0.3)'}}>Cultural context for answers</span></div>
+                  <div className="flex items-center gap-2"><span className="text-[16px] font-medium" style={{color:'rgba(255,255,255,0.5)'}}>{COUNTRIES.find(c=>c.name===selCountry)?.flag||'🌍'} {selCountry||'Not set'}</span><ChevronRight size={16} style={{color:'rgba(255,255,255,0.3)'}} /></div>
                 </button>
-                <button onClick={() => { setSetupStep(3); navigate('setup'); }} className="flex justify-between items-center px-4 py-4 w-full" style={{borderColor:'transparent'}}>
-                  <span className="text-[16px] font-semibold" style={{color:'var(--t1)'}}>Family beliefs</span>
-                  <div className="flex items-center gap-1.5"><span className="text-[15px]" style={{color:'var(--t3)'}}>{BELIEFS.find(b=>b.name===selBelief)?.icon||''} {selBelief||'Not set'}</span><ChevronRight size={16} style={{color:'var(--t3)'}} /></div>
+                <button onClick={() => { setSetupStep(3); navigate('setup'); }} className="flex justify-between items-center px-5 py-4.5 w-full transition-all active:bg-white/5" style={{borderColor:'transparent',padding:'18px 20px'}}>
+                  <div><span className="text-[17px] font-semibold block" style={{color:'#FFFFFF'}}>Family beliefs</span><span className="text-[13px]" style={{color:'rgba(255,255,255,0.3)'}}>Shapes framing of sensitive topics</span></div>
+                  <div className="flex items-center gap-2"><span className="text-[16px] font-medium" style={{color:'rgba(255,255,255,0.5)'}}>{BELIEFS.find(b=>b.name===selBelief)?.icon||''} {selBelief||'Not set'}</span><ChevronRight size={16} style={{color:'rgba(255,255,255,0.3)'}} /></div>
                 </button>
               </div>
 
               {/* Children */}
-              <div className="mx-5 mt-5 text-[13px] font-bold uppercase tracking-widest flex items-center gap-2" style={{color:'var(--t3)'}}>Children<div className="flex-1 h-px" style={{background:'var(--brs)'}} /></div>
-              <p className="mx-5 mt-1 mb-2 text-[13px]" style={{color:'var(--t3)',opacity:0.7}}>Explanations are personalized for each child's age</p>
-              <div className="mx-5 rounded-2xl border overflow-hidden" style={{background:'var(--bg2)',borderColor:'var(--brc)'}}>
+              <div className="mx-5 mt-6 text-[14px] font-bold uppercase tracking-widest flex items-center gap-2" style={{color:'rgba(255,255,255,0.4)'}}>Children<div className="flex-1 h-px" style={{background:'rgba(255,255,255,0.06)'}} /></div>
+              <p className="mx-5 mt-1.5 mb-3 text-[14px] leading-relaxed" style={{color:'rgba(255,255,255,0.3)'}}>Explanations are personalized for each child's age</p>
+              <div className="mx-5 rounded-2xl overflow-hidden" style={{background:'rgba(255,255,255,0.04)',border:'1px solid rgba(255,255,255,0.08)'}}>
                 {children.map((c) => (
-                  <div key={c.id} className="flex justify-between items-center px-4 py-4 border-b" style={{borderColor:'var(--brs)'}}>
-                    <div className="flex items-center gap-2.5"><Baby size={18} style={{color:'var(--ac)'}} /><span className="text-[16px] font-semibold" style={{color:'var(--t1)'}}>{c.name}</span></div>
-                    <span className="text-[14px] px-2.5 py-1 rounded-lg font-semibold" style={{background:'var(--a3g)',color:'var(--a3)'}}>{c.age}</span>
+                  <div key={c.id} className="flex justify-between items-center px-5 py-4 border-b" style={{borderColor:'rgba(255,255,255,0.06)'}}>
+                    <div className="flex items-center gap-2.5"><Baby size={18} style={{color:'#22D3B7'}} /><span className="text-[17px] font-semibold" style={{color:'#FFFFFF'}}>{c.name}</span></div>
+                    <span className="text-[14px] px-3 py-1.5 rounded-full font-bold" style={{background:'rgba(129,140,248,0.12)',color:'#818cf8'}}>{c.age}</span>
                   </div>
                 ))}
-                <button onClick={() => navigate('addchild')} className="flex items-center gap-2 px-4 py-4 w-full">
-                  <Plus size={18} style={{color:'var(--ac)'}} /><span className="text-[16px] font-semibold" style={{color:'var(--ac)'}}>Add child</span>
+                <button onClick={() => navigate('addchild')} className="flex items-center gap-2 px-5 py-4 w-full transition-all active:bg-white/5">
+                  <Plus size={18} style={{color:'#22D3B7'}} /><span className="text-[17px] font-semibold" style={{color:'#22D3B7'}}>Add child</span>
                 </button>
               </div>
 
               {/* Account */}
-              <div className="mx-5 mt-5 text-[13px] font-bold uppercase tracking-widest flex items-center gap-2" style={{color:'var(--t3)'}}>Account<div className="flex-1 h-px" style={{background:'var(--brs)'}} /></div>
-              <p className="mx-5 mt-1 mb-2 text-[13px]" style={{color:'var(--t3)',opacity:0.7}}>Manage your subscription and account details</p>
-              <div className="mx-5 rounded-2xl border overflow-hidden" style={{background:'var(--bg2)',borderColor:'var(--brc)'}}>
-                <div className="flex justify-between items-center px-4 py-4 border-b" style={{borderColor:'var(--brs)'}}>
-                  <span className="text-[16px] font-semibold" style={{color:'var(--t1)'}}>Subscription</span>
-                  <span className="text-[15px] font-bold" style={{color: isPro || isAdmin ? 'var(--ac)' : 'var(--a4)'}}>{isAdmin ? 'Admin ∞' : isPro ? 'Pro' : `Free (${MAX_FREE - usageCount} left)`}</span>
+              <div className="mx-5 mt-6 text-[14px] font-bold uppercase tracking-widest flex items-center gap-2" style={{color:'rgba(255,255,255,0.4)'}}>Account<div className="flex-1 h-px" style={{background:'rgba(255,255,255,0.06)'}} /></div>
+              <p className="mx-5 mt-1.5 mb-3 text-[14px] leading-relaxed" style={{color:'rgba(255,255,255,0.3)'}}>Manage your subscription and account details</p>
+              <div className="mx-5 rounded-2xl overflow-hidden" style={{background:'rgba(255,255,255,0.04)',border:'1px solid rgba(255,255,255,0.08)'}}>
+                <div className="flex justify-between items-center px-5 py-4 border-b" style={{borderColor:'rgba(255,255,255,0.06)'}}>
+                  <span className="text-[17px] font-semibold" style={{color:'#FFFFFF'}}>Subscription</span>
+                  <span className="text-[16px] font-bold px-3 py-1 rounded-full" style={{color: isPro || isAdmin ? '#000' : '#fbbf24', background: isPro || isAdmin ? '#22D3B7' : 'rgba(251,191,36,0.12)'}}>{isAdmin ? 'Admin' : isPro ? 'Pro' : `Free (${MAX_FREE - usageCount} left)`}</span>
                 </div>
                 {!isPro && !isAdmin && (
-                  <button onClick={() => navigate('paywall')} className="flex items-center gap-2 px-4 py-4 w-full border-b" style={{borderColor:'var(--brs)'}}>
-                    <CreditCard size={18} style={{color:'var(--ac)'}} /><span className="text-[16px] font-semibold" style={{color:'var(--ac)'}}>Upgrade to Pro</span>
+                  <button onClick={() => navigate('paywall')} className="flex items-center gap-2 px-5 py-4 w-full border-b transition-all active:bg-white/5" style={{borderColor:'rgba(255,255,255,0.06)'}}>
+                    <CreditCard size={18} style={{color:'#22D3B7'}} /><span className="text-[17px] font-semibold" style={{color:'#22D3B7'}}>Upgrade to Pro</span>
                   </button>
                 )}
                 {isPro && !isAdmin && (
@@ -1668,18 +1696,18 @@ export function AppShell() {
                       if (data.url) window.location.href = data.url;
                       else setToast('Could not open subscription manager');
                     } catch { setToast('Something went wrong'); }
-                  }} className="flex items-center gap-2 px-4 py-4 w-full border-b" style={{borderColor:'var(--brs)'}}>
-                    <CreditCard size={18} style={{color:'var(--ac)'}} /><span className="text-[16px] font-semibold" style={{color:'var(--ac)'}}>Manage Subscription</span>
+                  }} className="flex items-center gap-2 px-5 py-4 w-full border-b transition-all active:bg-white/5" style={{borderColor:'rgba(255,255,255,0.06)'}}>
+                    <CreditCard size={18} style={{color:'#22D3B7'}} /><span className="text-[17px] font-semibold" style={{color:'#22D3B7'}}>Manage Subscription</span>
                   </button>
                 )}
                 {[['Privacy Policy','privacy'],['Terms of Service','terms'],['Refund Policy','refund']].map(([l,k]) => (
-                  <button key={k} onClick={() => {setLegalPage(k);navigate('legal')}} className="flex justify-between items-center px-4 py-4 w-full border-b" style={{borderColor:'var(--brs)'}}>
-                    <span className="text-[16px] font-semibold" style={{color:'var(--t1)'}}>{l}</span>
-                    <ChevronRight size={16} style={{color:'var(--t3)'}} />
+                  <button key={k} onClick={() => {setLegalPage(k);navigate('legal')}} className="flex justify-between items-center px-5 py-4 w-full border-b transition-all active:bg-white/5" style={{borderColor:'rgba(255,255,255,0.06)'}}>
+                    <span className="text-[17px] font-semibold" style={{color:'#FFFFFF'}}>{l}</span>
+                    <ChevronRight size={16} style={{color:'rgba(255,255,255,0.3)'}} />
                   </button>
                 ))}
-                <button onClick={async () => { await signOut(); setIsLoggedIn(false); setDataLoaded(false); dataLoadedRef.current = false; setChildren([]); setSaved([]); navigate('auth'); }} className="flex items-center gap-2 px-4 py-4 w-full border-b" style={{borderColor:'var(--brs)'}}>
-                  <LogOut size={18} style={{color:'var(--a2)'}} /><span className="text-[16px] font-semibold" style={{color:'var(--a2)'}}>Sign Out</span>
+                <button onClick={async () => { await signOut(); setIsLoggedIn(false); setDataLoaded(false); dataLoadedRef.current = false; setChildren([]); setSaved([]); navigate('auth'); }} className="flex items-center gap-2 px-5 py-4 w-full border-b transition-all active:bg-white/5" style={{borderColor:'rgba(255,255,255,0.06)'}}>
+                  <LogOut size={18} style={{color:'#f472b6'}} /><span className="text-[17px] font-semibold" style={{color:'#f472b6'}}>Sign Out</span>
                 </button>
                 <button onClick={() => {
                   if (confirm('Are you sure you want to delete your account? This action cannot be undone. All your data including saved explanations and children profiles will be permanently deleted.')) {
@@ -1687,30 +1715,30 @@ export function AppShell() {
                     window.open(`mailto:solutions@noeldcosta.com?subject=Delete My Kidzplainer Account&body=${msg}`, '_blank');
                     setToast('Account deletion request sent. We\'ll process it within 48 hours.');
                   }
-                }} className="flex items-center gap-2 px-4 py-4 w-full">
-                  <X size={18} style={{color:'var(--t3)'}} /><span className="text-[16px] font-semibold" style={{color:'var(--t3)'}}>Delete Account</span>
+                }} className="flex items-center gap-2 px-5 py-4 w-full transition-all active:bg-white/5">
+                  <X size={18} style={{color:'rgba(255,255,255,0.3)'}} /><span className="text-[17px] font-semibold" style={{color:'rgba(255,255,255,0.3)'}}>Delete Account</span>
                 </button>
               </div>
 
               {/* Feedback & Support */}
-              <div className="mx-5 mt-5 text-[13px] font-bold uppercase tracking-widest flex items-center gap-2" style={{color:'var(--t3)'}}>Feedback & Support<div className="flex-1 h-px" style={{background:'var(--brs)'}} /></div>
-              <p className="mx-5 mt-1 mb-2 text-[13px]" style={{color:'var(--t3)',opacity:0.7}}>Help us improve Kidzplainer for every family</p>
-              <div className="mx-5 rounded-2xl border overflow-hidden" style={{background:'var(--bg2)',borderColor:'var(--brc)'}}>
-                <button onClick={() => { window.open(`mailto:solutions@noeldcosta.com?subject=Kidzplainer Feedback&body=Hi Kidzplainer team,%0A%0A`, '_blank'); }} className="flex justify-between items-center px-4 py-4 w-full border-b" style={{borderColor:'var(--brs)'}}>
-                  <div className="flex items-center gap-2.5"><Mail size={18} style={{color:'var(--ac)'}} /><span className="text-[16px] font-semibold" style={{color:'var(--t1)'}}>Send Feedback</span></div>
-                  <ChevronRight size={16} style={{color:'var(--t3)'}} />
+              <div className="mx-5 mt-6 text-[14px] font-bold uppercase tracking-widest flex items-center gap-2" style={{color:'rgba(255,255,255,0.4)'}}>Feedback & Support<div className="flex-1 h-px" style={{background:'rgba(255,255,255,0.06)'}} /></div>
+              <p className="mx-5 mt-1.5 mb-3 text-[14px] leading-relaxed" style={{color:'rgba(255,255,255,0.3)'}}>Help us improve Kidzplainer for every family</p>
+              <div className="mx-5 rounded-2xl overflow-hidden" style={{background:'rgba(255,255,255,0.04)',border:'1px solid rgba(255,255,255,0.08)'}}>
+                <button onClick={() => { window.open(`mailto:solutions@noeldcosta.com?subject=Kidzplainer Feedback&body=Hi Kidzplainer team,%0A%0A`, '_blank'); }} className="flex justify-between items-center px-5 py-4 w-full border-b transition-all active:bg-white/5" style={{borderColor:'rgba(255,255,255,0.06)'}}>
+                  <div className="flex items-center gap-2.5"><Mail size={18} style={{color:'#22D3B7'}} /><span className="text-[17px] font-semibold" style={{color:'#FFFFFF'}}>Send Feedback</span></div>
+                  <ChevronRight size={16} style={{color:'rgba(255,255,255,0.3)'}} />
                 </button>
-                <button onClick={() => navigate('review')} className="flex justify-between items-center px-4 py-4 w-full border-b" style={{borderColor:'var(--brs)'}}>
-                  <div className="flex items-center gap-2.5"><Star size={18} style={{color:'#fbbf24'}} /><span className="text-[16px] font-semibold" style={{color:'var(--t1)'}}>Leave a Review</span></div>
-                  <ChevronRight size={16} style={{color:'var(--t3)'}} />
+                <button onClick={() => navigate('review')} className="flex justify-between items-center px-5 py-4 w-full border-b transition-all active:bg-white/5" style={{borderColor:'rgba(255,255,255,0.06)'}}>
+                  <div className="flex items-center gap-2.5"><Star size={18} style={{color:'#fbbf24'}} /><span className="text-[17px] font-semibold" style={{color:'#FFFFFF'}}>Leave a Review</span></div>
+                  <ChevronRight size={16} style={{color:'rgba(255,255,255,0.3)'}} />
                 </button>
-                <button onClick={() => { window.open(`https://wa.me/+971501234567?text=Hi, I need help with Kidzplainer`, '_blank'); }} className="flex justify-between items-center px-4 py-4 w-full" style={{borderColor:'var(--brs)'}}>
-                  <div className="flex items-center gap-2.5"><MessageCircle size={18} style={{color:'#25D366'}} /><span className="text-[16px] font-semibold" style={{color:'var(--t1)'}}>WhatsApp Support</span></div>
-                  <ChevronRight size={16} style={{color:'var(--t3)'}} />
+                <button onClick={() => { window.open(`https://wa.me/+971501234567?text=Hi, I need help with Kidzplainer`, '_blank'); }} className="flex justify-between items-center px-5 py-4 w-full transition-all active:bg-white/5" style={{borderColor:'rgba(255,255,255,0.06)'}}>
+                  <div className="flex items-center gap-2.5"><MessageCircle size={18} style={{color:'#25D366'}} /><span className="text-[17px] font-semibold" style={{color:'#FFFFFF'}}>WhatsApp Support</span></div>
+                  <ChevronRight size={16} style={{color:'rgba(255,255,255,0.3)'}} />
                 </button>
               </div>
 
-              <div className="text-center mt-6 mb-4 text-[14px]" style={{color:'var(--t3)'}}>Kidzplainer v1.0 · Made with ❤️</div>
+              <div className="text-center mt-8 mb-4 text-[15px] font-medium" style={{color:'rgba(255,255,255,0.2)'}}>Kidzplainer v1.0</div>
             </div>
             <BottomNav active="settings" onNav={s => navigate(s === 'home' ? 'home' : s === 'saved' ? 'saved' : 'settings')} />
           </div>
