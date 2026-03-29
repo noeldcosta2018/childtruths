@@ -711,7 +711,7 @@ export function AppShell() {
   // RENDER
   // ═══════════════════════════════════════
   return (
-    <div className="flex flex-col items-center min-h-screen" style={{fontFamily:'Plus Jakarta Sans, sans-serif'}}>
+    <div className="flex flex-col items-center min-h-screen" style={{fontFamily:'Plus Jakarta Sans, sans-serif',background:'#000000'}}>
       <div className="w-full max-w-[500px] overflow-hidden relative" style={{...themeVars, background:'var(--bg0)', minHeight:'100vh', transition:'all 0.4s'}}>
 
         {/* Toast notification */}
