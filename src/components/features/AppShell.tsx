@@ -1430,124 +1430,133 @@ export function AppShell() {
 
         {/* ═══ PAYWALL ═══ */}
         {screen === 'paywall' && (
-          <div className="flex flex-col min-h-dvh px-6 pt-6 pb-8" style={{background:'var(--bg0)'}}>
-            <IconBtn icon={X} onClick={() => navigate('home')} className="self-end mb-4" />
-
-            <div className="text-center mb-6">
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4" style={{background:'linear-gradient(135deg,var(--ac),var(--a3))',boxShadow:'0 8px 30px rgba(34,211,183,0.3)'}}>
-                <Sparkles size={28} color="white" />
-              </div>
-              <h2 className="text-2xl font-extrabold mb-2" style={{fontFamily:'Baloo 2,cursive',color:'var(--t1)'}}>Start your 7-day free trial</h2>
-              <p className="text-[15px] leading-relaxed" style={{color:'var(--t3)'}}>Unlimited explanations for every tough question. Cancel anytime.</p>
+          <div className="flex flex-col min-h-dvh relative overflow-hidden" style={{background:'#0A0E17'}}>
+            {/* Dramatic gradient background like ElevenLabs */}
+            <div className="absolute inset-0 z-0">
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] rounded-full" style={{background:'radial-gradient(circle, rgba(34,211,183,0.15) 0%, rgba(34,211,183,0.05) 40%, transparent 70%)'}} />
+              <div className="absolute bottom-0 right-0 w-[300px] h-[300px] rounded-full" style={{background:'radial-gradient(circle, rgba(99,102,241,0.1) 0%, transparent 70%)'}} />
             </div>
 
-            {/* Plan selection */}
-            {[
-              {plan:'Annual',price:'$29.99',perMonth:'$2.50/mo',period:'/year',popular:true,save:'Save 50%',planKey:'annual'},
-              {plan:'Monthly',price:'$4.99',perMonth:'',period:'/month',popular:false,planKey:'monthly'},
-            ].map(p => (
-              <button key={p.plan} onClick={() => setSelectedPlan(p.planKey)}
-                className="w-full rounded-2xl p-5 mb-3 text-left relative transition-all active:scale-[0.98]"
-                style={{
-                  background: selectedPlan===p.planKey ? 'var(--acg)' : 'var(--bg2)',
-                  border: selectedPlan===p.planKey ? '2px solid var(--ac)' : '2px solid var(--brc)',
-                }}>
-                {p.popular && <span className="absolute -top-2.5 left-1/2 -translate-x-1/2 text-[11px] font-bold px-3 py-0.5 rounded-full" style={{background:'var(--ac)',color:'#0A0E17'}}>BEST VALUE</span>}
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-3">
-                    <div className="w-7 h-7 rounded-full border-2 flex items-center justify-center" style={{borderColor: selectedPlan===p.planKey ? 'var(--ac)' : 'var(--brc)'}}>
-                      {selectedPlan===p.planKey && <div className="w-4 h-4 rounded-full" style={{background:'var(--ac)'}} />}
-                    </div>
-                    <div>
-                      <div className="text-[17px] font-bold" style={{color:'var(--t1)'}}>{p.plan}</div>
-                      {p.save && <div className="text-[13px] font-semibold" style={{color:'var(--ac)'}}>{p.save}</div>}
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <span className="text-[22px] font-extrabold" style={{color:'var(--t1)'}}>{p.price}</span>
-                    <span className="text-[13px]" style={{color:'var(--t3)'}}>{p.period}</span>
-                    {p.perMonth && <div className="text-[13px]" style={{color:'var(--t3)'}}>{p.perMonth}</div>}
-                  </div>
+            <div className="relative z-10 flex flex-col px-6 pt-6 pb-8">
+              {/* Close button */}
+              <IconBtn icon={X} onClick={() => navigate('home')} className="self-end mb-2" />
+
+              {/* Hero pricing — ElevenLabs bold style */}
+              <div className="text-center mb-6">
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full mb-5" style={{background:'rgba(34,211,183,0.12)',border:'1px solid rgba(34,211,183,0.25)'}}>
+                  <Sparkles size={14} style={{color:'var(--ac)'}} />
+                  <span className="text-[13px] font-semibold tracking-wide" style={{color:'var(--ac)'}}>7 DAYS FREE</span>
                 </div>
-              </button>
-            ))}
 
-            {/* Subscribe button — Stripe Checkout */}
-            <button onClick={async () => {
-              if (!user || !session) { setToast('Please sign in first'); return; }
-              setGenerating(true);
-              try {
-                const res = await fetch('/api/checkout', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ plan: selectedPlan, email: user.email, userId: user.id }),
-                });
-                const data = await res.json();
-                if (data.url) {
-                  window.location.href = data.url;
-                } else {
-                  setToast(data.error || 'Failed to start checkout');
-                  setGenerating(false);
-                }
-              } catch (err) {
-                setToast('Something went wrong. Please try again.');
-                setGenerating(false);
-              }
-            }}
-              disabled={generating}
-              className="w-full py-4 rounded-2xl text-[17px] font-bold mt-2 transition-all active:scale-[0.97] flex items-center justify-center gap-2"
-              style={{background:'linear-gradient(135deg,var(--ac),#1AB5A0)',color:'#FFFFFF',boxShadow:'0 6px 24px rgba(34,211,183,0.3)',opacity: generating ? 0.7 : 1}}>
-              {generating ? <><Loader2 size={18} className="animate-spin" /> Processing...</> : 'Start Free Trial'}
-            </button>
-
-            <p className="text-center text-[12px] mt-2" style={{color:'var(--t3)'}}>
-              7 days free, then {selectedPlan === 'annual' ? '$29.99/year' : '$4.99/month'}. Cancel anytime.
-            </p>
-
-            {/* Apple Pay / Google Pay badges */}
-            <div className="flex items-center justify-center gap-3 mt-4">
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg" style={{background:'var(--bg2)',border:'1px solid var(--brc)'}}>
-                <span className="text-[13px] font-semibold" style={{color:'var(--t2)'}}>Apple Pay</span>
+                <h1 className="text-[44px] font-black leading-[1.05] tracking-tight mb-1" style={{fontFamily:'Baloo 2,cursive',color:'white'}}>
+                  {selectedPlan === 'annual' ? '$49.99' : '$4.99'}
+                </h1>
+                <p className="text-[18px] font-medium" style={{color:'rgba(255,255,255,0.5)'}}>
+                  {selectedPlan === 'annual' ? 'per year · $4.17/mo' : 'per month'}
+                </p>
+                <p className="text-[15px] mt-3 leading-relaxed max-w-[280px] mx-auto" style={{color:'rgba(255,255,255,0.6)'}}>
+                  Unlimited explanations for every tough question your child asks.
+                </p>
               </div>
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg" style={{background:'var(--bg2)',border:'1px solid var(--brc)'}}>
-                <span className="text-[13px] font-semibold" style={{color:'var(--t2)'}}>Google Pay</span>
+
+              {/* Plan toggle — pill style */}
+              <div className="flex p-1 rounded-2xl mb-5 mx-auto" style={{background:'rgba(255,255,255,0.06)',border:'1px solid rgba(255,255,255,0.08)'}}>
+                {[
+                  {key:'monthly',label:'Monthly',price:'$4.99'},
+                  {key:'annual',label:'Annual',price:'$49.99',badge:'Save 17%'},
+                ].map(p => (
+                  <button key={p.key} onClick={() => setSelectedPlan(p.key)}
+                    className="relative px-6 py-2.5 rounded-xl text-[15px] font-bold transition-all"
+                    style={{
+                      background: selectedPlan===p.key ? 'var(--ac)' : 'transparent',
+                      color: selectedPlan===p.key ? '#0A0E17' : 'rgba(255,255,255,0.5)',
+                    }}>
+                    {p.label}
+                    {p.badge && selectedPlan===p.key && (
+                      <span className="absolute -top-2 -right-1 text-[9px] font-black px-1.5 py-0.5 rounded-full" style={{background:'#FF6B6B',color:'white'}}>{p.badge}</span>
+                    )}
+                  </button>
+                ))}
               </div>
-              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg" style={{background:'var(--bg2)',border:'1px solid var(--brc)'}}>
-                <CreditCard size={14} style={{color:'var(--t3)'}} />
-                <span className="text-[13px] font-semibold" style={{color:'var(--t2)'}}>Card</span>
-              </div>
-            </div>
 
-            <div className="mt-5 space-y-2.5">
-              {['Unlimited explanations','All 4 response layers','Cultural & belief calibration','Audio read-aloud','Save & share explanations','Priority support'].map(f => (
-                <div key={f} className="flex items-center gap-2.5">
-                  <Check size={16} style={{color:'var(--ac)'}} />
-                  <span className="text-[15px] font-medium" style={{color:'var(--t2)'}}>{f}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-6 flex items-center justify-center gap-2 p-3 rounded-xl" style={{background:'var(--bg2)'}}>
-              <Shield size={16} style={{color:'var(--t3)'}} />
-              <span className="text-[13px] font-medium" style={{color:'var(--t3)'}}>Cancel anytime during your free trial</span>
-            </div>
-
-            {isPro && (
+              {/* Subscribe CTA */}
               <button onClick={async () => {
-                if (!session) return;
+                if (!user || !session) { setToast('Please sign in first'); return; }
+                setGenerating(true);
                 try {
-                  const res = await fetch('/api/manage-subscription', {
+                  const res = await fetch('/api/checkout', {
                     method: 'POST',
-                    headers: { 'Authorization': `Bearer ${session.access_token}` },
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ plan: selectedPlan, email: user.email, userId: user.id }),
                   });
                   const data = await res.json();
-                  if (data.url) window.location.href = data.url;
-                  else setToast('Could not open subscription manager');
-                } catch { setToast('Something went wrong'); }
-              }} className="mt-3 text-[14px] font-semibold text-center w-full underline" style={{color:'var(--ac)'}}>
-                Manage Subscription
+                  if (data.url) {
+                    window.location.href = data.url;
+                  } else {
+                    setToast(data.error || 'Failed to start checkout');
+                    setGenerating(false);
+                  }
+                } catch {
+                  setToast('Something went wrong. Please try again.');
+                  setGenerating(false);
+                }
+              }}
+                disabled={generating}
+                className="w-full py-4 rounded-2xl text-[18px] font-extrabold transition-all active:scale-[0.97] flex items-center justify-center gap-2"
+                style={{background:'linear-gradient(135deg,#22D3B7,#1AB5A0)',color:'#FFFFFF',boxShadow:'0 8px 32px rgba(34,211,183,0.35)',opacity: generating ? 0.7 : 1}}>
+                {generating ? <><Loader2 size={20} className="animate-spin" /> Processing...</> : 'Start Free Trial →'}
               </button>
-            )}
+
+              <p className="text-center text-[13px] mt-2.5" style={{color:'rgba(255,255,255,0.35)'}}>
+                7 days free · then {selectedPlan === 'annual' ? '$49.99/year' : '$4.99/month'} · cancel anytime
+              </p>
+
+              {/* Payment methods */}
+              <div className="flex items-center justify-center gap-4 mt-4">
+                <span className="text-[13px] font-semibold px-3 py-1 rounded-lg" style={{background:'rgba(255,255,255,0.06)',color:'rgba(255,255,255,0.5)'}}>Apple Pay</span>
+                <span className="text-[13px] font-semibold px-3 py-1 rounded-lg" style={{background:'rgba(255,255,255,0.06)',color:'rgba(255,255,255,0.5)'}}>Google Pay</span>
+                <span className="text-[13px] font-semibold px-3 py-1 rounded-lg" style={{background:'rgba(255,255,255,0.06)',color:'rgba(255,255,255,0.5)'}}>💳 Card</span>
+              </div>
+
+              {/* Features list */}
+              <div className="mt-6 grid grid-cols-2 gap-3">
+                {[
+                  {icon:'♾️',text:'Unlimited explanations'},
+                  {icon:'🧅',text:'All 4 response layers'},
+                  {icon:'🌍',text:'Cultural calibration'},
+                  {icon:'🔊',text:'Audio read-aloud'},
+                  {icon:'💾',text:'Save & share'},
+                  {icon:'⚡',text:'Priority support'},
+                ].map(f => (
+                  <div key={f.text} className="flex items-center gap-2.5 p-3 rounded-xl" style={{background:'rgba(255,255,255,0.04)'}}>
+                    <span className="text-[16px]">{f.icon}</span>
+                    <span className="text-[13px] font-medium" style={{color:'rgba(255,255,255,0.7)'}}>{f.text}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Trust bar */}
+              <div className="mt-5 flex items-center justify-center gap-2 py-3 rounded-xl" style={{background:'rgba(255,255,255,0.03)',border:'1px solid rgba(255,255,255,0.06)'}}>
+                <Shield size={14} style={{color:'rgba(255,255,255,0.3)'}} />
+                <span className="text-[12px] font-medium" style={{color:'rgba(255,255,255,0.35)'}}>Cancel anytime · No commitment · Secure payment</span>
+              </div>
+
+              {isPro && (
+                <button onClick={async () => {
+                  if (!session) return;
+                  try {
+                    const res = await fetch('/api/manage-subscription', {
+                      method: 'POST',
+                      headers: { 'Authorization': `Bearer ${session.access_token}` },
+                    });
+                    const data = await res.json();
+                    if (data.url) window.location.href = data.url;
+                    else setToast('Could not open subscription manager');
+                  } catch { setToast('Something went wrong'); }
+                }} className="mt-4 text-[14px] font-semibold text-center w-full underline" style={{color:'var(--ac)'}}>
+                  Manage Subscription
+                </button>
+              )}
 
             <div className="mt-3 flex justify-center gap-4">
               {[['Refund Policy','refund'],['Terms','terms'],['Privacy','privacy']].map(([l,k]) => (
