@@ -217,6 +217,83 @@ async function generateLayers(question: string, childName: string, age: string, 
 // ===================================================
 // FLOATING NAV (shared)
 // ===================================================
+// ===================================================
+// LOADING SCREENS
+// ===================================================
+function SplashScreen() {
+  const [step, setStep] = useState(0);
+  const steps = ['Loading your experience...', 'Preparing your sanctuary...', 'Almost ready...'];
+  useEffect(() => {
+    const t1 = setTimeout(() => setStep(1), 800);
+    const t2 = setTimeout(() => setStep(2), 1800);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, []);
+  return (
+    <div className="flex flex-col items-center justify-center text-center relative overflow-hidden" style={{ background: C.surface, minHeight: '100vh' }}>
+      <div className="absolute -top-20 -left-20 w-72 h-72 rounded-full blur-[100px] opacity-30" style={{ background: C.secondaryFixed }} />
+      <div className="absolute bottom-20 -right-20 w-64 h-64 rounded-full blur-[100px] opacity-20" style={{ background: C.primaryFixed }} />
+      <div className="relative z-10 flex flex-col items-center">
+        <p style={{ ...HL, color: C.primary, fontSize: 36, fontWeight: 800 }}>Kidzplainer</p>
+        <div className="h-1.5 w-8 rounded-full mt-2" style={{ background: C.tertiaryContainer }} />
+        <div className="mt-10 flex flex-col items-center gap-4">
+          <div className="w-48 h-1.5 rounded-full overflow-hidden" style={{ background: C.surfaceHigh }}>
+            <div className="h-full rounded-full transition-all duration-1000 ease-out" style={{ background: C.primary, width: step === 0 ? '30%' : step === 1 ? '65%' : '95%' }} />
+          </div>
+          <p className="text-sm font-medium transition-opacity duration-300" style={{ color: C.onSurfaceVariant }}>{steps[step]}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function GeneratingScreen({ childName, belief, country }: { childName: string; belief: string; country: string }) {
+  const [step, setStep] = useState(0);
+  const steps = [
+    { icon: 'psychology', text: `Understanding ${childName}'s perspective...` },
+    { icon: 'auto_awesome', text: 'Crafting age-appropriate language...' },
+    { icon: 'volunteer_activism', text: belief ? `Weaving in ${belief} values...` : 'Adding cultural sensitivity...' },
+    { icon: 'layers', text: 'Building 4 layers of explanation...' },
+  ];
+  useEffect(() => {
+    const timers = [
+      setTimeout(() => setStep(1), 1500),
+      setTimeout(() => setStep(2), 3500),
+      setTimeout(() => setStep(3), 5500),
+    ];
+    return () => timers.forEach(clearTimeout);
+  }, []);
+  return (
+    <div className="flex flex-col items-center justify-center text-center px-8 relative" style={{ background: C.surface, minHeight: '100vh' }}>
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="w-48 h-48 rounded-full animate-pulse opacity-15" style={{ background: C.primaryFixed }} />
+      </div>
+      <div className="relative z-10 w-full max-w-xs">
+        <p style={{ ...HL, color: C.primary, fontSize: 20, fontWeight: 800, marginBottom: 32 }}>Kidzplainer</p>
+        <div className="space-y-4 text-left">
+          {steps.map((s, i) => (
+            <div key={i} className="flex items-center gap-3 transition-all duration-500" style={{ opacity: i <= step ? 1 : 0.25, transform: i <= step ? 'translateX(0)' : 'translateX(8px)' }}>
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-500" style={{ background: i < step ? C.secondaryContainer : i === step ? C.primaryFixed : C.surfaceHigh }}>
+                {i < step ? (
+                  <MIcon name="check" size={18} style={{ color: C.secondary }} />
+                ) : i === step ? (
+                  <MIcon name={s.icon} size={18} style={{ color: C.primary, animation: 'pulse 1.5s ease-in-out infinite' }} />
+                ) : (
+                  <MIcon name={s.icon} size={18} style={{ color: C.outline }} />
+                )}
+              </div>
+              <p className="text-sm font-semibold" style={{ color: i <= step ? C.onSurface : C.outline }}>{s.text}</p>
+            </div>
+          ))}
+        </div>
+        <div className="mt-8 w-full h-1.5 rounded-full overflow-hidden" style={{ background: C.surfaceHigh }}>
+          <div className="h-full rounded-full transition-all duration-1500 ease-out" style={{ background: `linear-gradient(90deg, ${C.primary}, ${C.primaryContainer})`, width: `${Math.min(100, (step + 1) * 25)}%`, transition: 'width 1.5s ease-out' }} />
+        </div>
+        <p className="text-xs mt-3 font-medium" style={{ color: C.onSurfaceVariant }}>Personalized for {childName}'s world</p>
+      </div>
+    </div>
+  );
+}
+
 function FloatingNav({ active, onNav }: { active: string; onNav: (s: string) => void }) {
   const items = [
     { key: 'home', icon: 'chat_bubble', label: 'Ask' },
@@ -487,19 +564,7 @@ export function AppShell() {
         )}
 
         {/* === SPLASH === */}
-        {screen === 'splash' && (
-          <div className="flex flex-col items-center justify-center text-center relative overflow-hidden" style={{ background: C.surface, minHeight: '100vh' }}>
-            <div className="absolute -top-20 -left-20 w-72 h-72 rounded-full blur-[100px] opacity-30" style={{ background: C.secondaryFixed }} />
-            <div className="absolute bottom-20 -right-20 w-64 h-64 rounded-full blur-[100px] opacity-20" style={{ background: C.primaryFixed }} />
-            <div className="relative z-10 flex flex-col items-center">
-              <p style={{ ...HL, color: C.primary, fontSize: 36, fontWeight: 800 }}>Kidzplainer</p>
-              <div className="h-1.5 w-8 rounded-full mt-2" style={{ background: C.tertiaryContainer }} />
-              <div className="mt-10">
-                <MIcon name="progress_activity" size={20} style={{ color: C.primary, animation: 'spin 1s linear infinite' }} />
-              </div>
-            </div>
-          </div>
-        )}
+        {screen === 'splash' && <SplashScreen />}
 
         {/* === ONBOARDING === */}
         {screen === 'onboarding' && (
@@ -945,16 +1010,7 @@ export function AppShell() {
         )}
 
         {/* === LOADING === */}
-        {screen === 'loading' && (
-          <div className="flex flex-col items-center justify-center text-center px-8 relative" style={{ background: C.surface, minHeight: '100vh' }}>
-            <div className="absolute inset-0 flex items-center justify-center"><div className="w-40 h-40 rounded-full animate-pulse opacity-20" style={{ background: C.primaryFixed }} /></div>
-            <div className="relative z-10">
-              <MIcon name="progress_activity" size={40} style={{ color: C.primary, animation: 'spin 1s linear infinite' }} />
-              <h2 style={{ ...HL, fontSize: 24, fontWeight: 800, color: C.onSurface, marginBottom: 8, marginTop: 24 }}>Crafting the perfect answer...</h2>
-              <p className="text-sm" style={{ color: C.onSurfaceVariant }}>Personalized for {selectedChild?.name}'s age and your values.</p>
-            </div>
-          </div>
-        )}
+        {screen === 'loading' && <GeneratingScreen childName={selectedChild?.name || 'your child'} belief={selBelief} country={selCountry} />}
 
         {/* === RESULT === */}
         {screen === 'result' && layers && (
@@ -1203,15 +1259,24 @@ export function AppShell() {
               ))}
             </div>
 
-            {/* Monthly plan */}
+            {/* Plans */}
             <div className="space-y-4 mb-8">
-              <button onClick={() => setSelectedPlan('monthly')} className="w-full p-6 rounded-2xl text-left transition-all" style={{ background: selectedPlan === 'monthly' ? C.surfaceLow : C.white, border: `1.5px solid ${selectedPlan === 'monthly' ? C.outlineVariant : C.outlineVariant + '40'}` }}>
+              {/* Monthly plan */}
+              <button onClick={() => setSelectedPlan('monthly')} className="w-full p-6 rounded-2xl text-left transition-all relative overflow-hidden" style={{ background: selectedPlan === 'monthly' ? C.surfaceLow : C.white, border: `1.5px solid ${selectedPlan === 'monthly' ? C.outlineVariant : C.outlineVariant + '40'}` }}>
                 <p className="text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: C.onSurfaceVariant }}>Flexible</p>
                 <p className="text-xl font-bold" style={{ ...HL, color: C.onSurface }}>Monthly</p>
                 <p className="text-3xl font-extrabold mt-2" style={{ color: C.onSurface }}>$4.99<span className="text-base font-medium" style={{ color: C.onSurfaceVariant }}>/mo</span></p>
+                <div className="mt-4 space-y-2.5">
+                  {['Unlimited AI-powered answers','Save favorite explanations','Cancel anytime'].map((f,fi) => (
+                    <div key={fi} className="flex items-center gap-3">
+                      <MIcon name="check_circle" size={16} style={{ color: C.tertiary }} />
+                      <span className="text-sm" style={{ color: C.onSurfaceVariant }}>{f}</span>
+                    </div>
+                  ))}
+                </div>
               </button>
 
-              {/* Annual plan - premium */}
+              {/* Annual plan - best value */}
               <button onClick={() => setSelectedPlan('annual')} className="w-full p-6 rounded-3xl text-left transition-all relative overflow-hidden" style={{
                 background: C.white,
                 border: `2px solid ${selectedPlan === 'annual' ? C.primary + '50' : C.outlineVariant + '30'}`,
