@@ -1,20 +1,45 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Baloo+2:wght@500;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap');
 
 :root {
-  --bg-primary:#FFFAF7;--bg-surface:#FFFFFF;--bg-card:#FFFFFF;--bg-input:#F8F4F1;
-  --border-subtle:rgba(0,0,0,0.06);--border-card:rgba(0,0,0,0.08);
-  --text-primary:#1C1917;--text-secondary:#78716C;--text-muted:#A8A29E;
-  --accent:#F07854;--accent-glow:rgba(240,120,84,0.15);--accent-soft:rgba(240,120,84,0.08);
-  --accent-pink:#EC4899;--accent-pink-glow:rgba(236,72,153,0.08);
-  --accent-indigo:#6366F1;--accent-indigo-glow:rgba(99,102,241,0.08);
-  --accent-amber:#F59E0B;--accent-amber-glow:rgba(245,158,11,0.08);
-  --shadow-card:0 2px 12px rgba(0,0,0,0.06);--nav-bg:rgba(255,255,255,0.97);
-  --chip-bg:rgba(0,0,0,0.04);--chip-border:rgba(0,0,0,0.08);--chip-active-text:#FFFFFF;
+  --surface: #fef8f1;
+  --surface-low: #f9f3ec;
+  --surface-container: #f3ede6;
+  --surface-high: #ede7e0;
+  --surface-highest: #e7e2db;
+  --surface-lowest: #ffffff;
+  --primary: #914b31;
+  --primary-container: #d98466;
+  --primary-fixed: #ffdbcf;
+  --on-primary: #ffffff;
+  --on-surface: #1d1b17;
+  --on-surface-variant: #54433e;
+  --secondary: #51634b;
+  --secondary-container: #d1e6c7;
+  --secondary-fixed: #d4e9ca;
+  --tertiary: #1d6772;
+  --tertiary-container: #61a4b0;
+  --tertiary-fixed: #aaedfa;
+  --outline: #87736c;
+  --outline-variant: #d9c1ba;
+  --error-container: #ffdad6;
 }
-body { background:var(--bg-primary);color:var(--text-primary);font-family:'Plus Jakarta Sans',sans-serif; }
-*{-webkit-tap-highlight-color:transparent}
-.no-scrollbar::-webkit-scrollbar{display:none}
-.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
+html { background: #fef8f1; }
+body {
+  background: var(--surface);
+  color: var(--on-surface);
+  font-family: 'Manrope', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+* { -webkit-tap-highlight-color: transparent; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.organic-blob { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+.animate-float { animation: float 6s ease-in-out infinite; }
