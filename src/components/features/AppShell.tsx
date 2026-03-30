@@ -537,10 +537,15 @@ export function AppShell() {
 
   const handleCheckout = async (plan: string) => {
     try {
-      const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token}` }, body: JSON.stringify({ plan }) });
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session?.access_token}` },
+        body: JSON.stringify({ plan, email: user?.email, userId: user?.id }),
+      });
       const data = await res.json();
       if (data.url) window.location.href = data.url;
-    } catch (err) { console.error(err); }
+      else { setToast(data.error || 'Checkout failed'); }
+    } catch (err) { console.error(err); setToast('Checkout failed. Please try again.'); }
   };
 
   const filteredCountries = COUNTRIES.filter(c => c.name.toLowerCase().includes(countrySearch.toLowerCase()));
@@ -1233,7 +1238,7 @@ export function AppShell() {
 
         {/* === PAYWALL === */}
         {screen === 'paywall' && (
-          <div className="pb-20 px-6 pt-8 relative" style={{ background: C.surface, minHeight: '100vh' }}>
+          <div className="pb-32 px-6 pt-8 relative" style={{ background: C.surface, minHeight: '100vh' }}>
             <div className="absolute -top-10 -left-10 w-64 h-64 rounded-full blur-[100px] opacity-20" style={{ background: C.secondaryFixed }} />
             <button onClick={() => navigate('home')} className="p-2 rounded-full mb-4" style={{ background: C.white }}>
               <MIcon name="close" size={18} style={{ color: C.primary }} />
@@ -1346,6 +1351,7 @@ export function AppShell() {
                 </div>
               ))}
             </div>
+            <FloatingNav active="home" onNav={navigate} />
           </div>
         )}
 
