@@ -88,23 +88,97 @@ const PERSONALITIES = [
   {emoji:"\u{1F630}",label:"Gets Anxious"},{emoji:"\u{1F60A}",label:"Outgoing"},
 ];
 
-const TOPICS = [
-  {emoji:"\u{1F476}",label:"Babies",q:"Where do babies come from?"},
-  {emoji:"\u{1F54A}\uFE0F",label:"Death",q:"Why do people die?"},
-  {emoji:"\u{1F494}",label:"Divorce",q:"Why are you and dad splitting up?"},
-  {emoji:"\u2753",label:"Sex",q:"What is sex?"},
-  {emoji:"\u{1F319}",label:"Afterlife",q:"What happens after we die?"},
-  {emoji:"\u{1F3E5}",label:"Illness",q:"What happens when someone gets really sick?"},
-];
+const TOPICS_BY_LANG: Record<string, {emoji:string;label:string;q:string}[]> = {
+  'English': [
+    {emoji:"👶",label:"Babies",q:"Where do babies come from?"},
+    {emoji:"🕊️",label:"Death",q:"Why do people die?"},
+    {emoji:"💔",label:"Divorce",q:"Why are you and dad splitting up?"},
+    {emoji:"❓",label:"Sex",q:"What is sex?"},
+    {emoji:"🌙",label:"Afterlife",q:"What happens after we die?"},
+    {emoji:"🏥",label:"Illness",q:"What happens when someone gets really sick?"},
+  ],
+  'العربية': [
+    {emoji:"👶",label:"أطفال",q:"من أين يأتي الأطفال؟"},
+    {emoji:"🕊️",label:"الموت",q:"لماذا يموت الناس؟"},
+    {emoji:"💔",label:"الطلاق",q:"لماذا أنتما تنفصلان؟"},
+    {emoji:"❓",label:"الجنس",q:"ما هو الجنس؟"},
+    {emoji:"🌙",label:"الآخرة",q:"ماذا يحدث بعد الموت؟"},
+    {emoji:"🏥",label:"المرض",q:"ماذا يحدث عندما يمرض شخص ما بشدة؟"},
+  ],
+  'हिन्दी': [
+    {emoji:"👶",label:"बच्चे",q:"बच्चे कहाँ से आते हैं?"},
+    {emoji:"🕊️",label:"मृत्यु",q:"लोग क्यों मरते हैं?"},
+    {emoji:"💔",label:"तलाक",q:"आप और पापा अलग क्यों हो रहे हैं?"},
+    {emoji:"❓",label:"सेक्स",q:"सेक्स क्या है?"},
+    {emoji:"🌙",label:"परलोक",q:"मरने के बाद क्या होता है?"},
+    {emoji:"🏥",label:"बीमारी",q:"जब कोई बहुत बीमार हो जाए तो क्या होता है?"},
+  ],
+  'Español': [
+    {emoji:"👶",label:"Bebés",q:"¿De dónde vienen los bebés?"},
+    {emoji:"🕊️",label:"Muerte",q:"¿Por qué muere la gente?"},
+    {emoji:"💔",label:"Divorcio",q:"¿Por qué se están separando?"},
+    {emoji:"❓",label:"Sexo",q:"¿Qué es el sexo?"},
+    {emoji:"🌙",label:"Más allá",q:"¿Qué pasa después de morir?"},
+    {emoji:"🏥",label:"Enfermedad",q:"¿Qué pasa cuando alguien se enferma mucho?"},
+  ],
+  'Français': [
+    {emoji:"👶",label:"Bébés",q:"D'où viennent les bébés ?"},
+    {emoji:"🕊️",label:"Mort",q:"Pourquoi les gens meurent ?"},
+    {emoji:"💔",label:"Divorce",q:"Pourquoi vous séparez-vous ?"},
+    {emoji:"❓",label:"Sexe",q:"C'est quoi le sexe ?"},
+    {emoji:"🌙",label:"Au-delà",q:"Que se passe-t-il après la mort ?"},
+    {emoji:"🏥",label:"Maladie",q:"Que se passe-t-il quand quelqu'un est très malade ?"},
+  ],
+  '中文': [
+    {emoji:"👶",label:"宝宝",q:"宝宝是从哪里来的？"},
+    {emoji:"🕊️",label:"死亡",q:"人为什么会死？"},
+    {emoji:"💔",label:"离婚",q:"你们为什么要分开？"},
+    {emoji:"❓",label:"性",q:"什么是性？"},
+    {emoji:"🌙",label:"来世",q:"人死后会怎样？"},
+    {emoji:"🏥",label:"疾病",q:"人生了重病会怎样？"},
+  ],
+  'Português': [
+    {emoji:"👶",label:"Bebês",q:"De onde vêm os bebês?"},
+    {emoji:"🕊️",label:"Morte",q:"Por que as pessoas morrem?"},
+    {emoji:"💔",label:"Divórcio",q:"Por que vocês estão se separando?"},
+    {emoji:"❓",label:"Sexo",q:"O que é sexo?"},
+    {emoji:"🌙",label:"Além",q:"O que acontece depois que morremos?"},
+    {emoji:"🏥",label:"Doença",q:"O que acontece quando alguém fica muito doente?"},
+  ],
+  'Deutsch': [
+    {emoji:"👶",label:"Babys",q:"Woher kommen Babys?"},
+    {emoji:"🕊️",label:"Tod",q:"Warum sterben Menschen?"},
+    {emoji:"💔",label:"Scheidung",q:"Warum trennt ihr euch?"},
+    {emoji:"❓",label:"Sex",q:"Was ist Sex?"},
+    {emoji:"🌙",label:"Jenseits",q:"Was passiert nach dem Tod?"},
+    {emoji:"🏥",label:"Krankheit",q:"Was passiert wenn jemand sehr krank wird?"},
+  ],
+};
 
-const TRIGGERS_DATA = [
-  {icon:"\u{1F4FA}",label:"TV / Movie",key:"tv"},
-  {icon:"\u{1F4F1}",label:"iPad / Phone",key:"ipad"},
-  {icon:"\u{1F465}",label:"Friend told them",key:"friend"},
-  {icon:"\u{1F3EB}",label:"At school",key:"school"},
-  {icon:"\u{1F442}",label:"Overheard adults",key:"overheard"},
-  {icon:"\u{1F30D}",label:"Real event",key:"event"},
-];
+const TRIGGERS_BY_LANG: Record<string, string[]> = {
+  'English': ['TV / Movie','iPad / Phone','Friend told them','At school','Overheard adults','Real event'],
+  'العربية': ['تلفزيون / فيلم','آيباد / هاتف','أخبرهم صديق','في المدرسة','سمعوا الكبار','حدث حقيقي'],
+  'हिन्दी': ['टीवी / फिल्म','आईपैड / फोन','दोस्त ने बताया','स्कूल में','बड़ों की बात सुनी','असली घटना'],
+  'Español': ['TV / Película','iPad / Teléfono','Un amigo les dijo','En la escuela','Escucharon adultos','Evento real'],
+  'Français': ['TV / Film','iPad / Téléphone','Un ami leur a dit',"À l'école",'Entendu des adultes','Événement réel'],
+  '中文': ['电视/电影','iPad/手机','朋友告诉的','在学校','听到大人说','真实事件'],
+  'Português': ['TV / Filme','iPad / Celular','Amigo contou','Na escola','Ouviram adultos','Evento real'],
+  'Deutsch': ['TV / Film','iPad / Handy','Freund erzählte','In der Schule','Erwachsene gehört','Echtes Ereignis'],
+};
+
+const TRIGGER_ICONS = ['📺','📱','👥','🏫','👂','🌍'];
+const TRIGGER_KEYS = ['tv','ipad','friend','school','overheard','event'];
+
+const UI_STRINGS: Record<string, Record<string, string>> = {
+  'English': { whatDidAsk:'What did {name} ask?', quickTopics:'Quick Topics', triggeredBy:'What Triggered It?', explain:'Explain', explore:'Explore by Topic', trending:'Community Trending' },
+  'العربية': { whatDidAsk:'ماذا سأل {name}؟', quickTopics:'مواضيع سريعة', triggeredBy:'ما السبب؟', explain:'اشرح', explore:'استكشف حسب الموضوع', trending:'الأسئلة الشائعة' },
+  'हिन्दी': { whatDidAsk:'{name} ने क्या पूछा?', quickTopics:'त्वरित विषय', triggeredBy:'कारण', explain:'समझाएं', explore:'विषय के अनुसार खोजें', trending:'सामुदायिक चर्चा' },
+  'Español': { whatDidAsk:'¿Qué preguntó {name}?', quickTopics:'Temas rápidos', triggeredBy:'¿Qué lo provocó?', explain:'Explicar', explore:'Explorar por tema', trending:'Tendencias' },
+  'Français': { whatDidAsk:"Qu'a demandé {name} ?", quickTopics:'Sujets rapides', triggeredBy:'Déclencheur', explain:'Expliquer', explore:'Explorer par sujet', trending:'Tendances' },
+  '中文': { whatDidAsk:'{name}问了什么？', quickTopics:'快速话题', triggeredBy:'触发原因', explain:'解释', explore:'按话题探索', trending:'社区热门' },
+  'Português': { whatDidAsk:'O que {name} perguntou?', quickTopics:'Tópicos rápidos', triggeredBy:'O que provocou?', explain:'Explicar', explore:'Explorar por tópico', trending:'Tendências' },
+  'Deutsch': { whatDidAsk:'Was hat {name} gefragt?', quickTopics:'Schnelle Themen', triggeredBy:'Auslöser', explain:'Erklären', explore:'Nach Thema erkunden', trending:'Im Trend' },
+};
 
 const LAYER_META = [
   { name: 'The Spark', matIcon: 'auto_awesome', color: C.primary, softBg: `${C.primaryFixed}60`, ringColor: `${C.primary}20` },
@@ -394,6 +468,9 @@ export function AppShell() {
 
   const filteredCountries = COUNTRIES.filter(c => c.name.toLowerCase().includes(countrySearch.toLowerCase()));
   const freeLeft = Math.max(0, MAX_FREE - usageCount);
+  const t = UI_STRINGS[selLanguage] || UI_STRINGS['English'];
+  const topics = TOPICS_BY_LANG[selLanguage] || TOPICS_BY_LANG['English'];
+  const triggerLabels = TRIGGERS_BY_LANG[selLanguage] || TRIGGERS_BY_LANG['English'];
 
   // ===================================================
   // RENDER
@@ -756,7 +833,7 @@ export function AppShell() {
                   <MIcon name="chat_bubble" size={18} style={{ color: C.primary + '80', marginRight: 12, flexShrink: 0 }} />
                   <input value={question} onChange={e => setQuestion(e.target.value)} placeholder="e.g. 'Why is the sky blue?'" className="w-full bg-transparent border-none outline-none text-base py-3 placeholder:opacity-40" style={{ color: C.onSurface }} onKeyDown={e => e.key === 'Enter' && handleGenerate()} />
                 </div>
-                <button onClick={handleGenerate} className="px-6 py-3 rounded-xl font-bold text-sm active:scale-[0.97] transition-all" style={{ background: C.primary, color: C.onPrimary, boxShadow: '0 4px 12px rgba(145,75,49,0.2)' }}>Explain</button>
+                <button onClick={handleGenerate} className="px-6 py-3 rounded-xl font-bold text-sm active:scale-[0.97] transition-all" style={{ background: C.primary, color: C.onPrimary, boxShadow: '0 4px 12px rgba(145,75,49,0.2)' }}>{t.explain}</button>
               </div>
               {genError && <p className="text-sm mt-2 flex items-center gap-1" style={{ color: '#ba1a1a' }}><MIcon name="error" size={14} style={{ color: '#ba1a1a' }} />{genError}</p>}
             </div>
@@ -833,11 +910,11 @@ export function AppShell() {
 
             {/* Explore by Topic */}
             <div className="px-6 mb-6 relative z-10">
-              <p className="text-[11px] font-bold uppercase tracking-widest mb-3" style={{ color: C.primary + 'cc' }}>Explore by Topic</p>
+              <p className="text-[11px] font-bold uppercase tracking-widest mb-3" style={{ color: C.primary + 'cc' }}>{t.explore}</p>
               <div className="flex gap-3 overflow-x-auto no-scrollbar pb-1">
-                {TOPICS.map(t => (
-                  <button key={t.label} onClick={() => setQuestion(t.q)} className="flex items-center gap-2 px-5 py-3.5 rounded-2xl whitespace-nowrap font-bold text-sm transition-all hover:-translate-y-0.5 active:scale-[0.97]" style={{ background: C.white, boxShadow: `0 2px 8px rgba(29,27,23,0.04)`, border: `1px solid ${C.outlineVariant}20` }}>
-                    <span>{t.emoji}</span> {t.label}
+                {topics.map(tp => (
+                  <button key={tp.label} onClick={() => setQuestion(tp.q)} className="flex items-center gap-2 px-5 py-3.5 rounded-2xl whitespace-nowrap font-bold text-sm transition-all hover:-translate-y-0.5 active:scale-[0.97]" style={{ background: C.white, boxShadow: '0 2px 8px rgba(29,27,23,0.04)', border: `1px solid ${C.outlineVariant}20` }}>
+                    <span>{tp.emoji}</span> {tp.label}
                   </button>
                 ))}
               </div>
@@ -845,13 +922,14 @@ export function AppShell() {
 
             {/* What Triggered It */}
             <div className="px-6 mb-6 relative z-10">
-              <p className="text-[11px] font-bold uppercase tracking-widest mb-3" style={{ color: C.primary + 'cc' }}>What Triggered It?</p>
+              <p className="text-[11px] font-bold uppercase tracking-widest mb-3" style={{ color: C.primary + 'cc' }}>{t.triggeredBy}</p>
               <div className="grid grid-cols-3 gap-2.5">
-                {TRIGGERS_DATA.map(t => {
-                  const sel = selectedTriggers.includes(t.key);
-                  return <button key={t.key} onClick={() => setSelectedTriggers(prev => sel ? prev.filter(x => x !== t.key) : [...prev, t.key])} className="flex flex-col items-center gap-2 py-4 rounded-2xl transition-all active:scale-[0.97]" style={{ background: sel ? C.primaryFixed : C.white, border: `1.5px solid ${sel ? C.primary + '30' : C.surfaceHigh}` }}>
-                    <span className="text-xl">{t.icon}</span>
-                    <span className="text-[11px] font-semibold text-center leading-tight" style={{ color: C.onSurface }}>{t.label}</span>
+                {triggerLabels.map((label, i) => {
+                  const key = TRIGGER_KEYS[i];
+                  const sel = selectedTriggers.includes(key);
+                  return <button key={key} onClick={() => setSelectedTriggers(prev => sel ? prev.filter(x => x !== key) : [...prev, key])} className="flex flex-col items-center gap-2 py-4 rounded-2xl transition-all active:scale-[0.97]" style={{ background: sel ? C.primaryFixed : C.white, border: `1.5px solid ${sel ? C.primary + '30' : C.surfaceHigh}` }}>
+                    <span className="text-xl">{TRIGGER_ICONS[i]}</span>
+                    <span className="text-[11px] font-semibold text-center leading-tight" style={{ color: C.onSurface }}>{label}</span>
                   </button>;
                 })}
               </div>
@@ -1310,12 +1388,10 @@ export function AppShell() {
                 </button>
               ))}
 
-              {!isPro && !isAdmin && (
-                <button onClick={() => navigate('paywall')} className="w-full p-5 rounded-2xl text-left" style={{ background: C.primaryFixed + '60' }}>
-                  <p className="font-bold" style={{ color: C.primary }}>Upgrade to Pro</p>
-                  <p className="text-xs mt-1" style={{ color: C.onSurfaceVariant }}>Unlimited answers, priority features</p>
-                </button>
-              )}
+              <button onClick={() => navigate('paywall')} className="w-full p-5 rounded-2xl text-left" style={{ background: C.primaryFixed + '60' }}>
+                <p className="font-bold" style={{ color: C.primary }}>{isPro || isAdmin ? 'View Pricing (Pro active)' : 'Upgrade to Pro'}</p>
+                <p className="text-xs mt-1" style={{ color: C.onSurfaceVariant }}>{isPro || isAdmin ? 'Preview pricing and plans' : 'Unlimited answers, priority features'}</p>
+              </button>
 
               {/* Founder's Note link */}
               <button onClick={() => navigate('founder')} className="w-full flex items-center justify-between p-5 rounded-2xl" style={{ background: C.white }}>
