@@ -778,42 +778,54 @@ export function AppShell() {
             {/* Community Trending */}
             <div className="px-6 mb-8 relative z-10">
               <p className="text-[11px] font-bold uppercase tracking-widest mb-4" style={{ color: C.primary + 'cc' }}>Community Trending</p>
-              <div className="grid grid-cols-12 gap-3">
+              <div className="space-y-3">
                 {/* Large featured card */}
-                <div className="col-span-8 p-6 rounded-3xl" style={{ background: C.white, boxShadow: `0 8px 32px rgba(29,27,23,0.06)` }}>
+                <div className="p-6 rounded-3xl" style={{ background: C.white, boxShadow: '0 8px 32px rgba(29,27,23,0.06)' }}>
                   <span className="text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full inline-block mb-3" style={{ background: C.tertiaryFixed + '40', color: C.tertiary }}>Science & Nature</span>
-                  <h3 style={{ ...HL, fontSize: 18, fontWeight: 800, color: C.onSurface, lineHeight: 1.2, marginBottom: 12 }}>"Where do dreams go when we wake up?"</h3>
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="flex -space-x-2">
-                      {[C.primaryContainer, C.secondaryContainer, C.tertiaryContainer].map((bg, i) => (
-                        <div key={i} className="w-6 h-6 rounded-full border-2" style={{ background: bg, borderColor: C.white }} />
-                      ))}
+                  <h3 style={{ ...HL, fontSize: 20, fontWeight: 800, color: C.onSurface, lineHeight: 1.2, marginBottom: 12 }}>"Where do dreams go when we wake up?"</h3>
+                  <p className="text-sm mb-4" style={{ color: C.onSurfaceVariant }}>How to explain the subconscious mind and memory consolidation to a 5-year-old.</p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="flex -space-x-2">
+                        {[C.primaryContainer, C.secondaryContainer, C.tertiaryContainer].map((bg, i) => (
+                          <div key={i} className="w-7 h-7 rounded-full border-2" style={{ background: bg, borderColor: C.white }} />
+                        ))}
+                      </div>
+                      <span className="text-xs font-semibold" style={{ color: C.onSurfaceVariant + 'b0' }}>12 parents joined</span>
                     </div>
-                    <span className="text-xs font-medium" style={{ color: C.onSurfaceVariant }}>12 parents joined</span>
+                    <button onClick={() => setQuestion("Where do dreams go when we wake up?")} className="px-4 py-2 rounded-xl text-xs font-bold" style={{ background: C.surfaceHigh + '80', color: C.onSurfaceVariant }}>Read Answer</button>
                   </div>
-                  <button onClick={() => setQuestion("Where do dreams go when we wake up?")} className="px-4 py-2 rounded-xl text-xs font-bold" style={{ background: C.primaryFixed, color: C.primary }}>Read Answer</button>
                 </div>
 
-                {/* Secondary card - warm */}
-                <div className="col-span-4 p-4 rounded-3xl flex flex-col justify-between" style={{ background: '#E58B6E' }}>
-                  <p style={{ ...HL, fontSize: 13, fontWeight: 700, color: C.white, lineHeight: 1.3 }}>"Why can't I always win at games?"</p>
-                  <p className="text-[10px] font-semibold mt-2" style={{ color: 'rgba(255,255,255,0.8)' }}>84 parents asked today</p>
-                </div>
+                {/* Two secondary cards side by side */}
+                <div className="grid grid-cols-2 gap-3">
+                  {/* Warm card */}
+                  <div className="p-5 rounded-3xl flex flex-col justify-between min-h-[160px]" style={{ background: '#E58B6E' }}>
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full inline-block mb-3" style={{ background: 'rgba(255,255,255,0.2)', color: '#fff' }}>Social Skills</span>
+                      <p style={{ ...HL, fontSize: 16, fontWeight: 800, color: '#fff', lineHeight: 1.25 }}>"Why can't I always win at games?"</p>
+                    </div>
+                    <p className="text-[11px] font-semibold mt-3" style={{ color: 'rgba(255,255,255,0.8)' }}>84 parents asked today</p>
+                  </div>
 
-                {/* Secondary card - sage */}
-                <div className="col-span-4 p-4 rounded-3xl flex flex-col justify-between" style={{ background: '#B7C7B0' }}>
-                  <p style={{ ...HL, fontSize: 13, fontWeight: 700, color: C.onSurface, lineHeight: 1.3 }}>"Why did our goldfish go to sleep forever?"</p>
-                  <p className="text-[10px] font-semibold mt-2" style={{ color: C.onSurfaceVariant }}>Spiking in Toddlers (3-5)</p>
+                  {/* Sage card */}
+                  <div className="p-5 rounded-3xl flex flex-col justify-between min-h-[160px]" style={{ background: '#B7C7B0' }}>
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-widest px-3 py-1 rounded-full inline-block mb-3" style={{ background: 'rgba(45,62,40,0.1)', color: '#2D3E28' }}>Life Events</span>
+                      <p style={{ ...HL, fontSize: 16, fontWeight: 800, color: '#2D3E28', lineHeight: 1.25 }}>"Why did our goldfish go to sleep forever?"</p>
+                    </div>
+                    <p className="text-[11px] font-semibold mt-3" style={{ color: C.onSurfaceVariant }}>Spiking in Toddlers (3-5)</p>
+                  </div>
                 </div>
 
                 {/* Weekly tip card */}
-                <div className="col-span-8 p-5 rounded-3xl flex items-center gap-4" style={{ background: C.surfaceLow }}>
-                  <div className="w-10 h-10 rounded-2xl flex items-center justify-center" style={{ background: C.primaryFixed }}>
-                    <MIcon name="auto_awesome" size={20} style={{ color: C.primary }} />
+                <div className="p-5 rounded-3xl flex items-center gap-4" style={{ background: C.white, boxShadow: '0 2px 8px rgba(29,27,23,0.04)' }}>
+                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0" style={{ background: C.tertiaryFixed + '30' }}>
+                    <MIcon name="auto_awesome" size={22} style={{ color: C.tertiary }} filled />
                   </div>
-                  <div>
-                    <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: C.primary }}>Weekly Parenting Tip</p>
-                    <p className="text-sm font-semibold mt-0.5" style={{ color: C.onSurface }}>Let them lead the conversation.</p>
+                  <div className="flex-1">
+                    <p className="font-bold text-sm" style={{ ...HL, color: C.onSurface }}>Weekly Parenting Tip</p>
+                    <p className="text-sm mt-0.5" style={{ color: C.onSurfaceVariant }}>The 'Pause' method for explaining difficult emotions.</p>
                   </div>
                 </div>
               </div>
